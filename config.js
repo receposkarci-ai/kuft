@@ -16,4 +16,6 @@
 window.APP_CONFIG = {
   SUPABASE_URL: 'https://ueduafeymzjyjjwmaajs.supabase.co',
   SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVlZHVhZmV5bXpqeWpqd21hYWpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3Nzg1NjcsImV4cCI6MjEwODM1NDU2N30.Kx-yJlx_H88cK8-i9SPKeFUxcADVavV-yVWI36gHIKM',
+  // Herkese açık site adresi (davet mesajlarında kullanılır)
+  PUBLIC_URL: 'https://receposkarci-ai.github.io/kuft/',
 };

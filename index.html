@@ -2078,7 +2078,7 @@ const SettingsView = (() => {
     { key: 'p2', label: label + ' (tekrar)', type: 'password', required: true, autocomplete: 'new-password' },
   ];
   const pwValidate = (v) => { const e = {}; if (v.p1 && v.p1.length < 6) e.p1 = 'Şifre en az 6 karakter olmalı.'; if (v.p2 && v.p1 !== v.p2) e.p2 = 'Şifreler aynı değil.'; return e; };
-  const appLink = () => (/^https?:/.test(location.protocol) && !/^(localhost|127\.)/.test(location.hostname) ? location.origin + location.pathname : '');
+  const appLink = () => ((window.APP_CONFIG && window.APP_CONFIG.PUBLIC_URL) || (/^https?:/.test(location.protocol) && !/^(localhost|127\.)/.test(location.hostname) ? location.origin + location.pathname : ''));
 
   // ---- Hesabım ----
   function accountCard() {
@@ -2104,7 +2104,7 @@ const SettingsView = (() => {
       ],
       onSubmit: async (v) => {
         await Store.saveAccess({ email: r ? r.email : v.email, full_name: v.full_name, role: v.role });
-        UI.toast(r ? 'Kaydedildi.' : `${v.email} eklendi. Davet mesajını kopyalayıp gönderebilirsiniz.`);
+        UI.toast(r ? 'Kaydedildi.' : `${v.email} eklendi. Listede adının yanındaki kopyala simgesiyle davet mesajını alabilirsiniz.`);
         App.render();
       },
     });
@@ -2120,13 +2120,19 @@ const SettingsView = (() => {
       onSubmit: async (v) => { await Store.adminSetPassword(r.email, v.p1); UI.toast('Şifre sıfırlandı. Yeni şifreyi kişiye iletin.'); },
     });
   }
-  async function copyInvite() {
+  function inviteText(r) {
     const link = appLink();
-    const text = `Merhaba, Fotoğrafçılık Topluluğu yönetim paneline seni ekledim.\n` +
-      (link ? `1) Şu bağlantıyı aç: ${link}\n` : '1) Sana gönderdiğim uygulamayı kur ve aç.\n') +
-      `2) Sağ üstteki "Giriş yap"a, sonra "Hesap oluşturun"a tıkla.\n3) Bu mesajı gönderdiğim e-posta adresinle kendi şifreni belirle. Hepsi bu!`;
+    const name = r && r.full_name ? r.full_name.split(' ')[0] : '';
+    return `Merhaba${name ? ' ' + name : ''}, Fotoğrafçılık Topluluğu yönetim paneline seni ekledim.\n` +
+      (link ? `1) Şu bağlantıyı aç: ${link}\n` : '1) Yönetim panelini aç.\n') +
+      `2) Sağ üstteki "Giriş yap"a, sonra "Hesap oluşturun"a tıkla.\n` +
+      `3) ${r ? r.email + ' adresinle' : 'Seni eklediğim e-posta adresinle'} kendi şifreni belirle. Hepsi bu!` +
+      (link ? `\n\nİpucu: Telefonda bağlantıyı açıp tarayıcı menüsünden "Ana ekrana ekle" dersen uygulama gibi açılır.` : '');
+  }
+  async function copyInvite(r) {
+    const text = inviteText(r);
     try { await navigator.clipboard.writeText(text); UI.toast('Davet mesajı kopyalandı; WhatsApp veya e-postaya yapıştırabilirsiniz.'); }
-    catch (e) { UI.dialog({ title: 'Davet mesajı', size: 'sm', content: h('textarea', { rows: 7, readonly: true, value: text, style: 'width:100%' }) }); }
+    catch (e) { UI.dialog({ title: 'Davet mesajı', size: 'sm', content: h('textarea', { rows: 9, readonly: true, value: text, style: 'width:100%' }) }); }
   }
   function accessCard() {
     if (Store.state.mode !== 'remote' || !Store.can('admin')) return null;
@@ -2138,6 +2144,7 @@ const SettingsView = (() => {
         UI.td('Yetki', UI.badge(ROLE[r.role] || r.role, r.role === 'admin' ? 'warn' : 'info')),
         UI.td('Durum', r.registered ? UI.badge(r.last_sign_in_at ? 'Aktif · son giriş ' + U.fmtDateTime(r.last_sign_in_at) : 'Hesap açtı', 'ok') : UI.badge('Henüz hesap açmadı', 'muted')),
         UI.td('', h('div', { class: 'row-actions' },
+          r.email !== me ? UI.iconBtn('copy', 'Bu kişinin davet mesajını kopyala', () => copyInvite(r)) : null,
           UI.iconBtn('edit', 'Düzenle', () => accessForm(r)),
           r.registered && r.email !== me ? UI.iconBtn('lock', 'Şifre sıfırla', () => accessReset(r)) : null,
           r.email !== me ? UI.iconBtn('trash', 'Listeden kaldır', () => accessDel(r), 'danger') : null)))))
@@ -2146,7 +2153,7 @@ const SettingsView = (() => {
     return UI.card('Yetkili kişiler', h('div', null,
       h('p', { class: 'muted small' }, 'Listeye eklediğiniz kişiler "Giriş yap > Hesap oluşturun" ile kendi şifrelerini belirleyip hemen girer. Listede olmayan kimse hesap açamaz.'),
       box,
-      h('div', { class: 'btn-row' }, UI.btn('Kişi ekle', { ic: 'plus', variant: 'primary', small: true, onclick: () => accessForm(null) }), UI.btn('Davet mesajını kopyala', { ic: 'copy', small: true, onclick: copyInvite }))), null, 'wide');
+      h('div', { class: 'btn-row' }, UI.btn('Kişi ekle', { ic: 'plus', variant: 'primary', small: true, onclick: () => accessForm(null) }), UI.btn('Genel davet mesajını kopyala', { ic: 'copy', small: true, onclick: () => copyInvite(null) }))), null, 'wide');
   }
   const KINDS = [['event_type', 'Etkinlik türleri'], ['task_category', 'Görev kategorileri']];
 
