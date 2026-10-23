@@ -1,0 +1,2417 @@
+<!doctype html>
+<html lang="tr" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fotoğrafçılık Topluluğu · Yönetim</title>
+  <meta name="description" content="Kırıkkale Üniversitesi Fotoğrafçılık Topluluğu etkinlik ve yönetim sistemi">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+/* Fotoğrafçılık Topluluğu Yönetim Sistemi — "karanlık oda" teması */
+:root {
+  --bg: #f5f2ec; --surface: #fffdf9; --surface2: #efeae1; --ink: #1d1a16; --muted: #6b645a; --line: #ded7ca;
+  --accent: #b4560f; --accent-ink: #fff; --accent-soft: #f6e4d2;
+  --ok: #2f7d4f; --warn: #9a6200; --bad: #b3342a; --info: #2c5f8a; --done: #5b5750;
+  --side-bg: #1b1815; --side-ink: #e9e2d6; --side-muted: #a39a8b;
+  --shadow: 0 1px 2px rgb(0 0 0 / .06), 0 4px 14px rgb(0 0 0 / .05);
+  --radius: 10px; --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+}
+:root[data-theme='dark'] {
+  --bg: #12110f; --surface: #1b1917; --surface2: #25221e; --ink: #efe9de; --muted: #a39a8b; --line: #36322b;
+  --accent: #f0a64a; --accent-ink: #1a1206; --accent-soft: #3a2a14;
+  --ok: #6fc08a; --warn: #e3b04a; --bad: #ef7b6e; --info: #7fb2e0; --done: #9b958a;
+  --side-bg: #0c0b0a; --shadow: none;
+}
+* { box-sizing: border-box; }
+html { color-scheme: light; } :root[data-theme='dark'] { color-scheme: dark; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(--font); -webkit-text-size-adjust: 100%; }
+h1, h2, h3, h4 { margin: 0; line-height: 1.25; }
+h1 { font-family: var(--serif); font-weight: 600; font-size: 1.75rem; }
+h2 { font-size: 1.05rem; font-weight: 600; } h3 { font-size: 1rem; } h4 { font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 1.1rem 0 .4rem; font-weight: 600; }
+a { color: var(--accent); } p { margin: .4rem 0; }
+.muted { color: var(--muted); } .small { font-size: .82rem; } .neg { color: var(--bad); font-weight: 600; } .pos { color: var(--ok); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: -999px; top: 0; background: var(--accent); color: var(--accent-ink); padding: .5rem 1rem; z-index: 100; }
+.skip:focus { left: 0; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.ic { flex: none; }
+
+/* yerleşim */
+.app { display: grid; grid-template-columns: 250px 1fr; min-height: 100vh; }
+.side { background: var(--side-bg); color: var(--side-ink); padding: 1.2rem .9rem; position: sticky; top: 0; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; gap: 1.2rem; }
+.brand { display: flex; gap: .6rem; align-items: center; color: var(--accent); padding: .2rem .4rem; }
+:root[data-theme='light'] .brand { color: #f0a64a; }
+.brand-name { font-family: var(--serif); font-size: 1.02rem; font-weight: 600; color: var(--side-ink); line-height: 1.2; }
+.brand-logo { width: 34px; height: 34px; object-fit: contain; border-radius: 6px; background: #fff2; }
+.nav { display: flex; flex-direction: column; gap: 2px; }
+.nav-link { color: var(--side-muted); text-decoration: none; padding: .55rem .75rem; border-radius: 8px; font-weight: 500; }
+.nav-link:hover { background: #ffffff10; color: var(--side-ink); }
+.nav-link.on { background: #f0a64a22; color: #f6b862; box-shadow: inset 3px 0 0 #f0a64a; }
+.side-foot { margin-top: auto; font-size: .75rem; color: var(--side-muted); padding: 0 .5rem; }
+.content { min-width: 0; display: flex; flex-direction: column; }
+.topbar { display: flex; align-items: center; gap: .6rem; padding: .6rem 1.2rem; border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: 0; z-index: 20; }
+.topbar-spacer { flex: 1; } .auth { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+.mode-pill, .user-pill { display: inline-flex; gap: .3rem; align-items: center; font-size: .78rem; padding: .2rem .6rem; border-radius: 99px; background: var(--surface2); color: var(--muted); border: 1px solid var(--line); }
+.mode-pill.view { color: var(--info); } .user-pill { color: var(--ok); }
+.banner { background: var(--accent-soft); border-bottom: 1px solid var(--line); padding: .5rem 1.2rem; font-size: .85rem; }
+main { padding: 1.4rem 1.2rem 3rem; max-width: 1280px; width: 100%; margin: 0 auto; }
+.menu-btn { display: none; } .scrim { display: none; }
+
+.page-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.1rem; }
+.page-head .sub { color: var(--muted); margin: .2rem 0 0; } .head-actions { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+
+/* bileşenler */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; box-shadow: var(--shadow); margin-bottom: 1rem; min-width: 0; }
+.card.inner { background: var(--bg); box-shadow: none; margin-top: .9rem; }
+.card-head { display: flex; justify-content: space-between; align-items: center; gap: .6rem; margin-bottom: .7rem; flex-wrap: wrap; }
+.card > .btn, .card > .field { margin-top: .6rem; }
+.btn { display: inline-flex; align-items: center; gap: .4rem; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: .5rem .85rem; border-radius: 8px; font: inherit; font-weight: 500; cursor: pointer; min-height: 38px; }
+.btn:hover { background: var(--surface2); } .btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); } .btn.primary:hover { filter: brightness(1.08); background: var(--accent); }
+.btn.danger { background: var(--bad); border-color: var(--bad); color: #fff; }
+.btn.danger-ghost { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, var(--line)); }
+.btn.sm { padding: .3rem .65rem; min-height: 32px; font-size: .85rem; }
+.icon-btn { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 8px; border: 1px solid transparent; background: transparent; color: var(--muted); cursor: pointer; }
+.icon-btn:hover { background: var(--surface2); color: var(--ink); } .icon-btn.danger:hover { color: var(--bad); }
+.btn-row { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .7rem; }
+.link-btn { background: none; border: 0; padding: 0; color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; text-align: left; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+.link-btn:hover { color: var(--accent); text-decoration-color: var(--accent); }
+.badge { display: inline-block; font-size: .72rem; font-weight: 600; padding: .12rem .55rem; border-radius: 99px; border: 1px solid transparent; margin: 0 .25rem .15rem 0; white-space: nowrap; }
+.badge.muted, .badge.neutral { background: var(--surface2); color: var(--muted); border-color: var(--line); }
+.badge.info { background: color-mix(in srgb, var(--info) 15%, transparent); color: var(--info); }
+.badge.ok { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
+.badge.warn { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
+.badge.bad { background: color-mix(in srgb, var(--bad) 15%, transparent); color: var(--bad); }
+.badge.done { background: var(--surface2); color: var(--done); text-decoration: line-through; text-decoration-thickness: 1px; }
+.badge.sample { background: transparent; color: var(--muted); border: 1px dashed var(--line); }
+.badges { margin-top: .4rem; }
+.progress { height: 6px; background: var(--surface2); border-radius: 99px; overflow: hidden; min-width: 70px; }
+.progress span { display: block; height: 100%; background: var(--ok); border-radius: 99px; } .progress.bad span { background: var(--bad); }
+.ready { display: flex; flex-direction: column; gap: .25rem; font-weight: 600; } .ready.sm { font-size: .8rem; min-width: 80px; }
+.alert { display: flex; gap: .6rem; align-items: flex-start; padding: .7rem .9rem; border-radius: var(--radius); margin-bottom: 1rem; border: 1px solid; }
+.alert.warn { background: color-mix(in srgb, var(--warn) 12%, var(--surface)); border-color: color-mix(in srgb, var(--warn) 40%, var(--line)); }
+.alert.bad { background: color-mix(in srgb, var(--bad) 10%, var(--surface)); border-color: color-mix(in srgb, var(--bad) 40%, var(--line)); }
+.empty { text-align: center; color: var(--muted); padding: 1.6rem 1rem; } .locked { text-align: center; color: var(--muted); padding: 1rem; display: grid; gap: .6rem; justify-items: center; }
+.loading { display: flex; align-items: center; gap: .7rem; padding: 3rem 1rem; justify-content: center; color: var(--muted); }
+.spinner { width: 18px; height: 18px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } } @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
+.toasts { position: fixed; right: 1rem; bottom: 1rem; display: grid; gap: .5rem; z-index: 200; max-width: min(92vw, 380px); }
+.toast { display: flex; gap: .5rem; align-items: flex-start; background: var(--ink); color: var(--bg); padding: .65rem .9rem; border-radius: 8px; box-shadow: 0 6px 20px rgb(0 0 0 / .25); }
+.toast.error { background: var(--bad); color: #fff; }
+
+/* kpi */
+.kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: .8rem; margin-bottom: 1rem; }
+.small-kpis { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: .85rem 1rem; border-left: 3px solid var(--line); }
+.kpi.ok { border-left-color: var(--ok); } .kpi.bad { border-left-color: var(--bad); } .kpi.warn { border-left-color: var(--warn); }
+.kpi-label { font-size: .78rem; color: var(--muted); font-weight: 500; } .kpi-value { font-family: var(--serif); font-size: 1.55rem; font-weight: 600; margin: .1rem 0; overflow-wrap: anywhere; } .kpi-note { font-size: .78rem; color: var(--muted); }
+.kpi.bad .kpi-value { color: var(--bad); }
+.dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 1rem; } .dash-grid .card { margin: 0; }
+.cols-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 1rem; }
+.settings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr)); gap: 1rem; align-items: start; } .settings-grid .card { margin: 0; }
+
+/* tablolar */
+.table-wrap { overflow-x: auto; }
+.tbl { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.tbl th { text-align: left; font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 600; padding: .5rem .6rem; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.tbl td { padding: .55rem .6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tbl tbody tr:hover { background: color-mix(in srgb, var(--surface2) 55%, transparent); }
+tr.cancelled td { color: var(--muted); } tr.cancelled .link-btn { text-decoration: line-through; } tr.done td strong { text-decoration: line-through; color: var(--muted); }
+.code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .78rem; color: var(--muted); }
+.row-actions { display: flex; gap: 0; justify-content: flex-end; white-space: nowrap; }
+.result-count { color: var(--muted); font-size: .85rem; margin: 0 0 .5rem; }
+.filters { display: flex; gap: .8rem; flex-wrap: wrap; align-items: flex-end; padding: .8rem 1rem; }
+.filters .field { min-width: 150px; flex: 1 1 150px; margin: 0; }
+
+/* form */
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem 1rem; }
+.field { display: flex; flex-direction: column; gap: .25rem; min-width: 0; } .field.full, .form-h.full { grid-column: 1 / -1; }
+.field.inline { flex-direction: row; align-items: center; }
+label { font-size: .82rem; font-weight: 600; } .req { color: var(--bad); }
+input[type=text], input[type=search], input[type=number], input[type=date], input[type=time], input[type=month], input[type=email], input[type=password], select, textarea {
+  width: 100%; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: .5rem .65rem; min-height: 40px; }
+textarea { resize: vertical; } input:disabled, select:disabled, textarea:disabled { background: var(--surface2); color: var(--muted); }
+[aria-invalid='true'] { border-color: var(--bad) !important; }
+.inline-sel { min-height: 34px; padding: .25rem .5rem; width: auto; font-size: .85rem; }
+.help { font-size: .76rem; color: var(--muted); } .field-err { color: var(--bad); font-size: .8rem; min-height: 0; } .field-err:empty { display: none; }
+.form-error { background: color-mix(in srgb, var(--bad) 12%, var(--surface)); color: var(--bad); border: 1px solid var(--bad); padding: .5rem .75rem; border-radius: 8px; margin-bottom: .8rem; }
+.form-h { font-size: .85rem; color: var(--accent); border-bottom: 1px solid var(--line); padding-bottom: .25rem; margin-top: .6rem; text-transform: uppercase; letter-spacing: .05em; }
+.form-actions { display: flex; justify-content: flex-end; gap: .6rem; margin-top: 1.1rem; }
+.intro { color: var(--muted); }
+.check { display: flex; gap: .5rem; align-items: center; font-weight: 400; font-size: .9rem; cursor: pointer; } .check input { width: 18px; height: 18px; accent-color: var(--accent); } .check.inline { padding-bottom: .55rem; }
+.checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: .3rem .8rem; border: 1px solid var(--line); border-radius: 8px; padding: .6rem; max-height: 180px; overflow: auto; }
+.confirm-msg { margin: 0 0 .5rem; }
+
+/* diyalog */
+dialog.dlg { border: 1px solid var(--line); border-radius: 14px; padding: 0; background: var(--surface); color: var(--ink); width: min(94vw, 640px); max-height: 92vh; box-shadow: 0 20px 60px rgb(0 0 0 / .35); }
+dialog.dlg.sm { width: min(94vw, 420px); } dialog.dlg.lg { width: min(94vw, 820px); } dialog.dlg.xl { width: min(96vw, 980px); }
+dialog.dlg::backdrop { background: rgb(10 8 5 / .55); }
+.dlg-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: .8rem 1rem; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--surface); z-index: 1; border-radius: 14px 14px 0 0; }
+.dlg-head h2 { flex: 1; font-family: var(--serif); font-size: 1.15rem; } .dlg-body { padding: 1rem; overflow-y: auto; max-height: calc(92vh - 60px); }
+
+/* ayrıntı */
+.detail-top { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; align-items: flex-start; } .detail-title { font-family: var(--serif); font-size: 1.5rem; }
+.detail-actions { display: flex; gap: .4rem; flex-wrap: wrap; }
+.facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: .7rem 1.2rem; margin: 1rem 0; } .facts dt { font-size: .74rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; font-weight: 600; } .facts dd { margin: .1rem 0 0; overflow-wrap: anywhere; }
+.plain { margin: 0; padding-left: 1.1rem; } .pre { white-space: pre-wrap; }
+.task-mini { list-style: none; padding: 0; margin: 0; } .task-mini li { display: flex; gap: .6rem; align-items: center; padding: .35rem 0; border-bottom: 1px solid var(--line); flex-wrap: wrap; } .task-mini li.done .check span { text-decoration: line-through; color: var(--muted); } .task-mini .meta { margin-left: auto; font-size: .8rem; color: var(--muted); }
+.agenda, .log, .lookups, .undated { list-style: none; padding: 0; margin: 0; }
+.agenda li { display: grid; grid-template-columns: 110px 1fr auto auto; gap: .7rem; padding: .6rem 0; border-bottom: 1px solid var(--line); align-items: center; } .agenda-date { font-weight: 600; font-size: .85rem; }
+.log li { padding: .45rem 0; border-bottom: 1px solid var(--line); } .lookups li { display: flex; justify-content: space-between; align-items: center; padding: .2rem 0; border-bottom: 1px solid var(--line); }
+.undated-item { display: flex; justify-content: space-between; gap: .8rem; padding: .55rem 0; border-bottom: 1px solid var(--line); flex-wrap: wrap; align-items: center; } .undated-set { display: flex; gap: .4rem; align-items: center; } .undated-set input { width: auto; min-height: 34px; }
+.logo-prev { max-width: 120px; max-height: 80px; object-fit: contain; margin-bottom: .6rem; }
+
+/* takvim */
+.cal-bar { display: flex; justify-content: space-between; align-items: center; gap: .8rem; flex-wrap: wrap; margin-bottom: .7rem; } .cal-nav { display: flex; align-items: center; gap: .3rem; } .cal-title { font-family: var(--serif); font-size: 1.25rem; min-width: 11rem; text-align: center; }
+.segs { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; } .seg { border: 0; background: var(--surface); color: var(--ink); padding: .4rem .85rem; cursor: pointer; font: inherit; font-weight: 500; min-height: 36px; } .seg.on { background: var(--accent); color: var(--accent-ink); } .seg + .seg { border-left: 1px solid var(--line); }
+.cal-grid { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.cal-row { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); } .cal-dow > div { text-align: center; font-size: .75rem; font-weight: 600; color: var(--muted); padding: .4rem; background: var(--surface2); }
+.cal-cell { min-height: 104px; border-top: 1px solid var(--line); border-left: 1px solid var(--line); padding: .25rem; display: flex; flex-direction: column; gap: 2px; min-width: 0; } .cal-cell:nth-child(7n+1) { border-left: 0; }
+.cal-cell.other { background: color-mix(in srgb, var(--surface2) 60%, transparent); color: var(--muted); } .cal-cell.today .cal-num { background: var(--accent); color: var(--accent-ink); border-radius: 99px; } .cal-cell.drop, .week-col.drop, .board-col.drop { outline: 2px dashed var(--accent); outline-offset: -3px; } .cal-cell.has-conf { box-shadow: inset 0 0 0 1px var(--warn); }
+.cal-num { font-size: .78rem; font-weight: 600; width: 1.5rem; height: 1.5rem; display: grid; place-items: center; }
+.chip { display: flex; gap: .25rem; align-items: center; text-align: left; width: 100%; border: 0; border-left: 3px solid var(--muted); background: var(--surface2); color: var(--ink); font: inherit; font-size: .75rem; padding: 2px 5px; border-radius: 4px; cursor: pointer; overflow: hidden; }
+.chip:hover { filter: brightness(.96); } .chip-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .chip-time { font-weight: 600; flex: none; }
+.chip.tone-info { border-color: var(--info); } .chip.tone-warn { border-color: var(--warn); } .chip.tone-ok { border-color: var(--ok); } .chip.tone-bad { border-color: var(--bad); } .chip.tone-done { border-color: var(--done); }
+.chip.finished { opacity: .65; } .chip.cancelled { opacity: .6; text-decoration: line-through; }
+.more { border: 0; background: none; color: var(--accent); font-size: .74rem; cursor: pointer; text-align: left; padding: 0 4px; }
+.week-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .5rem; } .week-col { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: .5rem; display: flex; flex-direction: column; gap: 4px; min-height: 180px; } .week-col.today { border-color: var(--accent); } .week-head { display: flex; flex-direction: column; font-size: .8rem; margin-bottom: .3rem; }
+.legend { display: flex; gap: 1rem; flex-wrap: wrap; margin: .8rem 0; align-items: center; } .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; background: var(--muted); } .dot.tone-info { background: var(--info); } .dot.tone-warn { background: var(--warn); } .dot.tone-ok { background: var(--ok); } .dot.tone-bad { background: var(--bad); } .dot.tone-done { background: var(--done); }
+.mc { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; } .mc-title { font-weight: 600; margin-bottom: .4rem; } .mc-dow { font-size: .7rem; color: var(--muted); } .mc-day { aspect-ratio: 1; display: grid; place-items: center; font-size: .8rem; border-radius: 6px; border: 0; background: none; color: var(--ink); font-family: inherit; } .mc-day.other { color: var(--muted); opacity: .5; } .mc-day.today { outline: 1px solid var(--accent); } .mc-day.has { background: var(--accent); color: var(--accent-ink); font-weight: 600; cursor: pointer; opacity: 1; }
+
+/* grafik */
+.chart .bars { display: flex; gap: .5rem; align-items: flex-end; height: 160px; border-bottom: 1px solid var(--line); padding-top: 14px; } .bar-group { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; min-width: 0; align-items: stretch; } .bar-stack { display: flex; gap: 3px; align-items: flex-end; height: 100%; justify-content: center; } .bar { flex: 1; max-width: 34px; border-radius: 4px 4px 0 0; position: relative; } .bar.b1 { background: var(--accent); } .bar-val { position: absolute; top: -16px; left: 0; right: 0; text-align: center; font-size: .72rem; color: var(--muted); } .bar-label { text-align: center; font-size: .72rem; color: var(--muted); margin-top: 4px; }
+
+/* kanban, ekip */
+.board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; align-items: start; } .board-col { background: var(--surface2); border-radius: var(--radius); padding: .7rem; display: grid; gap: .6rem; min-height: 120px; } .board-col h3 { display: flex; justify-content: space-between; font-size: .85rem; } .count { background: var(--surface); border-radius: 99px; padding: 0 .55rem; font-size: .75rem; }
+.tcard { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: .6rem .7rem; cursor: grab; } .tcard.late { border-left: 3px solid var(--bad); } .tcard-title { font-weight: 600; } .tcard-meta { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin-top: .3rem; } .tcard-actions { display: flex; justify-content: space-between; align-items: center; margin-top: .4rem; }
+.team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 1rem; } .member { margin: 0; display: flex; flex-direction: column; gap: .35rem; } .avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 700; font-family: var(--serif); }
+.chips { display: flex; flex-wrap: wrap; gap: .3rem; } .tag { font-size: .74rem; background: var(--surface2); border-radius: 6px; padding: .1rem .5rem; } .load-label { display: flex; justify-content: space-between; font-size: .78rem; color: var(--muted); margin-bottom: .2rem; } .mini-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: .3rem; margin: .5rem 0; text-align: center; } .mini-stats dt { font-size: .66rem; color: var(--muted); } .mini-stats dd { margin: 0; font-weight: 700; font-size: 1.1rem; } .card-foot { display: flex; gap: .3rem; align-items: center; margin-top: auto; }
+
+/* raporlar */
+.report-layout { display: grid; grid-template-columns: 250px 1fr; gap: 1rem; align-items: start; } .report-list { display: flex; flex-direction: column; gap: 2px; margin: 0; } .report-item { text-align: left; background: none; border: 0; padding: .5rem .7rem; border-radius: 8px; cursor: pointer; font: inherit; color: var(--ink); } .report-item:hover { background: var(--surface2); } .report-item.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.sheet { background: #fff; color: #111; border: 1px solid var(--line); border-radius: var(--radius); padding: 1.6rem; font-family: var(--font); } .sheet h1 { font-size: 1.35rem; margin: .2rem 0; } .sheet h2 { font-size: 1rem; margin: 1.1rem 0 .4rem; border-bottom: 1px solid #bbb; padding-bottom: .2rem; } .sheet-head { display: flex; gap: 1rem; align-items: center; border-bottom: 2px solid #111; padding-bottom: .7rem; margin-bottom: .8rem; } .sheet-logo { width: 70px; height: 70px; object-fit: contain; } .sheet-org { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: #444; } .sheet-meta { font-size: .78rem; color: #555; }
+.sheet .tbl th, .sheet .tbl td { border: 1px solid #bbb; color: #111; } .sheet .tbl th { background: #eee; } .sheet-tbl { width: 100%; border-collapse: collapse; } .sheet-tbl th, .sheet-tbl td { border: 1px solid #999; padding: .35rem .6rem; text-align: left; vertical-align: top; } .sheet-tbl th { width: 32%; background: #f0f0f0; font-weight: 600; font-size: .85rem; }
+.sheet .facts dt { color: #555; } .sheet .muted { color: #555; }
+.sign { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; text-align: center; } .sign-line { border-top: 1px solid #111; margin-bottom: .3rem; } .sign-role { font-weight: 600; font-size: .85rem; } .sign-name { font-size: .85rem; min-height: 1.2em; } .sign-date { font-size: .72rem; color: #666; margin-top: 1.6rem; }
+#print-root { display: none; }
+
+/* duyarlı */
+@media (max-width: 900px) {
+  .app { grid-template-columns: 1fr; } .menu-btn { display: inline-grid; }
+  .side { position: fixed; inset: 0 auto 0 0; width: 260px; z-index: 60; transform: translateX(-100%); transition: transform .2s; } .nav-open .side { transform: none; }
+  .nav-open .scrim { display: block; position: fixed; inset: 0; background: rgb(0 0 0 / .5); z-index: 50; }
+  .report-layout { grid-template-columns: 1fr; } .report-list { flex-direction: row; flex-wrap: wrap; }
+  .board, .week-grid { grid-template-columns: 1fr; } .week-col { min-height: 0; }
+}
+@media (max-width: 720px) {
+  main { padding: 1rem .8rem 3rem; } h1 { font-size: 1.4rem; } .form-grid { grid-template-columns: 1fr; }
+  .agenda li { grid-template-columns: 1fr auto; } .agenda-date { grid-column: 1 / -1; }
+  .cal-cell { min-height: 64px; } .chip-title { display: none; } .chip { min-height: 8px; padding: 1px 3px; } .chip-time { display: none; } .chip::after { content: ''; } .cal-cell .chip { height: 8px; }
+  .tbl.resp thead { display: none; } .tbl.resp, .tbl.resp tbody, .tbl.resp tr, .tbl.resp td { display: block; width: 100%; }
+  .tbl.resp tr { border: 1px solid var(--line); border-radius: 8px; margin-bottom: .6rem; padding: .3rem .5rem; background: var(--surface); }
+  .tbl.resp td { display: flex; justify-content: space-between; gap: 1rem; border: 0; padding: .3rem 0; text-align: right; } .tbl.resp td::before { content: attr(data-label); font-weight: 600; color: var(--muted); font-size: .76rem; text-align: left; flex: none; } .tbl.resp td[data-label='']::before { content: none; }
+  .tbl.resp td:last-child { justify-content: flex-end; } .sheet .tbl.resp tr { border-color: #bbb; }
+  .mini-stats { grid-template-columns: repeat(2, 1fr); } .sign { grid-template-columns: 1fr; }
+}
+
+/* yazdırma */
+@media print {
+  body > *:not(#print-root) { display: none !important; }
+  #print-root { display: block !important; }
+  body { background: #fff; font-size: 11pt; } .no-print { display: none !important; }
+  .sheet { border: 0; padding: 0; box-shadow: none; } .sheet h2 { break-after: avoid; } table, .sign { break-inside: avoid; } tr { break-inside: avoid; }
+  .tbl.resp thead { display: table-header-group !important; } .tbl.resp, .tbl.resp tr, .tbl.resp td { display: revert !important; }
+  .tbl.resp td::before { content: none !important; } .tbl.resp tr { border: 0; padding: 0; margin: 0; }
+  @page { size: A4; margin: 16mm 14mm; }
+}
+.settings-grid .card.wide { grid-column: 1 / -1; }
+.auth-switch { margin: .4rem 0 0; font-size: .9rem; color: var(--muted); } .auth-switch .link-btn { color: var(--accent); }
+
+</style>
+</head>
+<body>
+  <a class="skip" href="#main">Ana içeriğe geç</a>
+  <div class="app">
+    <aside class="side no-print" id="side">
+      <div class="brand" id="brand"></div>
+      <nav id="nav" class="nav" aria-label="Ana menü"></nav>
+      <p class="side-foot">Kırıkkale Üniversitesi<br>Fotoğrafçılık Topluluğu</p>
+    </aside>
+    <div class="scrim" id="scrim"></div>
+    <div class="content">
+      <header class="topbar no-print">
+        <button id="menu-btn" class="icon-btn menu-btn" type="button" aria-label="Menüyü aç" aria-controls="side" aria-expanded="false"></button>
+        <div class="topbar-spacer"></div>
+        <div id="auth" class="auth"></div>
+        <button id="theme-btn" class="icon-btn" type="button" aria-label="Koyu temaya geç"></button>
+      </header>
+      <div id="banner" class="banner no-print" hidden></div>
+      <main id="main" tabindex="-1"><div id="view"></div></main>
+    </div>
+  </div>
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <noscript><p style="padding:2rem">Bu uygulama JavaScript gerektirir.</p></noscript>
+
+  <!-- Ortak mod için Supabase istemcisi (sürüm sabit). Yerel modda yüklenmese de çalışır. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+  <script src="config.js"></script>
+  <script>
+/* js/seed.js */
+/* Başlangıç (örnek) verileri.
+ * - Yerel modda ilk açılışta localStorage'a yazılır, sonraki açılışlarda ASLA tekrar yazılmaz.
+ * - Supabase modunda bu dosyadan üretilen supabase/seed.sql bir kez çalıştırılır (npm gerekmez: node tools/build-seed-sql.js).
+ * - Tüm kayıtlar is_sample=true ile işaretlidir; Ayarlar > "Örnek verileri temizle" ile silinebilir.
+ */
+(function (root) {
+  'use strict';
+  const pad = (n) => String(n).padStart(2, '0');
+  const NOW = '2026-10-22T09:00:00.000Z';
+
+  const lookups = [
+    ['et-trip', 'event_type', 'Fotoğraf gezisi'], ['et-workshop', 'event_type', 'Atölye'],
+    ['et-contest', 'event_type', 'Yarışma'], ['et-campus', 'event_type', 'Kampüs etkinliği'],
+    ['et-talk', 'event_type', 'Söyleşi'], ['et-expo', 'event_type', 'Sergi'],
+    ['et-social', 'event_type', 'Sosyal etkinlik'], ['et-other', 'event_type', 'Diğer'],
+    ['tc-permit', 'task_category', 'İzin ve başvuru'], ['tc-venue', 'task_category', 'Mekân ve ulaşım'],
+    ['tc-design', 'task_category', 'Tasarım'], ['tc-announce', 'task_category', 'Duyuru ve iletişim'],
+    ['tc-people', 'task_category', 'Katılımcı'], ['tc-gear', 'task_category', 'Ekipman'],
+    ['tc-archive', 'task_category', 'Arşiv'], ['tc-other', 'task_category', 'Diğer'],
+  ].map(([id, kind, name], i) => ({ id, kind, name, sort: i }));
+
+  const members = [
+    ['m1', 'Yönetici 1', 'Kulüp Başkanı', ['Genel koordinasyon', 'Üniversite ile resmî yazışmalar']],
+    ['m2', 'Yönetici 2', '1. Başkan Yardımcısı — Organizasyon', ['Organizasyon planı', 'Yarışma ve jüri süreçleri']],
+    ['m3', 'Yönetici 3', '2. Başkan Yardımcısı — Medya ve İletişim', ['Basın ve duyuru', 'Kurum içi iletişim']],
+    ['m4', 'Yönetici 4', 'Etkinlik ve Gezi Sorumlusu', ['Gezi planlaması', 'Kampüs etkinlikleri', 'Ulaşım ve mekân']],
+    ['m5', 'Yönetici 5', 'Sosyal Medya ve Tasarım Sorumlusu', ['Afiş ve görsel tasarım', 'Sosyal medya hesapları']],
+    ['m6', 'Yönetici 6', 'Fotoğraf ve Teknik Sorumlusu', ['Atölye içerikleri', 'Ekipman envanteri', 'Fotoğraf arşivi']],
+    ['m7', 'Yönetici 7', 'Üye İlişkileri Sorumlusu', ['Üye kayıtları', 'Katılımcı listeleri']],
+  ].map(([id, name, role_title, responsibilities], i) => ({ id, name, role_title, responsibilities, sort: i }));
+
+  // [no, başlık, tür, ay, mekân, şehir, katılımcı, sorumlu, açıklama, malzemeler, üniversite destekleri]
+  const E = [
+    [1, 'Kampüs Kadraj Avı', 'et-campus', '2026-11', 'Kırıkkale Üniversitesi Kampüsü', 'Kırıkkale', 40, 'm4',
+      'Üyelerin verilen temalara göre kampüste kadraj aradığı açılış etkinliği. En ilginç kareler kulüp hesaplarında paylaşılır.',
+      ['Telefon veya fotoğraf makinesi', 'Tema kartları', 'Katılım listesi'], ['Sosyal medya duyurusu']],
+    [2, 'Telefonla Fotoğrafçılık 101', 'et-workshop', '2026-11', 'Derslik (belirlenecek)', 'Kırıkkale', 50, 'm6',
+      'Akıllı telefonla kompozisyon, ışık ve temel düzenleme. Yeni üyeler için giriş atölyesi.',
+      ['Projeksiyon', 'Örnek fotoğraf sunumu', 'Katılımcıların kendi telefonları'], ['Sınıf veya konferans salonu', 'Projeksiyon']],
+    [3, 'Eski Ankara Fotoğraf Rotası', 'et-trip', '2026-11', 'Ulus / Hamamönü çevresi (planlanan güzergâh)', 'Ankara', 35, 'm4',
+      'Tarihî Ankara\'da belgesel ve sokak fotoğrafı odaklı yürüyüş gezisi.',
+      ['Fotoğraf makineleri', 'Güzergâh haritası', 'İlk yardım çantası', 'Katılım izin formları'], ['Üniversite aracı', 'Sosyal medya duyurusu']],
+    [4, 'Tek Işık, Bin Hikâye', 'et-workshop', '2026-12', 'Atölye alanı (belirlenecek)', 'Kırıkkale', 25, 'm6',
+      'Tek ışık kaynağıyla portre ve ışık yönlendirme çalışması.',
+      ['Sürekli ışık veya flaş', 'Reflektör', 'Fon', 'Tripod'], ['Fotoğraf ekipmanları', 'Sınıf veya konferans salonu']],
+    [5, 'Kampüs Portre Günü', 'et-campus', '2026-12', 'Kırıkkale Üniversitesi Kampüsü', 'Kırıkkale', 60, 'm4',
+      'Kampüste öğrencilere portre çekimi. Çekilen fotoğraflar katılımcılarla paylaşılır.',
+      ['Reflektör', 'Fon / arka plan', 'Taşınabilir ışık', 'Katılımcı kayıt formu'], ['Fotoğraf ekipmanları', 'Sosyal medya duyurusu']],
+    [6, 'CerModern Sanat ve Kadraj', 'et-trip', '2026-12', 'CerModern (planlanan)', 'Ankara', 35, 'm4',
+      'Sanat merkezinde sergi gezisi ve mimari/sanat fotoğrafı çalışması. Ziyaret ve çekim koşulları kurumdan teyit edilecek.',
+      ['Fotoğraf makineleri', 'Katılım izin formları', 'Güzergâh bilgi notu'], ['Üniversite aracı', 'Sosyal medya duyurusu']],
+    [7, 'Fotoğraf Kritik Buluşması', 'et-social', '2027-01', 'Kulüp odası veya derslik (belirlenecek)', 'Kırıkkale', 30, 'm1',
+      'Üyelerin kendi fotoğraflarını getirip karşılıklı geri bildirim aldığı sohbet buluşması.',
+      ['Fotoğraf baskıları veya ekran', 'İkram'], []],
+    [8, 'Kışın Kadrajı', 'et-contest', '2027-01', 'Çevrimiçi başvuru + kampüs sergisi', 'Kırıkkale', 80, 'm2',
+      'Kış temalı fotoğraf yarışması. Jüri değerlendirmesi ve mini sergi.',
+      ['Yarışma şartnamesi', 'Başvuru formu', 'Sertifikalar'], ['Sertifika ve ödül', 'Sosyal medya duyurusu']],
+    [9, 'Fotoğraf Düzenleme Laboratuvarı', 'et-workshop', '2027-02', 'Bilgisayar laboratuvarı (belirlenecek)', 'Kırıkkale', 30, 'm6',
+      'Işık ve renk düzenleme, ham dosya (RAW) işleme ve toplu düzenleme uygulamaları.',
+      ['Bilgisayarlar', 'Düzenleme yazılımı', 'Örnek RAW dosyaları'], ['Sınıf veya konferans salonu']],
+    [10, 'Kadraj Savaşları', 'et-contest', '2027-02', 'Kampüs', 'Kırıkkale', 40, 'm2',
+      'Takımların süre sınırlı görevlerle yarıştığı hızlı fotoğraf yarışması.',
+      ['Görev kartları', 'Hakem formu', 'Ödüller'], ['Sertifika ve ödül', 'Sosyal medya duyurusu']],
+    [11, 'Ankara Sokak Hikâyeleri', 'et-trip', '2027-03', 'Ankara (güzergâh belirlenecek)', 'Ankara', 35, 'm4',
+      'Şehirde sokak fotoğrafı ve insan hikâyeleri odaklı gezi.',
+      ['Fotoğraf makineleri', 'Güzergâh haritası', 'İlk yardım çantası', 'Katılım izin formları'], ['Üniversite aracı', 'Sosyal medya duyurusu']],
+    [12, 'Fotoğraftan Afişe', 'et-workshop', '2027-03', 'Bilgisayar laboratuvarı (belirlenecek)', 'Kırıkkale', 30, 'm5',
+      'Bir fotoğrafı afiş ve görsel tasarıma dönüştürme atölyesi.',
+      ['Bilgisayarlar', 'Tasarım yazılımı', 'Örnek afişler'], ['Sınıf veya konferans salonu']],
+    [13, 'Ustasıyla Fotoğraf Sohbeti', 'et-talk', '2027-03', 'Konferans salonu (belirlenecek)', 'Kırıkkale', 100, 'm1',
+      'Konuk bir fotoğrafçıyla söyleşi ve soru-cevap.',
+      ['Projeksiyon', 'Mikrofon', 'Konuk ağırlama', 'Teşekkür belgesi'], ['Sınıf veya konferans salonu', 'Projeksiyon', 'Sosyal medya duyurusu']],
+    [14, 'Eymir\'de Doğanın İzleri', 'et-trip', '2027-04', 'Eymir Gölü çevresi (planlanan)', 'Ankara', 35, 'm4',
+      'Doğa ve manzara fotoğrafı odaklı gün içi gezi.',
+      ['Fotoğraf makineleri', 'Tripod', 'İlk yardım çantası', 'Katılım izin formları'], ['Üniversite aracı', 'Sosyal medya duyurusu']],
+    [15, 'Kampüste Gece ve Işık', 'et-workshop', '2027-04', 'Kırıkkale Üniversitesi Kampüsü', 'Kırıkkale', 30, 'm6',
+      'Uzun pozlama, ışıkla boyama ve gece fotoğrafı uygulaması.',
+      ['Tripod', 'Uzaktan deklanşör', 'El feneri', 'Yedek pil'], ['Fotoğraf ekipmanları']],
+    [16, 'Bir Kare Bir Hikâye', 'et-social', '2027-04', 'Kulüp odası veya derslik (belirlenecek)', 'Kırıkkale', 40, 'm3',
+      'Üyelerin tek bir fotoğrafın hikâyesini anlattığı paylaşım akşamı ve sosyal medya serisi.',
+      ['Ekran / projeksiyon', 'İkram'], ['Sosyal medya duyurusu']],
+    [17, 'Altınköy Belgesel Gezisi', 'et-trip', '2027-05', 'Altınköy (planlanan)', 'Ankara', 35, 'm4',
+      'Belgesel fotoğrafçılığı odaklı, tam gün gezi. Ziyaret koşulları önceden teyit edilecek.',
+      ['Fotoğraf makineleri', 'Güzergâh bilgi notu', 'İlk yardım çantası', 'Katılım izin formları'], ['Üniversite aracı', 'Sosyal medya duyurusu']],
+    [18, 'Fotoğraf Maratonu', 'et-contest', '2027-05', 'Kampüs ve çevresi', 'Kırıkkale', 60, 'm2',
+      'Belirli süre içinde verilen temaları sırayla çekme maratonu.',
+      ['Tema listesi', 'Hakem formu', 'Ödüller', 'Sertifikalar'], ['Sertifika ve ödül', 'Sosyal medya duyurusu']],
+    [19, 'Kare Kare Kırıkkale Sergisi', 'et-expo', '2027-06', 'Kampüs sergi alanı (belirlenecek)', 'Kırıkkale', 200, 'm3',
+      'Yıl boyunca seçilen fotoğrafların baskılı sergisi.',
+      ['Fotoğraf baskıları', 'Çerçeve / pano', 'Etiketler', 'Açılış duyurusu'], ['Fotoğraf baskısı', 'Sergi panoları', 'Sosyal medya duyurusu']],
+    [20, 'Yıl Sonu Fotoğraf Ödülleri', 'et-social', '2027-06', 'Konferans salonu (belirlenecek)', 'Kırıkkale', 100, 'm1',
+      'Yılın en iyi fotoğraflarının ve katkı verenlerin ödüllendirildiği kapanış buluşması.',
+      ['Ödüller', 'Sertifikalar', 'Projeksiyon', 'İkram'], ['Sınıf veya konferans salonu', 'Sertifika ve ödül', 'Sosyal medya duyurusu']],
+  ];
+
+  const unitOf = {
+    'Üniversite aracı': 'SKS Daire Başkanlığı', 'Sınıf veya konferans salonu': 'Dekanlık / Fakülte Sekreterliği',
+    'Fotoğraf baskısı': 'Matbaa / Basım Birimi', 'Sergi panoları': 'SKS Daire Başkanlığı', 'Projeksiyon': 'Bilgi İşlem / Dekanlık',
+    'Fotoğraf ekipmanları': 'SKS Daire Başkanlığı', 'Sertifika ve ödül': 'SKS Daire Başkanlığı', 'Sosyal medya duyurusu': 'Kurumsal İletişim Birimi',
+  };
+  const taskTpl = [
+    ['Üniversiteden izin alma', 'tc-permit', 'm2', -12, 'Yüksek'],
+    ['Mekân ayarlama', 'tc-venue', 'm4', -9, 'Yüksek'],
+    ['Ulaşım planlama', 'tc-venue', 'm4', -9, 'Orta', 'et-trip'],
+    ['Afiş tasarlama', 'tc-design', 'm5', -7, 'Orta'],
+    ['Duyuru yayımlama', 'tc-announce', 'm3', -5, 'Orta'],
+    ['Katılımcı listesini oluşturma', 'tc-people', 'm7', -3, 'Orta'],
+    ['Ekipmanları hazırlama', 'tc-gear', 'm6', -1, 'Orta'],
+    ['Etkinlik fotoğraflarını arşivleme', 'tc-archive', 'm6', 10, 'Düşük'],
+  ];
+
+  const events = [], tasks = [], supports = [];
+  E.forEach((r) => {
+    const [no, title, type, ym, venue, city, part, lead, desc, mats, sups] = r;
+    const id = 'ev-' + pad(no);
+    events.push({
+      id, code: 'ETK-' + String(no).padStart(3, '0'), title, type_id: type, description: desc,
+      purpose: 'Üyelerin fotoğraf becerilerini geliştirmek ve kulüp içi etkileşimi artırmak.',
+      start_date: null, end_date: null, month_hint: ym, start_time: null, end_time: null,
+      venue, city, est_participants: part, actual_participants: null, lead_id: lead, support_ids: [],
+      materials: mats, univ_supports: sups, approval: sups.length ? 'Henüz istenmedi' : 'Gerekmiyor',
+      status: no <= 3 ? 'Planlanıyor' : 'Fikir aşamasında', evaluation: '', attachments: [],
+      notes: 'Tarih henüz kesinleşmedi.',
+      archived: false, is_sample: true, created_at: NOW, updated_at: NOW,
+    });
+    // görevler
+    const [y, m] = ym.split('-').map(Number);
+    taskTpl.forEach((t, i) => {
+      if (t[5] && t[5] !== type) return;
+      const d = new Date(y, m - 1, 15 + t[3]);
+      tasks.push({
+        id: `tk-${pad(no)}-${i + 1}`, event_id: id, title: t[0], assignee_id: t[2],
+        due_date: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`,
+        priority: t[4], status: 'Yapılacak', category_id: t[1], notes: '', sort: i, is_sample: true, created_at: NOW, updated_at: NOW,
+      });
+    });
+    // üniversite destek talepleri
+    sups.forEach((s, i) => supports.push({
+      id: `sp-${pad(no)}-${i + 1}`, event_id: id, title: s, unit: unitOf[s] || '', request_date: null,
+      status: 'Hazırlanıyor', description: 'Talep henüz yapılmadı.', is_sample: true, created_at: NOW, updated_at: NOW,
+    }));
+  });
+
+  root.SEED = {
+    settings: { id: 'main', name: 'Kırıkkale Üniversitesi Fotoğrafçılık Topluluğu', logo_url: '', academic_year: '2026-2027', advisor: '', confirm_delete: true },
+    lookups, members, events, tasks, supports, log: [],
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* js/util.js */
+/* Yardımcılar: DOM üretimi (güvenli, innerHTML yok), Türkiye biçimleri, tarih işlemleri, dışa aktarma */
+'use strict';
+const U = (() => {
+  const MONTHS = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+  const DAYS_SHORT = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
+  const DAYS_LONG = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'];
+  const collator = new Intl.Collator('tr');
+  const numFmt = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 2 });
+
+  const pad = (n) => String(n).padStart(2, '0');
+  const iso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const parse = (s) => {
+    if (!s) return null;
+    const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s);
+    return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null;
+  };
+  const addDays = (d, n) => { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() + n); return x; };
+  const todayISO = () => iso(new Date());
+  const fmtDate = (s) => { const d = parse(s); return d ? `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}` : '—'; };
+  const fmtDateLong = (s) => { const d = parse(s); return d ? `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}` : '—'; };
+  const fmtMonth = (ym) => {
+    const m = /^(\d{4})-(\d{2})/.exec(ym || '');
+    return m ? `${MONTHS[+m[2] - 1]} ${m[1]}` : '—';
+  };
+  const fmtNum = (n) => (n === null || n === undefined || n === '' || isNaN(n)) ? '—' : numFmt.format(Number(n));
+  const fmtDateTime = (s) => {
+    const d = new Date(s);
+    if (isNaN(d)) return '';
+    return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  };
+  const weekStart = (d) => { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); const wd = (x.getDay() + 6) % 7; x.setDate(x.getDate() - wd); return x; };
+  const sortTr = (a, b) => collator.compare(a || '', b || '');
+  const uid = (p = 'id') => {
+    try { if (crypto && crypto.randomUUID) return p + '-' + crypto.randomUUID().slice(0, 12); } catch (e) { /* yoksay */ }
+    return p + '-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  };
+  const clone = (o) => JSON.parse(JSON.stringify(o));
+  const isUrl = (s) => { try { const u = new URL(s); return u.protocol === 'http:' || u.protocol === 'https:'; } catch (e) { return false; } };
+  const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+
+  /** Güvenli DOM oluşturucu: metinler textContent olarak eklenir, HTML enjekte edilemez. */
+  function h(tag, attrs, ...kids) {
+    const el = document.createElement(tag);
+    const props = {};
+    if (attrs) {
+      for (const [k, v] of Object.entries(attrs)) {
+        if (v === undefined || v === null || v === false) continue;
+        if (k === 'class') el.className = v;
+        else if (k === 'value' || k === 'checked' || k === 'selected' || k === 'disabled') props[k] = v;
+        else if (k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2), v);
+        else if (k === 'dataset') Object.assign(el.dataset, v);
+        else el.setAttribute(k, v === true ? '' : String(v));
+      }
+    }
+    const add = (k) => {
+      if (k === null || k === undefined || k === false) return;
+      if (Array.isArray(k)) k.forEach(add);
+      else el.append(k instanceof Node ? k : document.createTextNode(String(k)));
+    };
+    kids.forEach(add);
+    for (const [k, v] of Object.entries(props)) el[k] = v;
+    return el;
+  }
+  /** Güvenli ekleme: null/false atlanır, diziler düzleştirilir (yerel append bunları metne çevirirdi). */
+  function put(el, ...kids) {
+    const add = (k) => { if (k === null || k === undefined || k === false) return; if (Array.isArray(k)) k.forEach(add); else el.append(k instanceof Node ? k : document.createTextNode(String(k))); };
+    kids.forEach(add); return el;
+  }
+  const clear = (el) => { while (el.firstChild) el.removeChild(el.firstChild); return el; };
+
+  // ---- Dışa aktarma ----
+  function csvCell(v) {
+    const s = v === null || v === undefined ? '' : String(v);
+    return /[;"\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  }
+  /** Türkçe Excel uyumlu CSV: ayraç ';' ve UTF-8 BOM */
+  const toCSV = (columns, rows) => '﻿' + [columns, ...rows].map((r) => r.map(csvCell).join(';')).join('\r\n');
+  function download(filename, content, mime) {
+    const blob = content instanceof Blob ? content : new Blob([content], { type: mime || 'text/plain;charset=utf-8' });
+    const a = h('a', { href: URL.createObjectURL(blob), download: filename });
+    document.body.append(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  }
+  const slug = (s) => (s || 'dosya').toLowerCase().replace(/ı/g, 'i').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ö/g, 'o').replace(/ç/g, 'c').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+  let xlsxPromise = null;
+  function loadXLSX() {
+    if (window.XLSX) return Promise.resolve(window.XLSX);
+    if (!xlsxPromise) {
+      xlsxPromise = new Promise((resolve, reject) => {
+        const s = h('script', { src: 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js', crossorigin: 'anonymous' });
+        s.onload = () => resolve(window.XLSX);
+        s.onerror = () => { xlsxPromise = null; reject(new Error('Excel kütüphanesi yüklenemedi (internet bağlantısı gerekir).')); };
+        document.head.append(s);
+      });
+    }
+    return xlsxPromise;
+  }
+  /** sheets: [{name, columns, rows}] */
+  async function downloadXLSX(filename, sheets) {
+    const X = await loadXLSX();
+    const wb = X.utils.book_new();
+    sheets.forEach((s) => {
+      const ws = X.utils.aoa_to_sheet([s.columns, ...s.rows]);
+      ws['!cols'] = s.columns.map((c, i) => ({ wch: Math.min(48, Math.max(String(c).length, ...s.rows.slice(0, 60).map((r) => String(r[i] ?? '').length)) + 2) }));
+      X.utils.book_append_sheet(wb, ws, s.name.replace(/[\\/?*[\]:]/g, ' ').slice(0, 31));
+    });
+    X.writeFile(wb, filename);
+  }
+
+  return { MONTHS, DAYS_SHORT, DAYS_LONG, pad, iso, parse, addDays, todayISO, fmtDate, fmtDateLong, fmtMonth, fmtNum, fmtDateTime, weekStart, sortTr, uid, clone, isUrl, debounce, h, put, clear, toCSV, download, downloadXLSX, slug };
+})();
+
+</script>
+  <script>
+/* js/store.js */
+/* Veri katmanı.
+ *  - Yerel mod  : localStorage (config.js boşsa)
+ *  - Ortak mod  : Supabase (Postgres + Auth). Yetki kontrolü veritabanında (RLS) yapılır;
+ *                 buradaki can()/internal() yalnızca arayüzü uygun biçimde göstermek içindir.
+ * Arayüz her iki modda da aynı API'yi kullanır: Store.save / remove / removeEvent ...
+ */
+'use strict';
+const Store = (() => {
+  const LS_KEY = 'kuft.v1';
+  const TABLE = { lookups: 'lookups', members: 'members', events: 'events', tasks: 'tasks', supports: 'support_requests', log: 'activity_log' };
+  // Yalnızca bu sütunlar sunucuya gönderilir (bilinmeyen alan hatasını önler)
+  const FIELDS = {
+    lookups: ['id', 'kind', 'name', 'sort'],
+    members: ['id', 'name', 'role_title', 'responsibilities', 'sort'],
+    events: ['id', 'code', 'title', 'type_id', 'description', 'purpose', 'start_date', 'end_date', 'month_hint', 'start_time', 'end_time', 'venue', 'city', 'est_participants', 'actual_participants', 'lead_id', 'support_ids', 'materials', 'univ_supports', 'approval', 'status', 'evaluation', 'attachments', 'notes', 'archived', 'is_sample', 'created_at', 'updated_at'],
+    tasks: ['id', 'event_id', 'title', 'assignee_id', 'due_date', 'priority', 'status', 'category_id', 'notes', 'sort', 'is_sample', 'created_at', 'updated_at'],
+    supports: ['id', 'event_id', 'title', 'unit', 'request_date', 'status', 'description', 'is_sample', 'created_at', 'updated_at'],
+    log: ['id', 'action', 'entity', 'summary'],
+  };
+  const SETTINGS_FIELDS = ['id', 'name', 'logo_url', 'academic_year', 'advisor', 'confirm_delete'];
+  const HAS_UPDATED = new Set(['events', 'tasks', 'supports']);
+  const ADMIN_COLS = new Set(['lookups', 'members']);
+  const ARRAY_FIELDS = ['support_ids', 'materials', 'univ_supports', 'attachments', 'responsibilities'];
+
+  const state = { mode: 'local', ready: false, data: emptyData(), user: null, role: null, storageOk: true, pending: 0 };
+  const listeners = new Set();
+  const hooks = { notify: () => {} };
+  let sb = null;
+
+  function emptyData() {
+    return { settings: { id: 'main', name: 'Fotoğrafçılık Topluluğu', logo_url: '', academic_year: '', advisor: '', confirm_delete: true }, lookups: [], members: [], events: [], tasks: [], supports: [], log: [] };
+  }
+  const emit = () => listeners.forEach((fn) => { try { fn(); } catch (e) { console.error(e); } });
+  const on = (fn) => { listeners.add(fn); return () => listeners.delete(fn); };
+
+  // ---------- yetki (yalnızca arayüz için; asıl kontrol RLS) ----------
+  const can = (kind) => state.mode === 'local' ? true : (kind === 'admin' ? state.role === 'admin' : state.role === 'admin' || state.role === 'editor');
+  const internal = () => state.mode === 'local' ? true : !!state.role;
+  const colPerm = (col) => ADMIN_COLS.has(col) ? 'admin' : 'edit';
+
+  // ---------- normalleştirme ----------
+  function normRow(col, r) {
+    const o = { ...r };
+    ARRAY_FIELDS.forEach((k) => { if (k in o && !Array.isArray(o[k])) o[k] = []; });
+    ['start_time', 'end_time'].forEach((k) => { if (typeof o[k] === 'string' && o[k].length > 5) o[k] = o[k].slice(0, 5); });
+    ['sort'].forEach((k) => { if (k in o && o[k] !== null) o[k] = Number(o[k]) || 0; });
+    return o;
+  }
+  function normalizeData(d) {
+    const out = emptyData();
+    out.settings = { ...out.settings, ...(d.settings || {}) };
+    ['lookups', 'members', 'events', 'tasks', 'supports', 'log'].forEach((c) => {
+      out[c] = Array.isArray(d[c]) ? d[c].filter((r) => r && r.id).map((r) => normRow(c, r)) : [];
+    });
+    return out;
+  }
+
+  // ---------- yerel mod ----------
+  const Local = {
+    load() {
+      try { const raw = localStorage.getItem(LS_KEY); if (raw) return JSON.parse(raw); } catch (e) { state.storageOk = false; }
+      return null;
+    },
+    persist() {
+      try { localStorage.setItem(LS_KEY, JSON.stringify(state.data)); }
+      catch (e) { state.storageOk = false; hooks.notify('Yerel depolama kullanılamıyor; değişiklikler kalıcı olmayabilir.', 'error'); }
+    },
+  };
+
+  // ---------- Supabase ----------
+  async function initRemote(cfg) {
+    if (!window.supabase || !window.supabase.createClient) throw new Error('Supabase kütüphanesi yüklenemedi. İnternet bağlantınızı kontrol edip sayfayı yenileyin.');
+    sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false } });
+    const { data: { session } } = await sb.auth.getSession();
+    await applySession(session);
+    await reloadAll();
+    sb.auth.onAuthStateChange((event, s) => {
+      const uid = s && s.user ? s.user.id : null;
+      if (uid === (state.user ? state.user.id : null)) return;
+      setTimeout(async () => { try { await applySession(s); await reloadAll(); emit(); } catch (e) { console.error(e); } }, 0);
+    });
+    const live = U.debounce(async () => {
+      if (state.pending > 0) return;
+      try { await reloadAll(); emit(); } catch (e) { console.error(e); }
+    }, 500);
+    try { sb.channel('kuft-live').on('postgres_changes', { event: '*', schema: 'public' }, live).subscribe(); } catch (e) { console.warn('Gerçek zamanlı güncelleme başlatılamadı:', e); }
+  }
+
+  async function applySession(session) {
+    if (!session || !session.user) { state.user = null; state.role = null; return; }
+    state.user = { id: session.user.id, email: session.user.email };
+    const { data, error } = await sb.from('profiles').select('role,full_name').eq('user_id', session.user.id).maybeSingle();
+    if (error) console.warn('Profil okunamadı:', error.message);
+    state.role = data ? data.role : null;
+    state.user.name = data ? data.full_name : null;
+  }
+
+  async function reloadAll() {
+    const member = !!state.role;
+    const none = Promise.resolve({ data: [] });
+    const [st, lk, mb, ev, tk, sp, lg] = await Promise.all([
+      sb.from('settings').select('*').eq('id', 'main').maybeSingle(),
+      sb.from('lookups').select('*').order('sort'),
+      sb.from('members').select('*').order('sort'),
+      sb.from('events').select('*'),
+      sb.from('tasks').select('*'),
+      member ? sb.from('support_requests').select('*') : none,
+      member ? sb.from('activity_log').select('*').order('at', { ascending: false }).limit(60) : none,
+    ]);
+    for (const r of [st, lk, mb, ev, tk, sp, lg]) if (r.error) throw r.error;
+    state.data = {
+      settings: { ...emptyData().settings, ...(st.data || {}) },
+      lookups: (lk.data || []).map((r) => normRow('lookups', r)),
+      members: (mb.data || []).map((r) => normRow('members', r)),
+      events: (ev.data || []).map((r) => normRow('events', r)),
+      tasks: (tk.data || []).map((r) => normRow('tasks', r)),
+      supports: (sp.data || []).map((r) => normRow('supports', r)),
+      log: (lg.data || []).map((r) => ({ ...r })),
+    };
+  }
+
+  const pick = (col, row) => { const o = {}; FIELDS[col].forEach((k) => { if (row[k] !== undefined) o[k] = row[k]; }); return o; };
+  const must = async (p) => { const r = await p; if (r.error) throw r.error; return r; };
+
+  async function remoteUpsert(col, rows) {
+    const list = Array.isArray(rows) ? rows : [rows];
+    if (!list.length) return;
+    for (let i = 0; i < list.length; i += 200) {
+      const chunk = list.slice(i, i + 200);
+      await must(sb.from(TABLE[col]).upsert(chunk.map((r) => pick(col, r))));
+    }
+  }
+  async function remoteDelete(col, ids) {
+    if (!ids.length) return;
+    for (let i = 0; i < ids.length; i += 100) {
+      const part = ids.slice(i, i + 100);
+      const r = await must(sb.from(TABLE[col]).delete().in('id', part).select('id'));
+      if (!r.data || r.data.length === 0) throw new Error('Kayıt silinemedi (yetkiniz olmayabilir veya kayıt zaten yok).');
+    }
+  }
+  function friendly(e) {
+    const m = (e && e.message) || String(e);
+    if (e && (e.code === '42501' || /row-level security|permission denied/i.test(m))) return 'Bu işlem için yetkiniz yok. Oturumunuz kapanmış olabilir; yeniden giriş yapın.';
+    if (e && e.code === '23505') return 'Aynı değere sahip bir kayıt zaten var (örneğin etkinlik numarası).';
+    if (e && e.code === '23514') return 'Girilen değerler veritabanı kurallarına uymuyor (ör. bitiş tarihi başlangıçtan önce olamaz).';
+    if (/failed to fetch|networkerror|load failed/i.test(m)) return 'Sunucuya ulaşılamadı. İnternet bağlantınızı kontrol edin.';
+    if (/KAYIT_IZNI_YOK|database error saving new user/i.test(m)) return 'Bu e-posta yetkili kişiler listesinde yok. Topluluk başkanından sizi listeye eklemesini isteyin.';
+    if (/already registered|already been registered|user_already_exists/i.test(m)) return 'Bu e-postayla zaten bir hesap var. "Giriş yap" sekmesinden giriş yapın.';
+    if (/password should be at least|weak_password|SIFRE_KISA/i.test(m)) return 'Şifre en az 6 karakter olmalı.';
+    if (/signups not allowed|signup_disabled/i.test(m)) return 'Yeni hesap açma Supabase ayarlarında kapalı. Yöneticinin "Allow new users to sign up" seçeneğini açması gerekir.';
+    if (/email rate limit|over_email_send_rate_limit/i.test(m)) return 'Çok fazla deneme yapıldı. Birkaç dakika sonra tekrar deneyin.';
+    if (/error sending confirmation email|email not confirmed/i.test(m)) return 'E-posta onayı açık olduğu için hesap açılamadı. Yöneticinin Supabase\'de "Confirm email" seçeneğini kapatması gerekir.';
+    if (/SON_YONETICI/.test(m)) return 'En az bir yönetici kalmalı; son yöneticiyi kaldıramaz veya rolünü değiştiremezsiniz.';
+    if (/HESAP_YOK/.test(m)) return 'Bu e-postayla henüz hesap açılmamış; şifre ancak hesap açıldıktan sonra sıfırlanabilir.';
+    if (/YETKI_YOK/.test(m)) return 'Bu işlem için yönetici yetkisi gerekir.';
+    if (/same_password|should be different/i.test(m)) return 'Yeni şifre eskisinden farklı olmalı.';
+    return m;
+  }
+  /** Kalıcı kayda yazar; hata olursa sunucudaki gerçek veriyi geri yükler. */
+  async function commit(fn) {
+    if (state.mode === 'local') { Local.persist(); return; }
+    state.pending++;
+    try { await fn(); }
+    catch (e) {
+      console.error(e);
+      hooks.notify(friendly(e), 'error');
+      try { await reloadAll(); } catch (e2) { /* yoksay */ }
+      emit();
+      throw e;
+    } finally { state.pending--; }
+  }
+  const need = (kind) => { if (!can(kind)) { const e = new Error('Bu işlem için yetkiniz yok.'); hooks.notify(e.message, 'error'); throw e; } };
+
+  // ---------- genel API ----------
+  const D = () => state.data;
+  const get = (col, id) => state.data[col].find((r) => r.id === id) || null;
+
+  async function save(col, row, opts = {}) {
+    need(colPerm(col));
+    const arr = state.data[col];
+    const idx = arr.findIndex((r) => r.id === row.id);
+    const rec = Object.assign({}, idx >= 0 ? arr[idx] : {}, row);
+    if (HAS_UPDATED.has(col)) rec.updated_at = new Date().toISOString();
+    if ('is_sample' in rec && !opts.keepSample) rec.is_sample = false;
+    if (idx >= 0) arr[idx] = rec; else arr.push(rec);
+    emit();
+    await commit(() => remoteUpsert(col, rec));
+    if (opts.log) await addLog(opts.log, col);
+    return rec;
+  }
+  async function saveMany(col, rows, opts = {}) {
+    need(colPerm(col));
+    const now = new Date().toISOString();
+    rows.forEach((row) => {
+      const arr = state.data[col];
+      const idx = arr.findIndex((r) => r.id === row.id);
+      const rec = Object.assign({}, idx >= 0 ? arr[idx] : {}, row);
+      if (HAS_UPDATED.has(col)) rec.updated_at = now;
+      if (idx >= 0) arr[idx] = rec; else arr.push(rec);
+    });
+    emit();
+    await commit(() => remoteUpsert(col, rows.map((r) => get(col, r.id))));
+    if (opts.log) await addLog(opts.log, col);
+  }
+  async function saveSettings(patch, logText) {
+    need('admin');
+    state.data.settings = { ...state.data.settings, ...patch, id: 'main' };
+    emit();
+    await commit(async () => { await must(sb.from('settings').upsert(pick0(state.data.settings, SETTINGS_FIELDS))); });
+    if (logText) await addLog(logText, 'settings');
+  }
+  const pick0 = (row, keys) => { const o = {}; keys.forEach((k) => { if (row[k] !== undefined) o[k] = row[k]; }); return o; };
+
+  function cascadeLocal(eventId) {
+    const d = state.data;
+    d.tasks = d.tasks.filter((t) => t.event_id !== eventId);
+    d.supports.forEach((s) => { if (s.event_id === eventId) s.event_id = null; });
+    d.events = d.events.filter((e) => e.id !== eventId);
+  }
+  /** Etkinlik silinince: bağlı görevler silinir, destek talepleri "etkinliksiz" kalır (sunucuda FK ile aynı davranış). */
+  async function removeEvent(id, opts = {}) {
+    need('edit');
+    cascadeLocal(id);
+    emit();
+    await commit(() => remoteDelete('events', [id]));
+    if (opts.log) await addLog(opts.log, 'events');
+  }
+  async function removeMember(id, opts = {}) {
+    need('admin');
+    const touched = state.data.events.filter((e) => (e.support_ids || []).includes(id));
+    touched.forEach((e) => { e.support_ids = e.support_ids.filter((x) => x !== id); });
+    state.data.events.forEach((e) => { if (e.lead_id === id) e.lead_id = null; });
+    state.data.tasks.forEach((t) => { if (t.assignee_id === id) t.assignee_id = null; });
+    state.data.members = state.data.members.filter((m) => m.id !== id);
+    emit();
+    await commit(async () => {
+      if (touched.length) await remoteUpsert('events', touched);
+      await remoteDelete('members', [id]);
+    });
+    if (opts.log) await addLog(opts.log, 'members');
+  }
+  async function remove(col, id, opts = {}) {
+    need(colPerm(col));
+    state.data[col] = state.data[col].filter((r) => r.id !== id);
+    emit();
+    await commit(() => remoteDelete(col, [id]));
+    if (opts.log) await addLog(opts.log, col);
+  }
+  async function addLog(summary, entity) {
+    const rec = { id: U.uid('lg'), at: new Date().toISOString(), actor: state.mode === 'local' ? 'Yerel kullanıcı' : (state.user && state.user.email) || '', action: 'degisiklik', entity: entity || '', summary };
+    state.data.log.unshift(rec);
+    state.data.log = state.data.log.slice(0, state.mode === 'local' ? 200 : 60);
+    emit();
+    if (state.mode === 'local') { Local.persist(); return; }
+    try { await must(sb.from('activity_log').insert(pick('log', rec))); } catch (e) { console.warn('Günlük yazılamadı:', e.message || e); }
+  }
+
+  // ---------- örnek veri temizliği ----------
+  function sampleCount() {
+    const d = state.data;
+    return ['events', 'tasks', 'supports'].reduce((n, c) => n + d[c].filter((r) => r.is_sample).length, 0);
+  }
+  /** Değiştirilmemiş örnek kayıtları siler. Kullanıcının düzenlediği (is_sample=false) kayıtlar korunur. */
+  async function purgeSamples() {
+    need('admin');
+    const d = state.data;
+    const evIds = d.events.filter((e) => e.is_sample).map((e) => e.id);
+    const evSet = new Set(evIds);
+    const orphan = (r) => r.is_sample && (!r.event_id || evSet.has(r.event_id));
+    const taskIds = d.tasks.filter(orphan).map((r) => r.id);
+    const supIds = d.supports.filter(orphan).map((r) => r.id);
+    d.tasks = d.tasks.filter((t) => !(evSet.has(t.event_id) || taskIds.includes(t.id)));
+    d.supports = d.supports.filter((s) => !supIds.includes(s.id));
+    d.supports.forEach((s) => { if (evSet.has(s.event_id)) s.event_id = null; });
+    d.events = d.events.filter((e) => !evSet.has(e.id));
+    emit();
+    await commit(async () => {
+      await remoteDelete2('events', evIds);
+      await remoteDelete2('tasks', taskIds);
+      await remoteDelete2('supports', supIds);
+    });
+    await addLog('Örnek veriler temizlendi', 'settings');
+    return evIds.length + taskIds.length + supIds.length;
+  }
+  // Zincirleme silme sonrası zaten yok olan kayıtlar hata sayılmasın
+  async function remoteDelete2(col, ids) {
+    for (let i = 0; i < ids.length; i += 100) await must(sb.from(TABLE[col]).delete().in('id', ids.slice(i, i + 100)));
+  }
+
+  // ---------- yedek / geri yükleme ----------
+  function exportJSON() {
+    return { app: 'kuft-yonetim', version: 1, exported_at: new Date().toISOString(), mode: state.mode, data: U.clone(state.data) };
+  }
+  function validateBackup(obj) {
+    if (!obj || obj.app !== 'kuft-yonetim' || !obj.data || typeof obj.data !== 'object') throw new Error('Bu dosya geçerli bir yedek dosyası değil.');
+    for (const c of ['lookups', 'members', 'events', 'tasks', 'supports']) {
+      if (obj.data[c] !== undefined && !Array.isArray(obj.data[c])) throw new Error(`Yedek dosyası bozuk: "${c}" listesi okunamadı.`);
+    }
+    (obj.data.events || []).forEach((e, i) => { if (!e.id || !e.title || !e.code) throw new Error(`Yedekteki ${i + 1}. etkinlikte zorunlu alan (id, ad, numara) eksik.`); });
+    return normalizeData(obj.data);
+  }
+  async function restore(obj) {
+    need('admin');
+    const nd = validateBackup(obj);
+    if (state.mode === 'local') {
+      state.data = nd; Local.persist(); emit(); return;
+    }
+    // Ortak modda: yedekteki kayıtlar eklenir/güncellenir; yedekte olmayan kayıtlar SİLİNMEZ.
+    state.data = { ...nd, log: state.data.log };
+    emit();
+    await commit(async () => {
+      await must(sb.from('settings').upsert(pick0(nd.settings, SETTINGS_FIELDS)));
+      await remoteUpsert('lookups', nd.lookups);
+      await remoteUpsert('members', nd.members);
+      await remoteUpsert('events', nd.events);
+      await remoteUpsert('tasks', nd.tasks);
+      await remoteUpsert('supports', nd.supports);
+      await reloadAll();
+    });
+    await addLog('Yedekten geri yükleme yapıldı', 'settings');
+    emit();
+  }
+  async function resetLocal() {
+    if (state.mode !== 'local') return;
+    state.data = normalizeData(U.clone(window.SEED)); Local.persist(); emit();
+  }
+
+  // ---------- giriş / çıkış ----------
+  async function signIn(email, password) {
+    if (!sb) throw new Error('Giriş yalnızca ortak modda kullanılabilir.');
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) {
+      if (/invalid login/i.test(error.message)) throw new Error('E-posta veya şifre hatalı.');
+      throw new Error(friendly(error));
+    }
+    await applySession(data.session);
+    await reloadAll();
+    emit();
+  }
+  /** Yetkili kişiler listesindeki e-posta ile kendi hesabını açar (şifreyi kişi kendisi belirler). */
+  async function signUp(email, password, fullName) {
+    if (!sb) throw new Error('Hesap açma yalnızca ortak modda kullanılabilir.');
+    const { data, error } = await sb.auth.signUp({ email: email.trim().toLowerCase(), password, options: { data: { full_name: fullName || '' } } });
+    if (error) throw new Error(friendly(error));
+    if (!data.session) {
+      // E-posta onayı açıksa oturum gelmez; doğrudan girişi dene
+      const r = await sb.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
+      if (r.error) throw new Error(friendly(r.error));
+      await applySession(r.data.session);
+    } else await applySession(data.session);
+    await reloadAll();
+    emit();
+  }
+  async function changePassword(password) {
+    if (!sb || !state.user) throw new Error('Önce giriş yapın.');
+    const { error } = await sb.auth.updateUser({ password });
+    if (error) throw new Error(friendly(error));
+  }
+  // ---------- yetkili kişiler (yalnızca yönetici) ----------
+  async function listAccess() {
+    if (!sb || state.role !== 'admin') return [];
+    const { data, error } = await sb.rpc('list_access');
+    if (error) throw new Error(friendly(error));
+    return data || [];
+  }
+  async function saveAccess(row) {
+    need('admin');
+    const rec = { email: row.email.trim().toLowerCase(), full_name: row.full_name || '', role: row.role };
+    const { error } = await sb.from('allowed_emails').upsert(rec);
+    if (error) throw new Error(friendly(error));
+    await addLog(`Yetkili kişi kaydedildi: ${rec.email} (${rec.role})`, 'access');
+  }
+  async function removeAccess(email) {
+    need('admin');
+    const { data, error } = await sb.from('allowed_emails').delete().eq('email', email).select('email');
+    if (error) throw new Error(friendly(error));
+    if (!data || !data.length) throw new Error('Kayıt silinemedi.');
+    await addLog(`Yetkili kişi kaldırıldı: ${email}`, 'access');
+  }
+  async function adminSetPassword(email, password) {
+    need('admin');
+    const { error } = await sb.rpc('admin_set_password', { target_email: email, new_password: password });
+    if (error) throw new Error(friendly(error));
+    await addLog(`Şifre sıfırlandı: ${email}`, 'access');
+  }
+  async function signOut() {
+    if (!sb) return;
+    await sb.auth.signOut();
+    await applySession(null);
+    await reloadAll();
+    emit();
+  }
+
+  // ---------- başlatma ----------
+  async function init() {
+    const cfg = window.APP_CONFIG || {};
+    if (cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY) {
+      state.mode = 'remote';
+      await initRemote(cfg);
+    } else {
+      state.mode = 'local';
+      const saved = Local.load();
+      if (saved) state.data = normalizeData(saved);
+      else { state.data = normalizeData(U.clone(window.SEED)); Local.persist(); }   // yalnızca İLK açılışta örnek veri
+    }
+    state.ready = true;
+  }
+
+  // ---------- küçük yardımcılar ----------
+  const lookups = (kind) => state.data.lookups.filter((l) => l.kind === kind).sort((a, b) => (a.sort - b.sort) || U.sortTr(a.name, b.name));
+  const lookupInUse = (id) => state.data.events.some((e) => e.type_id === id) || state.data.tasks.some((t) => t.category_id === id);
+  const nextEventCode = () => {
+    const max = state.data.events.reduce((m, e) => { const n = /(\d+)$/.exec(e.code || ''); return n ? Math.max(m, +n[1]) : m; }, 0);
+    return 'ETK-' + String(max + 1).padStart(3, '0');
+  };
+
+  return { state, D, on, emit, hooks, init, can, internal, get, save, saveMany, saveSettings, remove, removeEvent, removeMember, addLog, purgeSamples, sampleCount, exportJSON, restore, validateBackup, resetLocal, signIn, signUp, signOut, changePassword, listAccess, saveAccess, removeAccess, adminSetPassword, lookups, lookupInUse, nextEventCode, friendly, settings: () => state.data.settings };
+})();
+
+</script>
+  <script>
+/* js/calc.js */
+/* Sabitler ve türetilmiş hesaplamalar. Tüm sayılar güncel veriden otomatik hesaplanır; elle tekrar girilmez. */
+'use strict';
+const C = {
+  EVENT_STATUS: ['Fikir aşamasında', 'Planlanıyor', 'Onay bekliyor', 'Hazırlanıyor', 'Hazır', 'Gerçekleştirildi', 'İptal edildi'],
+  PREPARING: ['Planlanıyor', 'Onay bekliyor', 'Hazırlanıyor'],
+  APPROVAL: ['Gerekmiyor', 'Henüz istenmedi', 'Bekleniyor', 'Onaylandı', 'Reddedildi'],
+  TASK_STATUS: ['Yapılacak', 'Devam ediyor', 'Tamamlandı'],
+  PRIORITY: ['Düşük', 'Orta', 'Yüksek'],
+  SUPPORT: ['Hazırlanıyor', 'Başvuruldu', 'Onaylandı', 'Reddedildi', 'Tamamlandı'],
+  tone: {
+    'Fikir aşamasında': 'muted', 'Planlanıyor': 'info', 'Onay bekliyor': 'warn', 'Hazırlanıyor': 'info', 'Hazır': 'ok', 'Gerçekleştirildi': 'done', 'İptal edildi': 'bad',
+    'Gerekmiyor': 'muted', 'Henüz istenmedi': 'muted', 'Bekleniyor': 'warn', 'Onaylandı': 'ok', 'Reddedildi': 'bad',
+    'Yapılacak': 'muted', 'Devam ediyor': 'info', 'Tamamlandı': 'ok',
+    'Düşük': 'muted', 'Orta': 'info', 'Yüksek': 'warn',
+    'Başvuruldu': 'info',
+  },
+};
+
+const Calc = (() => {
+  const d = () => Store.state.data;
+  const sum = (arr, f) => arr.reduce((s, x) => s + (Number(f(x)) || 0), 0);
+
+  const event = (id) => d().events.find((e) => e.id === id) || null;
+  const member = (id) => d().members.find((m) => m.id === id) || null;
+  const memberName = (id) => { const m = member(id); return m ? m.name : '—'; };
+  const lookupName = (id) => { const l = d().lookups.find((x) => x.id === id); return l ? l.name : '—'; };
+  const eventTitle = (id) => { const e = event(id); return e ? e.title : '—'; };
+
+  const activeEvents = () => d().events.filter((e) => !e.archived);
+  const isFinal = (e) => e.status === 'Gerçekleştirildi' || e.status === 'İptal edildi';
+  const evMonth = (e) => (e.start_date ? e.start_date.slice(0, 7) : (e.month_hint || ''));
+  const evEnd = (e) => e.end_date || e.start_date;
+  const tasksOf = (id) => d().tasks.filter((t) => t.event_id === id);
+  /** Aktif (arşivlenmemiş) etkinliklere bağlı veya genel görevler */
+  const activeTasks = () => { const act = new Set(activeEvents().map((e) => e.id)); return d().tasks.filter((t) => !t.event_id || act.has(t.event_id)); };
+
+  /** Hazırlık yüzdesi: görev varsa tamamlanan oranı; yoksa duruma göre. İptal için null. */
+  function readiness(e) {
+    if (e.status === 'İptal edildi') return null;
+    if (e.status === 'Gerçekleştirildi') return 100;
+    const t = tasksOf(e.id);
+    if (t.length) return Math.round(t.filter((x) => x.status === 'Tamamlandı').length / t.length * 100);
+    return e.status === 'Hazır' ? 100 : 0;
+  }
+  const overdue = (t) => t.status !== 'Tamamlandı' && !!t.due_date && t.due_date < U.todayISO();
+
+  function taskStats(tasks) {
+    const done = tasks.filter((t) => t.status === 'Tamamlandı').length;
+    return { total: tasks.length, done, pending: tasks.length - done, overdue: tasks.filter(overdue).length, doing: tasks.filter((t) => t.status === 'Devam ediyor').length };
+  }
+  function memberStats(id) {
+    const tasks = Calc.activeTasks().filter((t) => t.assignee_id === id);
+    return { ...taskStats(tasks), led: activeEvents().filter((e) => e.lead_id === id && !isFinal(e)).length, supportOn: activeEvents().filter((e) => (e.support_ids || []).includes(id)).length };
+  }
+
+  /** Çakışma: tarihleri kesişen, iptal/arşiv dışındaki etkinlikler. Aynı gün ve ikisinin de saati varsa saatler de karşılaştırılır. */
+  function conflicts() {
+    const evs = activeEvents().filter((e) => e.start_date && e.status !== 'İptal edildi');
+    const map = new Map();
+    for (let i = 0; i < evs.length; i++) {
+      for (let j = i + 1; j < evs.length; j++) {
+        const a = evs[i], b = evs[j];
+        const aEnd = evEnd(a), bEnd = evEnd(b);
+        if (a.start_date > bEnd || b.start_date > aEnd) continue;
+        const sameDay = a.start_date === aEnd && b.start_date === bEnd && a.start_date === b.start_date;
+        if (sameDay && a.start_time && a.end_time && b.start_time && b.end_time) {
+          if (a.start_time >= b.end_time || b.start_time >= a.end_time) continue;
+        }
+        (map.get(a.id) || map.set(a.id, []).get(a.id)).push(b.id);
+        (map.get(b.id) || map.set(b.id, []).get(b.id)).push(a.id);
+      }
+    }
+    return map;
+  }
+  /** Etkinliğin takvimde kapladığı günler (ISO listesi) */
+  function daysOf(e) {
+    if (!e.start_date) return [];
+    const out = [];
+    let cur = U.parse(e.start_date);
+    const end = U.parse(evEnd(e));
+    for (let n = 0; cur <= end && n < 400; n++) { out.push(U.iso(cur)); cur = U.addDays(cur, 1); }
+    return out;
+  }
+  const sortEvents = (list) => [...list].sort((a, b) => {
+    const ka = a.start_date || (a.month_hint ? a.month_hint + '-99' : '9999'), kb = b.start_date || (b.month_hint ? b.month_hint + '-99' : '9999');
+    return ka < kb ? -1 : ka > kb ? 1 : U.sortTr(a.code, b.code);
+  });
+  const dateLabel = (e) => {
+    if (e.start_date) return e.end_date && e.end_date !== e.start_date ? `${U.fmtDate(e.start_date)} – ${U.fmtDate(e.end_date)}` : U.fmtDate(e.start_date);
+    return e.month_hint ? `${U.fmtMonth(e.month_hint)} (tarih belirlenmedi)` : 'Tarih belirlenmedi';
+  };
+  const timeLabel = (e) => (e.start_time ? (e.end_time ? `${e.start_time}–${e.end_time}` : e.start_time) : '');
+  /** Akademik yıl "2026-2027" -> Eylül 2026 … Ağustos 2027 */
+  function yearRange(label) {
+    const m = /^(\d{4})\s*[-–/]\s*(\d{4})$/.exec(label || '');
+    return m ? { from: `${m[1]}-09`, to: `${m[2]}-08` } : null;
+  }
+  const inYear = (e, label) => { const r = yearRange(label); if (!r) return true; const ym = evMonth(e); return !!ym && ym >= r.from && ym <= r.to; };
+
+  return { event, member, memberName, lookupName, eventTitle, activeEvents, activeTasks, isFinal, evMonth, evEnd, tasksOf, readiness, overdue, taskStats, memberStats, conflicts, daysOf, sortEvents, dateLabel, timeLabel, yearRange, inYear, sum };
+})();
+
+</script>
+  <script>
+/* js/ui.js */
+/* Ortak arayüz bileşenleri: bildirim, diyalog, onay, form üretici, rozetler */
+'use strict';
+const UI = (() => {
+  const { h, clear } = U;
+
+  // Sabit, güvenilir SVG simgeleri (kullanıcı verisi içermez)
+  const ICONS = {
+    plus: '<path d="M12 5v14M5 12h14"/>', edit: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
+    trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>', copy: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/>',
+    archive: '<rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v11h14V8M10 12h4"/>', print: '<path d="M7 9V4h10v5M7 17H5a1 1 0 0 1-1-1v-5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5a1 1 0 0 1-1 1h-2"/><rect x="7" y="14" width="10" height="6"/>',
+    download: '<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>', upload: '<path d="M12 16V5M7 9l5-5 5 5M5 20h14"/>', check: '<path d="M5 12.5l4.5 4.5L19 7"/>', x: '<path d="M6 6l12 12M18 6L6 18"/>',
+    menu: '<path d="M4 7h16M4 12h16M4 17h16"/>', sun: '<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6L7 7M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/>',
+    moon: '<path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/>', warn: '<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17.5v.5"/>', user: '<circle cx="12" cy="8" r="4"/><path d="M4 20a8 8 0 0 1 16 0"/>',
+    calendar: '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>', chevL: '<path d="M15 5l-7 7 7 7"/>', chevR: '<path d="M9 5l7 7-7 7"/>',
+    eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>', lock: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+    aperture: '<circle cx="12" cy="12" r="9"/><path d="M12 3l4 7M20.2 8.5H9M19 16l-7 0.1M12 21l-4-7M3.8 15.5H15M5 8l7-.1"/>',
+    file: '<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/>', link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+  };
+  const icon = (name, size = 18) => {
+    const t = document.createElement('template');
+    t.innerHTML = `<svg class="ic" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${ICONS[name] || ''}</svg>`;
+    return t.content.firstChild;
+  };
+
+  // ---- bildirim ----
+  function toast(msg, type = 'ok') {
+    const box = document.getElementById('toasts');
+    if (!box) return;
+    const t = h('div', { class: 'toast ' + type, role: type === 'error' ? 'alert' : 'status' }, icon(type === 'error' ? 'warn' : 'check', 16), h('span', null, msg));
+    box.append(t);
+    setTimeout(() => t.remove(), type === 'error' ? 7000 : 3500);
+  }
+
+  // ---- diyalog (yerel <dialog>: odak tuzağı ve Esc dahili) ----
+  let dlgSeq = 0;
+  function dialog({ title, content, size = 'md', onClose, backdropClose = false, headerExtra }) {
+    const id = 'dlg-title-' + (++dlgSeq);
+    const closeBtn = h('button', { class: 'icon-btn', type: 'button', 'aria-label': 'Kapat', onclick: () => dlg.close() }, icon('x'));
+    const body = h('div', { class: 'dlg-body' }, content);
+    const dlg = h('dialog', { class: 'dlg ' + size, 'aria-labelledby': id },
+      h('div', { class: 'dlg-head' }, h('h2', { id }, title), headerExtra || null, closeBtn), body);
+    dlg.addEventListener('close', () => { dlg.remove(); if (onClose) onClose(); });
+    if (backdropClose) dlg.addEventListener('mousedown', (e) => { if (e.target === dlg) dlg.close(); });
+    document.body.append(dlg);
+    dlg.showModal();
+    dlg.body = body;
+    return dlg;
+  }
+  /** İçeriği Store değiştikçe yenilenen diyalog (örn. etkinlik ayrıntısı) */
+  function liveDialog({ title, size = 'lg', render, headerExtra }) {
+    const holder = h('div');
+    const dlg = dialog({ title, size, content: holder, backdropClose: true, headerExtra, onClose: () => off() });
+    const refresh = () => {
+      const r = render();
+      if (r === null) { dlg.close(); return; }
+      const st = dlg.body.scrollTop;
+      U.put(clear(holder), r);
+      dlg.body.scrollTop = st;
+    };
+    const off = Store.on(() => { if (dlg.open) refresh(); });
+    refresh();
+    return dlg;
+  }
+  function confirmBox({ title = 'Onay', message, okLabel = 'Evet', cancelLabel = 'Vazgeç', danger = false }) {
+    return new Promise((resolve) => {
+      let result = false;
+      const ok = h('button', { class: 'btn ' + (danger ? 'danger' : 'primary'), type: 'button', onclick: () => { result = true; dlg.close(); } }, okLabel);
+      const dlg = dialog({
+        title, size: 'sm', onClose: () => resolve(result),
+        content: [h('p', { class: 'confirm-msg' }, message), h('div', { class: 'form-actions' }, h('button', { class: 'btn', type: 'button', onclick: () => dlg.close() }, cancelLabel), ok)],
+      });
+      setTimeout(() => (danger ? dlg.querySelector('.btn:not(.danger)') : ok).focus(), 0);
+    });
+  }
+  /** Silme onayı; Ayarlar'da kapatılmışsa doğrudan onaylanır. */
+  const confirmDelete = (message) => Store.settings().confirm_delete === false ? Promise.resolve(true) : confirmBox({ title: 'Silme onayı', message, okLabel: 'Sil', danger: true });
+
+  // ---- küçük bileşenler ----
+  const badge = (text, tone = 'muted') => h('span', { class: 'badge ' + tone }, text);
+  const statusBadge = (s) => badge(s, C.tone[s] || 'muted');
+  const progress = (pct, label) => {
+    const v = pct === null ? 0 : Math.max(0, Math.min(100, pct));
+    return h('div', { class: 'progress', role: 'progressbar', 'aria-valuenow': v, 'aria-valuemin': 0, 'aria-valuemax': 100, 'aria-label': label || 'İlerleme' },
+      h('span', { style: `width:${v}%` }));
+  };
+  const btn = (label, { variant = '', onclick, ic, title, type = 'button', disabled, small } = {}) =>
+    h('button', { class: ['btn', variant, small ? 'sm' : ''].join(' ').trim(), type, title, 'aria-label': title || null, onclick, disabled }, ic ? icon(ic, 16) : null, label ? h('span', null, label) : null);
+  const iconBtn = (ic, label, onclick, variant = '') => h('button', { class: 'icon-btn ' + variant, type: 'button', title: label, 'aria-label': label, onclick }, icon(ic, 18));
+  const empty = (msg, action) => h('div', { class: 'empty' }, h('p', null, msg), action || null);
+  const loading = (msg = 'Yükleniyor…') => h('div', { class: 'loading', role: 'status' }, h('span', { class: 'spinner' }), msg);
+  const pageHead = (title, sub, actions) => h('div', { class: 'page-head' }, h('div', null, h('h1', null, title), sub ? h('p', { class: 'sub' }, sub) : null), h('div', { class: 'head-actions no-print' }, actions || null));
+  const card = (title, body, actions, cls = '') => h('section', { class: 'card ' + cls }, (title || actions) ? h('header', { class: 'card-head' }, title ? h('h2', null, title) : null, actions ? h('div', { class: 'card-actions' }, actions) : null) : null, body);
+  const kpi = (label, value, note, tone) => h('div', { class: 'kpi ' + (tone || '') }, h('div', { class: 'kpi-label' }, label), h('div', { class: 'kpi-value' }, value), note ? h('div', { class: 'kpi-note' }, note) : null);
+  const opt = (value, label, selected) => h('option', { value, selected: !!selected }, label);
+
+  // ---- form üretici ----
+  /**
+   * fields: {key,label,type,required,options,help,min,max,step,placeholder,rows,full,disabled}
+   * type: text textarea number date time month select checkboxes lines links checkbox heading
+   */
+  function form({ title, fields, values = {}, submitLabel = 'Kaydet', size = 'md', validate, onSubmit, intro, onClose }) {
+    const getters = {};
+    const errBoxes = {};
+    const controls = {};
+    const grid = h('div', { class: 'form-grid' });
+    const banner = h('div', { class: 'form-error', role: 'alert', hidden: true });
+    const seq = Math.random().toString(36).slice(2, 7);
+
+    fields.forEach((f) => {
+      if (f.type === 'heading') { grid.append(h('h3', { class: 'form-h full' }, f.label)); return; }
+      const id = `f-${f.key}-${seq}`;
+      const v = values[f.key];
+      let ctl;
+      switch (f.type) {
+        case 'textarea':
+          ctl = h('textarea', { id, rows: f.rows || 3, value: v == null ? '' : v, placeholder: f.placeholder, maxlength: f.maxlength || 4000, disabled: f.disabled });
+          getters[f.key] = () => ctl.value.trim(); break;
+        case 'lines':
+          ctl = h('textarea', { id, rows: f.rows || 4, value: Array.isArray(v) ? v.join('\n') : '', placeholder: f.placeholder || 'Her satıra bir madde', disabled: f.disabled });
+          getters[f.key] = () => ctl.value.split('\n').map((s) => s.trim()).filter(Boolean); break;
+        case 'links':
+          ctl = h('textarea', { id, rows: f.rows || 3, value: Array.isArray(v) ? v.map((a) => `${a.title} | ${a.url}`).join('\n') : '', placeholder: 'Başlık | https://bağlantı (her satıra bir bağlantı)', disabled: f.disabled });
+          getters[f.key] = () => ctl.value.split('\n').map((s) => s.trim()).filter(Boolean).map((line) => {
+            const i = line.lastIndexOf('|');
+            const t = i >= 0 ? line.slice(0, i).trim() : '';
+            const u = (i >= 0 ? line.slice(i + 1) : line).trim();
+            return { title: t || u, url: u };
+          }); break;
+        case 'select': {
+          const opts = (f.options || []).map((o) => opt(o.value, o.label, String(o.value) === String(v == null ? '' : v)));
+          if (!f.required) opts.unshift(opt('', f.emptyLabel || '— Seçiniz —', v == null || v === ''));
+          ctl = h('select', { id, disabled: f.disabled }, opts);
+          getters[f.key] = () => (ctl.value === '' ? null : ctl.value); break;
+        }
+        case 'checkboxes': {
+          const set = new Set(Array.isArray(v) ? v : []);
+          const boxes = (f.options || []).map((o) => h('label', { class: 'check' }, h('input', { type: 'checkbox', value: o.value, checked: set.has(o.value) }), h('span', null, o.label)));
+          ctl = h('div', { class: 'checks', role: 'group', 'aria-labelledby': id + '-l' }, boxes.length ? boxes : h('span', { class: 'muted' }, 'Seçenek yok'));
+          getters[f.key] = () => [...ctl.querySelectorAll('input:checked')].map((i) => i.value); break;
+        }
+        case 'checkbox':
+          ctl = h('label', { class: 'check' }, h('input', { type: 'checkbox', id, checked: !!v }), h('span', null, f.checkLabel || f.label));
+          getters[f.key] = () => ctl.querySelector('input').checked; break;
+        case 'number':
+          ctl = h('input', { id, type: 'number', inputmode: 'decimal', value: v == null ? '' : v, min: f.min, max: f.max, step: f.step || 'any', placeholder: f.placeholder, disabled: f.disabled });
+          getters[f.key] = () => (ctl.value === '' ? null : Number(ctl.value)); break;
+        case 'date': case 'time': case 'month':
+          ctl = h('input', { id, type: f.type, value: v || '', min: f.min, max: f.max, disabled: f.disabled });
+          getters[f.key] = () => (ctl.value === '' ? null : ctl.value); break;
+        default:
+          ctl = h('input', { id, type: f.type === 'password' ? 'password' : f.type === 'email' ? 'email' : 'text', value: v == null ? '' : v, placeholder: f.placeholder, maxlength: f.maxlength || 300, autocomplete: f.autocomplete || 'off', disabled: f.disabled });
+          getters[f.key] = () => ctl.value.trim();
+      }
+      controls[f.key] = ctl;
+      const err = h('div', { class: 'field-err', id: id + '-e', role: 'alert' });
+      errBoxes[f.key] = err;
+      const showLabel = f.type !== 'checkbox';
+      grid.append(h('div', { class: 'field' + (f.full ? ' full' : '') },
+        showLabel ? h('label', { for: f.type === 'checkboxes' ? null : id, id: id + '-l' }, f.label, f.required ? h('span', { class: 'req', 'aria-hidden': 'true' }, ' *') : null) : null,
+        ctl, f.help ? h('div', { class: 'help' }, f.help) : null, err));
+    });
+
+    const submit = h('button', { class: 'btn primary', type: 'submit' }, submitLabel);
+    const cancel = h('button', { class: 'btn', type: 'button', onclick: () => dlg.close() }, 'Vazgeç');
+    const formEl = h('form', { class: 'form', novalidate: true }, intro ? h('p', { class: 'intro' }, intro) : null, banner, grid, h('div', { class: 'form-actions' }, cancel, submit));
+
+    formEl.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      banner.hidden = true;
+      const out = {}; const errors = {};
+      fields.forEach((f) => {
+        if (f.type === 'heading') return;
+        const val = getters[f.key]();
+        out[f.key] = val;
+        const empty = val === null || val === '' || (Array.isArray(val) && !val.length);
+        if (f.required && empty && f.type !== 'checkbox') errors[f.key] = 'Bu alan zorunludur.';
+        else if (f.type === 'number' && val !== null) {
+          if (!Number.isFinite(val)) errors[f.key] = 'Geçerli bir sayı girin.';
+          else if (f.min !== undefined && val < f.min) errors[f.key] = `En az ${f.min} olmalı.`;
+          else if (f.max !== undefined && val > f.max) errors[f.key] = `En fazla ${f.max} olabilir.`;
+          else if (f.integer && !Number.isInteger(val)) errors[f.key] = 'Tam sayı girin.';
+        } else if (f.type === 'links' && Array.isArray(val)) {
+          const bad = val.find((a) => !U.isUrl(a.url));
+          if (bad) errors[f.key] = `Geçersiz bağlantı: "${bad.url}". http:// veya https:// ile başlamalı.`;
+        } else if (f.type === 'url' && val && !U.isUrl(val)) errors[f.key] = 'Geçerli bir bağlantı girin (https://…).';
+        if (f.type === 'text' && f.isUrl && val && !U.isUrl(val)) errors[f.key] = 'Geçerli bir bağlantı girin (https://…).';
+        if (f.type === 'email' && val && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(val)) errors[f.key] = 'Geçerli bir e-posta adresi girin.';
+      });
+      if (validate) Object.assign(errors, validate(out) || {});
+      Object.values(errBoxes).forEach((b) => { b.textContent = ''; });
+      Object.values(controls).forEach((c) => c.removeAttribute && c.removeAttribute('aria-invalid'));
+      const keys = Object.keys(errors);
+      if (keys.length) {
+        keys.forEach((k) => { if (errBoxes[k]) errBoxes[k].textContent = errors[k]; if (controls[k]) controls[k].setAttribute('aria-invalid', 'true'); });
+        const first = controls[keys[0]];
+        if (first) (first.matches('input,select,textarea') ? first : first.querySelector('input') || first).focus();
+        banner.textContent = 'Lütfen işaretli alanları düzeltin.'; banner.hidden = false;
+        return;
+      }
+      submit.disabled = true; submit.textContent = 'Kaydediliyor…';
+      try { await onSubmit(out); dlg.close(); }
+      catch (err) {
+        banner.textContent = (err && err.message) ? Store.friendly(err) : 'Kaydedilemedi.'; banner.hidden = false;
+        submit.disabled = false; submit.textContent = submitLabel;
+      }
+    });
+
+    const dlg = dialog({ title, content: formEl, size, onClose });
+    const firstInput = dlg.querySelector('input:not([type=checkbox]),select,textarea');
+    if (firstInput) firstInput.focus();
+    return dlg;
+  }
+
+  // ---- tablo / bağlantı / yazdırma yardımcıları ----
+  /** Dar ekranda kart görünümüne dönüşen tablo hücresi (data-label) */
+  const td = (label, ...kids) => h('td', { 'data-label': label }, ...kids);
+  const table = (headers, rows, cls = '') => h('div', { class: 'table-wrap' },
+    h('table', { class: 'tbl resp ' + cls }, h('thead', null, h('tr', null, headers.map((x) => h('th', { scope: 'col' }, x)))), h('tbody', null, rows)));
+  /** Yalnızca http(s) bağlantıları tıklanabilir yapılır (javascript: vb. engellenir) */
+  const link = (url, text) => U.isUrl(url)
+    ? h('a', { href: url, target: '_blank', rel: 'noopener noreferrer' }, text || url)
+    : h('span', null, text || url);
+  /** Düğümü yalnızca yazdırma çıktısında görünen bir kök içine koyar ve yazdırma penceresini açar. */
+  function printNode(node) {
+    const old = document.getElementById('print-root');
+    if (old) old.remove();
+    const root = h('div', { id: 'print-root' }, node);
+    document.body.append(root);
+    setTimeout(() => window.print(), 60);
+  }
+
+  return { icon, toast, dialog, liveDialog, confirmBox, confirmDelete, badge, statusBadge, progress, btn, iconBtn, empty, loading, pageHead, card, kpi, opt, form, td, table, link, printNode };
+})();
+
+</script>
+  <script>
+/* js/views-events.js */
+/* Etkinlik yönetimi + takvim */
+'use strict';
+const EventsView = (() => {
+  const { h, clear } = U;
+  const f = { q: '', type: '', status: '', month: '', archived: false, year: false };
+
+  const memberOpts = () => Store.D().members.map((m) => ({ value: m.id, label: `${m.name} — ${m.role_title}` }));
+  const typeOpts = () => Store.lookups('event_type').map((l) => ({ value: l.id, label: l.name }));
+
+  // ---------- form ----------
+  function eventForm(ev, { quick = false, preset = {} } = {}) {
+    if (!Store.can('edit')) return UI.toast('Düzenleme yetkiniz yok.', 'error');
+    const isNew = !ev;
+    const vals = ev ? { ...ev } : { status: 'Fikir aşamasında', approval: 'Henüz istenmedi', code: Store.nextEventCode(), type_id: (Store.lookups('event_type')[0] || {}).id, ...preset };
+    const fields = quick ? [
+      { key: 'title', label: 'Etkinlik adı', type: 'text', required: true, full: true },
+      { key: 'type_id', label: 'Etkinlik türü', type: 'select', required: true, options: typeOpts() },
+      { key: 'lead_id', label: 'Sorumlu yönetici', type: 'select', options: memberOpts() },
+      { key: 'start_date', label: 'Tarih', type: 'date', help: 'Kesin değilse boş bırakın ve planlanan ayı seçin.' },
+      { key: 'month_hint', label: 'Planlanan ay', type: 'month' },
+    ] : [
+      { type: 'heading', label: 'Temel bilgiler' },
+      { key: 'title', label: 'Etkinlik adı', type: 'text', required: true, full: true },
+      { key: 'code', label: 'Etkinlik numarası', type: 'text', required: true, maxlength: 30, help: 'Benzersiz olmalı.' },
+      { key: 'type_id', label: 'Etkinlik türü', type: 'select', required: true, options: typeOpts() },
+      { key: 'status', label: 'Durum', type: 'select', required: true, options: C.EVENT_STATUS.map((s) => ({ value: s, label: s })) },
+      { key: 'approval', label: 'İzin ve onay durumu', type: 'select', required: true, options: C.APPROVAL.map((s) => ({ value: s, label: s })) },
+      { key: 'description', label: 'Açıklama', type: 'textarea', full: true },
+      { key: 'purpose', label: 'Amaç', type: 'textarea', full: true, rows: 2 },
+      { type: 'heading', label: 'Zaman ve yer' },
+      { key: 'start_date', label: 'Başlangıç tarihi', type: 'date' },
+      { key: 'end_date', label: 'Bitiş tarihi', type: 'date', help: 'Tek günlük etkinliklerde boş bırakılabilir.' },
+      { key: 'month_hint', label: 'Planlanan ay (tarih kesin değilse)', type: 'month', help: 'Başlangıç tarihi girilirse bu alan kullanılmaz.' },
+      { key: 'start_time', label: 'Başlangıç saati', type: 'time' },
+      { key: 'end_time', label: 'Bitiş saati', type: 'time' },
+      { key: 'venue', label: 'Mekân', type: 'text' },
+      { key: 'city', label: 'Şehir', type: 'text' },
+      { type: 'heading', label: 'Katılım ve ekip' },
+      { key: 'est_participants', label: 'Tahmini katılımcı sayısı', type: 'number', min: 0, integer: true },
+      { key: 'actual_participants', label: 'Gerçek katılımcı sayısı', type: 'number', min: 0, integer: true },
+      { key: 'lead_id', label: 'Sorumlu yönetici', type: 'select', options: memberOpts() },
+      { key: 'support_ids', label: 'Destek ekibi', type: 'checkboxes', options: memberOpts(), full: true },
+      { type: 'heading', label: 'Hazırlık ve değerlendirme' },
+      { key: 'materials', label: 'Gerekli malzemeler', type: 'lines' },
+      { key: 'univ_supports', label: 'Üniversiteden talep edilecek destekler', type: 'lines' },
+      { key: 'evaluation', label: 'Etkinlik sonrası değerlendirme', type: 'textarea', full: true },
+      { key: 'attachments', label: 'Fotoğraf ve dosya ekleri (bağlantı)', type: 'links', full: true, help: 'Drive, OneDrive vb. paylaşım bağlantılarını ekleyin.' },
+      { key: 'notes', label: 'Notlar', type: 'textarea', full: true },
+    ];
+    return UI.form({
+      title: isNew ? (quick ? 'Hızlı etkinlik ekle' : 'Yeni etkinlik') : 'Etkinliği düzenle', size: 'lg', fields, values: vals,
+      submitLabel: isNew ? 'Etkinlik oluştur' : 'Kaydet',
+      validate: (v) => {
+        const e = {};
+        if (v.end_date && !v.start_date) e.end_date = 'Önce başlangıç tarihini girin.';
+        if (v.start_date && v.end_date && v.end_date < v.start_date) e.end_date = 'Bitiş tarihi başlangıçtan önce olamaz.';
+        if (v.start_time && v.end_time && (!v.end_date || v.end_date === v.start_date) && v.end_time <= v.start_time) e.end_time = 'Bitiş saati başlangıç saatinden sonra olmalı.';
+        if (!quick && Store.D().events.some((x) => x.code.toLowerCase() === (v.code || '').toLowerCase() && x.id !== (ev && ev.id))) e.code = 'Bu etkinlik numarası zaten kullanılıyor.';
+        return e;
+      },
+      onSubmit: async (v) => {
+        const now = new Date().toISOString();
+        const month_hint = v.start_date ? null : v.month_hint;
+        let rec;
+        if (ev) {
+          rec = { ...v, id: ev.id, month_hint };
+        } else {
+          rec = {
+            support_ids: [], materials: [], univ_supports: [], attachments: [], description: '', purpose: '', venue: '', city: '', notes: '', evaluation: '',
+            status: 'Fikir aşamasında', approval: 'Henüz istenmedi', code: Store.nextEventCode(),
+            ...v, id: U.uid('ev'), month_hint, archived: false, is_sample: false, created_at: now,
+          };
+        }
+        await Store.save('events', rec, { log: `${isNew ? 'Etkinlik eklendi' : 'Etkinlik güncellendi'}: ${v.title}` });
+        UI.toast(isNew ? 'Etkinlik oluşturuldu.' : 'Etkinlik kaydedildi.');
+        if (isNew && !quick) openEvent(rec.id);
+      },
+    });
+  }
+
+  // ---------- eylemler ----------
+  async function duplicate(id) {
+    const e = Store.get('events', id); if (!e) return;
+    const now = new Date().toISOString(); const nid = U.uid('ev');
+    const copy = { ...U.clone(e), id: nid, code: Store.nextEventCode(), title: e.title + ' (Kopya)', status: 'Fikir aşamasında', approval: 'Henüz istenmedi', start_date: null, end_date: null, month_hint: Calc.evMonth(e) || null, actual_participants: null, evaluation: '', archived: false, is_sample: false, created_at: now };
+    await Store.save('events', copy, { log: `Etkinlik çoğaltıldı: ${e.title}` });
+    const tasks = Calc.tasksOf(id).map((t) => ({ ...U.clone(t), id: U.uid('tk'), event_id: nid, status: 'Yapılacak', is_sample: false, created_at: now }));
+    if (tasks.length) await Store.saveMany('tasks', tasks);
+    UI.toast('Etkinlik görevleriyle birlikte çoğaltıldı. Tarihi yeniden belirleyin.');
+    openEvent(nid);
+  }
+  async function toggleArchive(id) {
+    const e = Store.get('events', id); if (!e) return;
+    if (!e.archived && !(await UI.confirmBox({ title: 'Arşivle', message: `"${e.title}" arşive taşınacak. Listelerde ve takvimde görünmez, istediğiniz zaman geri alabilirsiniz.`, okLabel: 'Arşivle' }))) return;
+    await Store.save('events', { id, archived: !e.archived }, { log: `${e.archived ? 'Arşivden çıkarıldı' : 'Arşivlendi'}: ${e.title}`, keepSample: true });
+    UI.toast(e.archived ? 'Etkinlik arşivden çıkarıldı.' : 'Etkinlik arşivlendi.');
+  }
+  async function deleteEvent(id) {
+    const e = Store.get('events', id); if (!e) return false;
+    const nt = Calc.tasksOf(id).length, ns = Store.D().supports.filter((s) => s.event_id === id).length;
+    const msg = `"${e.title}" kalıcı olarak silinecek.` + (nt ? ` Bağlı ${nt} görev de silinir.` : '') + (ns ? ` ${ns} destek talebi etkinlik bağlantısı olmadan kalır.` : '') + ' Bu işlem geri alınamaz. (Silmek yerine arşivleyebilirsiniz.)';
+    if (!(await UI.confirmDelete(msg))) return false;
+    await Store.removeEvent(id, { log: `Etkinlik silindi: ${e.title}` });
+    UI.toast('Etkinlik silindi.');
+    return true;
+  }
+  async function moveEvent(id, iso) {
+    const e = Store.get('events', id); if (!e || !Store.can('edit')) return;
+    const dur = e.start_date && e.end_date ? Math.round((U.parse(e.end_date) - U.parse(e.start_date)) / 86400000) : 0;
+    await Store.save('events', { id, start_date: iso, end_date: e.end_date ? U.iso(U.addDays(U.parse(iso), dur)) : null, month_hint: null }, { log: `Etkinlik tarihi değişti: ${e.title} → ${U.fmtDate(iso)}`, keepSample: false });
+    UI.toast(`Tarih güncellendi: ${U.fmtDate(iso)}`);
+    if (Calc.conflicts().has(id)) UI.toast('Dikkat: bu tarihte başka bir etkinlikle çakışma var.', 'error');
+  }
+
+  // ---------- ayrıntı ----------
+  const dl = (pairs) => h('dl', { class: 'facts' }, pairs.filter(Boolean).map(([k, v]) => h('div', null, h('dt', null, k), h('dd', null, v == null || v === '' ? '—' : v))));
+  const list = (arr) => (arr && arr.length ? h('ul', { class: 'plain' }, arr.map((x) => h('li', null, x))) : h('p', { class: 'muted' }, '—'));
+
+  function openEvent(id) {
+    if (!Store.get('events', id)) return;
+    UI.liveDialog({ title: 'Etkinlik ayrıntısı', size: 'xl', render: () => { const e = Store.get('events', id); return e ? detail(e) : null; } });
+  }
+  function detail(e) {
+    const canEdit = Store.can('edit'), internal = Store.internal();
+    const conf = Calc.conflicts().get(e.id) || [];
+    const pct = Calc.readiness(e);
+    const tasks = Calc.tasksOf(e.id).sort((a, c) => (a.due_date || '9') < (c.due_date || '9') ? -1 : 1);
+    const sups = Store.D().supports.filter((s) => s.event_id === e.id);
+    const supportNames = (e.support_ids || []).map(Calc.memberName).join(', ');
+
+    const actions = h('div', { class: 'detail-actions no-print' },
+      canEdit ? UI.btn('Düzenle', { ic: 'edit', variant: 'primary', onclick: () => eventForm(e) }) : null,
+      internal ? UI.btn('Faaliyet raporu', { ic: 'print', onclick: () => printReport(e.id) }) : UI.btn('Yazdır', { ic: 'print', onclick: () => printReport(e.id) }),
+      canEdit ? UI.btn('Çoğalt', { ic: 'copy', onclick: () => duplicate(e.id) }) : null,
+      canEdit ? UI.btn(e.archived ? 'Arşivden çıkar' : 'Arşivle', { ic: 'archive', onclick: () => toggleArchive(e.id) }) : null,
+      canEdit ? UI.btn('Sil', { ic: 'trash', variant: 'danger-ghost', onclick: async () => { if (await deleteEvent(e.id)) { /* liveDialog kendini kapatır */ } } }) : null);
+
+    const taskList = tasks.length ? h('ul', { class: 'task-mini' }, tasks.map((t) => h('li', { class: t.status === 'Tamamlandı' ? 'done' : '' },
+      h('label', { class: 'check' }, h('input', { type: 'checkbox', checked: t.status === 'Tamamlandı', disabled: !canEdit, 'aria-label': `${t.title} tamamlandı`, onchange: (ev) => TasksView.setStatus(t.id, ev.target.checked ? 'Tamamlandı' : 'Yapılacak') }), h('span', null, t.title)),
+      h('span', { class: 'meta' }, Calc.memberName(t.assignee_id), t.due_date ? ` · ${U.fmtDate(t.due_date)}` : ''),
+      Calc.overdue(t) ? UI.badge('Gecikti', 'bad') : null,
+      canEdit ? UI.iconBtn('edit', 'Görevi düzenle', () => TasksView.taskForm(t)) : null)))
+      : UI.empty('Bu etkinlik için henüz görev yok.');
+
+    return h('div', { class: 'detail' },
+      h('div', { class: 'detail-top' },
+        h('div', null, h('div', { class: 'code' }, e.code), h('h3', { class: 'detail-title' }, e.title),
+          h('div', { class: 'badges' }, UI.statusBadge(e.status), UI.badge(Calc.lookupName(e.type_id), 'neutral'), UI.badge('İzin: ' + e.approval, C.tone[e.approval] || 'muted'),
+            e.archived ? UI.badge('Arşivlendi', 'muted') : null, e.is_sample ? UI.badge('Örnek veri', 'sample') : null,
+            conf.length ? UI.badge('Çakışma: ' + conf.map(Calc.eventTitle).join(', '), 'warn') : null)),
+        actions),
+      dl([
+        ['Tarih', Calc.dateLabel(e)], ['Saat', Calc.timeLabel(e)], ['Mekân', e.venue], ['Şehir', e.city],
+        ['Sorumlu yönetici', Calc.memberName(e.lead_id)], ['Destek ekibi', supportNames],
+        ['Tahmini katılımcı', U.fmtNum(e.est_participants)], ['Gerçek katılımcı', U.fmtNum(e.actual_participants)],
+        ['Hazırlık durumu', h('div', { class: 'ready' }, pct === null ? 'İptal edildi' : `%${pct}`, pct === null ? null : UI.progress(pct, 'Hazırlık yüzdesi'))],
+      ]),
+      h('div', { class: 'cols-2' },
+        h('div', null, h('h4', null, 'Açıklama'), h('p', null, e.description || '—'), h('h4', null, 'Amaç'), h('p', null, e.purpose || '—'),
+          h('h4', null, 'Etkinlik sonrası değerlendirme'), h('p', null, e.evaluation || '—'), h('h4', null, 'Notlar'), h('p', { class: 'pre' }, e.notes || '—')),
+        h('div', null, h('h4', null, 'Gerekli malzemeler'), list(e.materials), h('h4', null, 'Üniversiteden talep edilecek destekler'), list(e.univ_supports),
+          h('h4', null, 'Dosya ve fotoğraf ekleri'), (e.attachments || []).length ? h('ul', { class: 'plain' }, e.attachments.map((a) => h('li', null, UI.icon('link', 14), ' ', UI.link(a.url, a.title)))) : h('p', { class: 'muted' }, '—'))),
+      UI.card('Görevler', taskList, canEdit ? UI.btn('Görev ekle', { ic: 'plus', small: true, onclick: () => TasksView.taskForm(null, { event_id: e.id }) }) : null, 'inner'),
+      internal ? UI.card('Üniversite destek talepleri', sups.length ? UI.table(['Talep', 'Birim', 'Tarih', 'Durum'], sups.map((s) => h('tr', null, UI.td('Talep', s.title), UI.td('Birim', s.unit || '—'), UI.td('Tarih', U.fmtDate(s.request_date)), UI.td('Durum', UI.statusBadge(s.status))))) : UI.empty('Bu etkinlik için destek talebi yok.'),
+        canEdit ? UI.btn('Talep ekle', { ic: 'plus', small: true, onclick: () => SupportView.supportForm(null, { event_id: e.id }) }) : null, 'inner') : null);
+  }
+
+  // ---------- resmî faaliyet raporu (yazdırılabilir) ----------
+  function printReport(id) {
+    const e = Store.get('events', id); if (!e) return;
+    const s = Store.settings(), internal = Store.internal();
+    const logo = s.logo_url && (U.isUrl(s.logo_url) || s.logo_url.startsWith('data:image/')) ? h('img', { class: 'sheet-logo', src: s.logo_url, alt: '' }) : null;
+    const tasks = Calc.tasksOf(id), sups = Store.D().supports.filter((x) => x.event_id === id);
+    const row = (k, v) => h('tr', null, h('th', { scope: 'row' }, k), h('td', null, v == null || v === '' ? '—' : v));
+    const president = Store.D().members.find((m) => /başkanı$/i.test(m.role_title.trim())) || Store.D().members[0];
+    const sheet = h('article', { class: 'sheet' },
+      h('header', { class: 'sheet-head' }, logo, h('div', null, h('div', { class: 'sheet-org' }, s.name), h('h1', null, 'ETKİNLİK FAALİYET RAPORU'), h('div', { class: 'sheet-meta' }, `Akademik yıl: ${s.academic_year || '—'} · Belge no: ${e.code} · Düzenleme tarihi: ${U.fmtDate(U.todayISO())}`))),
+      h('h2', null, '1. Etkinlik bilgileri'),
+      h('table', { class: 'sheet-tbl' }, h('tbody', null,
+        row('Etkinlik adı', e.title), row('Etkinlik türü', Calc.lookupName(e.type_id)), row('Tarih', Calc.dateLabel(e)), row('Saat', Calc.timeLabel(e)),
+        row('Mekân / Şehir', [e.venue, e.city].filter(Boolean).join(' / ')), row('Sorumlu yönetici', Calc.memberName(e.lead_id)),
+        row('Destek ekibi', (e.support_ids || []).map(Calc.memberName).join(', ')),
+        row('Katılımcı (tahmini / gerçek)', `${U.fmtNum(e.est_participants)} / ${U.fmtNum(e.actual_participants)}`),
+        row('Durum', e.status), row('İzin ve onay durumu', e.approval))),
+      h('h2', null, '2. Amaç ve içerik'), h('p', null, e.purpose || '—'), h('p', null, e.description || ''),
+      h('h2', null, '3. Malzeme ve üniversite destekleri'),
+      h('p', null, h('strong', null, 'Malzemeler: '), (e.materials || []).join(', ') || '—'),
+      h('p', null, h('strong', null, 'Talep edilen destekler: '), (e.univ_supports || []).join(', ') || '—'),
+      internal && sups.length ? UI.table(['Talep', 'Birim', 'Durum'], sups.map((x) => h('tr', null, UI.td('Talep', x.title), UI.td('Birim', x.unit || '—'), UI.td('Durum', x.status))), 'sheet-tbl2') : null,
+      h('h2', null, '4. Görev ve hazırlık'),
+      tasks.length ? UI.table(['Görev', 'Sorumlu', 'Son tarih', 'Durum'], tasks.map((t) => h('tr', null, UI.td('Görev', t.title), UI.td('Sorumlu', Calc.memberName(t.assignee_id)), UI.td('Son tarih', U.fmtDate(t.due_date)), UI.td('Durum', t.status))), 'sheet-tbl2') : h('p', null, 'Görev kaydı yok.'),
+      h('p', null, `Hazırlık oranı: ${Calc.readiness(e) === null ? '—' : '%' + Calc.readiness(e)}`),
+      h('h2', null, '5. Etkinlik sonrası değerlendirme'), h('p', null, e.evaluation || '—'),
+      (e.attachments || []).length ? [h('h2', null, 'Ekler'), h('ul', null, e.attachments.map((a) => h('li', null, `${a.title} — ${a.url}`)))] : null,
+      h('div', { class: 'sign' },
+        [['Etkinlik sorumlusu', Calc.memberName(e.lead_id)], ['Kulüp başkanı', president ? president.name : ''], ['Danışman öğretim üyesi', s.advisor || '']].map(([role, name]) =>
+          h('div', null, h('div', { class: 'sign-line' }), h('div', { class: 'sign-role' }, role), h('div', { class: 'sign-name' }, name), h('div', { class: 'sign-date' }, 'Tarih / İmza')))));
+    UI.printNode(sheet);
+  }
+
+  // ---------- liste ----------
+  function applyFilters() {
+    let list = Store.D().events.filter((e) => (f.archived ? e.archived : !e.archived));
+    const q = f.q.trim().toLocaleLowerCase('tr');
+    if (q) list = list.filter((e) => [e.title, e.code, e.venue, e.city, e.description, Calc.memberName(e.lead_id)].join(' ').toLocaleLowerCase('tr').includes(q));
+    if (f.type) list = list.filter((e) => e.type_id === f.type);
+    if (f.status) list = list.filter((e) => e.status === f.status);
+    if (f.month) list = list.filter((e) => Calc.evMonth(e) === f.month);
+    if (f.year) list = list.filter((e) => Calc.inYear(e, Store.settings().academic_year));
+    return Calc.sortEvents(list);
+  }
+
+  function render(root) {
+    const canEdit = Store.can('edit');
+    const months = [...new Set(Store.D().events.map(Calc.evMonth).filter(Boolean))].sort();
+    const results = h('div', { id: 'ev-results' });
+    const draw = () => {
+      const list = applyFilters();
+      const conf = Calc.conflicts();
+      U.put(clear(results), h('p', { class: 'result-count', 'aria-live': 'polite' }, `${list.length} etkinlik`),
+        list.length ? UI.table(['No', 'Etkinlik', 'Tür', 'Tarih', 'Durum', 'Hazırlık', 'Sorumlu', ''], list.map((e) => {
+          const pct = Calc.readiness(e);
+          return h('tr', { class: e.status === 'İptal edildi' ? 'cancelled' : '' },
+            UI.td('No', h('span', { class: 'code' }, e.code)),
+            UI.td('Etkinlik', h('button', { class: 'link-btn', type: 'button', onclick: () => openEvent(e.id) }, e.title), e.is_sample ? UI.badge('Örnek', 'sample') : null, conf.has(e.id) ? UI.badge('Çakışma', 'warn') : null),
+            UI.td('Tür', Calc.lookupName(e.type_id)), UI.td('Tarih', Calc.dateLabel(e)), UI.td('Durum', UI.statusBadge(e.status)),
+            UI.td('Hazırlık', pct === null ? '—' : h('div', { class: 'ready sm' }, `%${pct}`, UI.progress(pct, 'Hazırlık'))),
+            UI.td('Sorumlu', Calc.memberName(e.lead_id)),
+            UI.td('', h('div', { class: 'row-actions no-print' },
+              UI.iconBtn('eye', 'Ayrıntı', () => openEvent(e.id)),
+              canEdit ? [UI.iconBtn('edit', 'Düzenle', () => eventForm(e)), UI.iconBtn('copy', 'Çoğalt', () => duplicate(e.id)), UI.iconBtn('archive', e.archived ? 'Arşivden çıkar' : 'Arşivle', () => toggleArchive(e.id)), UI.iconBtn('trash', 'Sil', () => deleteEvent(e.id), 'danger')] : null)));
+        })) : UI.empty(f.archived ? 'Arşivde etkinlik yok.' : 'Filtrelere uyan etkinlik bulunamadı.'));
+    };
+    const inp = (id, label, ctl) => h('div', { class: 'field' }, h('label', { for: id }, label), ctl);
+    const sel = (id, key, opts, all) => h('select', { id, onchange: (ev) => { f[key] = ev.target.value; draw(); } }, [UI.opt('', all, !f[key]), ...opts.map((o) => UI.opt(o.value, o.label, f[key] === o.value))]);
+    U.put(root, 
+      UI.pageHead('Etkinlikler', 'Tüm etkinlikleri arayın, filtreleyin ve yönetin.', canEdit ? UI.btn('Yeni etkinlik', { ic: 'plus', variant: 'primary', onclick: () => eventForm(null) }) : null),
+      h('div', { class: 'filters card no-print' },
+        inp('ev-q', 'Ara', h('input', { id: 'ev-q', type: 'search', value: f.q, placeholder: 'Ad, numara, mekân, sorumlu…', oninput: (ev) => { f.q = ev.target.value; draw(); } })),
+        inp('ev-type', 'Tür', sel('ev-type', 'type', typeOpts(), 'Tümü')),
+        inp('ev-status', 'Durum', sel('ev-status', 'status', C.EVENT_STATUS.map((s) => ({ value: s, label: s })), 'Tümü')),
+        inp('ev-month', 'Ay', sel('ev-month', 'month', months.map((m) => ({ value: m, label: U.fmtMonth(m) })), 'Tümü')),
+        h('label', { class: 'check inline' }, h('input', { type: 'checkbox', checked: f.archived, onchange: (ev) => { f.archived = ev.target.checked; draw(); } }), h('span', null, 'Arşivi göster')),
+        h('label', { class: 'check inline' }, h('input', { type: 'checkbox', checked: f.year, onchange: (ev) => { f.year = ev.target.checked; draw(); } }), h('span', null, `Yalnızca ${Store.settings().academic_year || 'akademik yıl'}`))),
+      results);
+    draw();
+  }
+
+  return { render, eventForm, openEvent, moveEvent, duplicate, toggleArchive, deleteEvent, printReport };
+})();
+
+/* ---------------- Takvim ---------------- */
+const CalendarView = (() => {
+  const { h, clear } = U;
+  const st = { view: 'month', cursor: new Date() };
+
+  const chip = (e, conf) => {
+    const canEdit = Store.can('edit');
+    const cls = ['chip', 'tone-' + (C.tone[e.status] || 'muted'), e.status === 'İptal edildi' ? 'cancelled' : '', e.status === 'Gerçekleştirildi' ? 'finished' : ''].join(' ');
+    return h('button', {
+      class: cls, type: 'button', draggable: canEdit ? 'true' : null,
+      title: `${e.title} — ${e.status}${conf.has(e.id) ? ' (çakışma var)' : ''}`,
+      onclick: () => EventsView.openEvent(e.id),
+      ondragstart: (ev) => { ev.dataTransfer.setData('text/plain', e.id); ev.dataTransfer.effectAllowed = 'move'; },
+    }, conf.has(e.id) ? UI.icon('warn', 12) : null, e.start_time ? h('span', { class: 'chip-time' }, e.start_time) : null, h('span', { class: 'chip-title' }, e.title));
+  };
+  const dropTarget = (el, iso) => {
+    if (!Store.can('edit')) return el;
+    el.addEventListener('dragover', (ev) => { ev.preventDefault(); el.classList.add('drop'); });
+    el.addEventListener('dragleave', () => el.classList.remove('drop'));
+    el.addEventListener('drop', (ev) => { ev.preventDefault(); el.classList.remove('drop'); const id = ev.dataTransfer.getData('text/plain'); if (id) EventsView.moveEvent(id, iso); });
+    return el;
+  };
+
+  function monthGrid(evs, conf) {
+    const y = st.cursor.getFullYear(), m = st.cursor.getMonth();
+    const start = U.weekStart(new Date(y, m, 1));
+    const today = U.todayISO();
+    const byDay = new Map();
+    evs.forEach((e) => Calc.daysOf(e).forEach((d) => (byDay.get(d) || byDay.set(d, []).get(d)).push(e)));
+    const head = h('div', { class: 'cal-row cal-dow', role: 'row' }, U.DAYS_SHORT.map((d) => h('div', { role: 'columnheader' }, d)));
+    const rows = [head];
+    for (let w = 0; w < 6; w++) {
+      const cells = [];
+      for (let d = 0; d < 7; d++) {
+        const day = U.addDays(start, w * 7 + d), iso = U.iso(day), list = byDay.get(iso) || [];
+        const shown = list.slice(0, 3);
+        cells.push(dropTarget(h('div', { class: ['cal-cell', day.getMonth() !== m ? 'other' : '', iso === today ? 'today' : '', list.length > 1 && list.some((e) => conf.has(e.id)) ? 'has-conf' : ''].join(' '), role: 'gridcell', 'aria-label': U.fmtDateLong(iso) },
+          h('div', { class: 'cal-num' }, day.getDate()), shown.map((e) => chip(e, conf)),
+          list.length > 3 ? h('button', { class: 'more', type: 'button', onclick: () => { st.view = 'week'; st.cursor = day; App.render(); } }, `+${list.length - 3} daha`) : null), iso));
+      }
+      rows.push(h('div', { class: 'cal-row', role: 'row' }, cells));
+    }
+    return h('div', { class: 'cal-grid', role: 'grid', 'aria-label': `${U.MONTHS[m]} ${y} takvimi` }, rows);
+  }
+  function weekGrid(evs, conf) {
+    const start = U.weekStart(st.cursor), today = U.todayISO();
+    return h('div', { class: 'week-grid' }, Array.from({ length: 7 }, (_, i) => {
+      const day = U.addDays(start, i), iso = U.iso(day);
+      const list = evs.filter((e) => Calc.daysOf(e).includes(iso)).sort((a, b) => (a.start_time || '') < (b.start_time || '') ? -1 : 1);
+      return dropTarget(h('div', { class: 'week-col' + (iso === today ? ' today' : '') },
+        h('div', { class: 'week-head' }, h('strong', null, U.DAYS_LONG[i]), h('span', null, `${day.getDate()} ${U.MONTHS[day.getMonth()]}`)),
+        list.length ? list.map((e) => chip(e, conf)) : h('span', { class: 'muted small' }, '—')), iso);
+    }));
+  }
+  function listView(evs, conf) {
+    const dated = Calc.sortEvents(evs.filter((e) => e.start_date));
+    if (!dated.length) return UI.empty('Takvimde tarihli etkinlik yok.');
+    const groups = new Map();
+    dated.forEach((e) => (groups.get(e.start_date.slice(0, 7)) || groups.set(e.start_date.slice(0, 7), []).get(e.start_date.slice(0, 7))).push(e));
+    return h('div', null, [...groups].map(([ym, list]) => UI.card(U.fmtMonth(ym), h('ul', { class: 'agenda' }, list.map((e) => h('li', null,
+      h('div', { class: 'agenda-date' }, U.fmtDate(e.start_date), e.end_date && e.end_date !== e.start_date ? ` – ${U.fmtDate(e.end_date)}` : '', Calc.timeLabel(e) ? h('div', { class: 'small muted' }, Calc.timeLabel(e)) : null),
+      h('div', { class: 'agenda-main' }, h('button', { class: 'link-btn', type: 'button', onclick: () => EventsView.openEvent(e.id) }, e.title), h('div', { class: 'small muted' }, [e.venue, e.city].filter(Boolean).join(', '))),
+      conf.has(e.id) ? UI.badge('Çakışma', 'warn') : null, UI.statusBadge(e.status)))))));
+  }
+
+  function undatedPanel() {
+    const ym = `${st.cursor.getFullYear()}-${U.pad(st.cursor.getMonth() + 1)}`;
+    const und = Calc.sortEvents(Calc.activeEvents().filter((e) => !e.start_date));
+    if (!und.length) return null;
+    const canEdit = Store.can('edit');
+    const item = (e) => {
+      const input = h('input', { type: 'date', 'aria-label': `${e.title} için tarih`, value: '' });
+      return h('li', { class: 'undated-item' },
+        h('div', null, h('button', { class: 'link-btn', type: 'button', draggable: canEdit ? 'true' : null, onclick: () => EventsView.openEvent(e.id), ondragstart: (ev) => { ev.dataTransfer.setData('text/plain', e.id); } }, e.title),
+          h('div', { class: 'small muted' }, e.month_hint ? 'Planlanan: ' + U.fmtMonth(e.month_hint) : 'Ay belirlenmedi')),
+        canEdit ? h('div', { class: 'undated-set' }, input, UI.btn('Tarih ata', { small: true, onclick: () => { if (!input.value) return UI.toast('Önce bir tarih seçin.', 'error'); EventsView.moveEvent(e.id, input.value); } })) : null);
+    };
+    const mine = und.filter((e) => e.month_hint === ym), rest = und.filter((e) => e.month_hint !== ym);
+    return UI.card('Tarihi belirlenmemiş etkinlikler', h('div', null,
+      canEdit ? h('p', { class: 'muted small' }, 'Bir etkinliği takvimdeki güne sürükleyebilir veya tarih seçip "Tarih ata"ya basabilirsiniz.') : null,
+      h('h4', null, `${U.fmtMonth(ym)} için planlananlar (${mine.length})`), mine.length ? h('ul', { class: 'undated' }, mine.map(item)) : h('p', { class: 'muted small' }, 'Bu ay için tarihi bekleyen etkinlik yok.'),
+      rest.length ? h('details', null, h('summary', null, `Diğer aylar (${rest.length})`), h('ul', { class: 'undated' }, rest.map(item))) : null));
+  }
+
+  function render(root) {
+    const conf = Calc.conflicts();
+    const evs = Calc.activeEvents();
+    const y = st.cursor.getFullYear(), m = st.cursor.getMonth();
+    const shift = (n) => {
+      if (st.view === 'week') st.cursor = U.addDays(st.cursor, 7 * n); else st.cursor = new Date(y, m + n, 1);
+      App.render();
+    };
+    const title = st.view === 'week' ? (() => { const s = U.weekStart(st.cursor), e = U.addDays(s, 6); return `${s.getDate()} ${U.MONTHS[s.getMonth()]} – ${e.getDate()} ${U.MONTHS[e.getMonth()]} ${e.getFullYear()}`; })() : `${U.MONTHS[m]} ${y}`;
+    const seg = (v, label) => h('button', { class: 'seg' + (st.view === v ? ' on' : ''), type: 'button', 'aria-pressed': st.view === v, onclick: () => { st.view = v; App.render(); } }, label);
+    const pairs = []; const seen = new Set();
+    conf.forEach((others, id) => others.forEach((o) => { const k = [id, o].sort().join('|'); if (!seen.has(k)) { seen.add(k); pairs.push([id, o]); } }));
+    U.put(root, 
+      UI.pageHead('Takvim', 'Etkinlikleri aylık, haftalık veya liste olarak izleyin.', Store.can('edit') ? UI.btn('Yeni etkinlik', { ic: 'plus', variant: 'primary', onclick: () => EventsView.eventForm(null) }) : null),
+      pairs.length ? h('div', { class: 'alert warn', role: 'status' }, UI.icon('warn', 18), h('div', null, h('strong', null, `${pairs.length} çakışma: `), pairs.map(([a, b]) => `${Calc.eventTitle(a)} ↔ ${Calc.eventTitle(b)}`).join(' · '))) : null,
+      h('div', { class: 'cal-bar no-print' },
+        h('div', { class: 'cal-nav' }, UI.iconBtn('chevL', 'Önceki', () => shift(-1)), h('h2', { class: 'cal-title', 'aria-live': 'polite' }, title), UI.iconBtn('chevR', 'Sonraki', () => shift(1)), UI.btn('Bugün', { small: true, onclick: () => { st.cursor = new Date(); App.render(); } })),
+        h('div', { class: 'segs', role: 'group', 'aria-label': 'Görünüm' }, seg('month', 'Ay'), seg('week', 'Hafta'), seg('list', 'Liste'))),
+      st.view === 'month' ? monthGrid(evs, conf) : st.view === 'week' ? weekGrid(evs, conf) : listView(evs, conf),
+      h('div', { class: 'legend small muted' }, [['info', 'Hazırlık'], ['warn', 'Onay bekliyor'], ['ok', 'Hazır'], ['done', 'Gerçekleştirildi'], ['bad', 'İptal edildi'], ['muted', 'Fikir']].map(([t, l]) => h('span', null, h('i', { class: 'dot tone-' + t }), l)), h('span', null, UI.icon('warn', 12), ' Çakışma')),
+      undatedPanel());
+  }
+  return { render };
+})();
+
+</script>
+  <script>
+/* js/views-work.js */
+/* Görevler (liste + kanban), ekip, destek talepleri */
+'use strict';
+
+const TasksView = (() => {
+  const { h, clear } = U;
+  const f = { mode: 'list', q: '', event: '', assignee: '', status: '', priority: '', category: '', overdue: false };
+
+  const eventOpts = () => Calc.sortEvents(Calc.activeEvents()).map((e) => ({ value: e.id, label: `${e.code} · ${e.title}` }));
+  const memberOpts = () => Store.D().members.map((m) => ({ value: m.id, label: m.name + ' — ' + m.role_title }));
+
+  function taskForm(t, preset = {}) {
+    if (!Store.can('edit')) return UI.toast('Düzenleme yetkiniz yok.', 'error');
+    const isNew = !t;
+    return UI.form({
+      title: isNew ? 'Yeni görev' : 'Görevi düzenle',
+      values: t || { status: 'Yapılacak', priority: 'Orta', ...preset },
+      fields: [
+        { key: 'title', label: 'Görev', type: 'text', required: true, full: true },
+        { key: 'event_id', label: 'Etkinlik', type: 'select', options: eventOpts(), emptyLabel: '— Genel görev (etkinliğe bağlı değil) —', full: true },
+        { key: 'assignee_id', label: 'Sorumlu kişi', type: 'select', options: memberOpts() },
+        { key: 'due_date', label: 'Son teslim tarihi', type: 'date' },
+        { key: 'priority', label: 'Öncelik', type: 'select', required: true, options: C.PRIORITY.map((p) => ({ value: p, label: p })) },
+        { key: 'status', label: 'Durum', type: 'select', required: true, options: C.TASK_STATUS.map((p) => ({ value: p, label: p })) },
+        { key: 'category_id', label: 'Kategori', type: 'select', options: Store.lookups('task_category').map((l) => ({ value: l.id, label: l.name })) },
+        { key: 'notes', label: 'Not', type: 'textarea', full: true, rows: 2 },
+      ],
+      onSubmit: async (v) => {
+        const rec = { ...v, id: t ? t.id : U.uid('tk') };
+        if (isNew) Object.assign(rec, { sort: 0, is_sample: false, created_at: new Date().toISOString() });
+        await Store.save('tasks', rec, { log: `${isNew ? 'Görev eklendi' : 'Görev güncellendi'}: ${v.title}` });
+        UI.toast(isNew ? 'Görev eklendi.' : 'Görev kaydedildi.');
+      },
+    });
+  }
+  async function setStatus(id, status) {
+    const t = Store.get('tasks', id); if (!t || t.status === status) return;
+    try { await Store.save('tasks', { id, status }, { log: `Görev durumu: ${t.title} → ${status}` }); } catch (e) { /* Store bildirdi */ }
+  }
+  async function del(id) {
+    const t = Store.get('tasks', id); if (!t) return;
+    if (!(await UI.confirmDelete(`"${t.title}" görevi silinecek. Bu işlem geri alınamaz.`))) return;
+    await Store.remove('tasks', id, { log: `Görev silindi: ${t.title}` });
+    UI.toast('Görev silindi.');
+  }
+
+  function filtered() {
+    const q = f.q.trim().toLocaleLowerCase('tr');
+    return Calc.activeTasks().filter((t) =>
+      (!q || (t.title + ' ' + (t.notes || '')).toLocaleLowerCase('tr').includes(q)) &&
+      (!f.event || (f.event === '__none' ? !t.event_id : t.event_id === f.event)) &&
+      (!f.assignee || t.assignee_id === f.assignee) && (!f.status || t.status === f.status) &&
+      (!f.priority || t.priority === f.priority) && (!f.category || t.category_id === f.category) && (!f.overdue || Calc.overdue(t)))
+      .sort((a, b) => ((a.due_date || '9999') < (b.due_date || '9999') ? -1 : (a.due_date || '9999') > (b.due_date || '9999') ? 1 : 0));
+  }
+  const prioTone = (p) => C.tone[p] || 'muted';
+  const statusSelect = (t, canEdit) => canEdit
+    ? h('select', { class: 'inline-sel', 'aria-label': `${t.title} durumu`, onchange: (e) => setStatus(t.id, e.target.value) }, C.TASK_STATUS.map((s) => UI.opt(s, s, t.status === s)))
+    : UI.statusBadge(t.status);
+
+  function listTable(list, canEdit) {
+    if (!list.length) return UI.empty('Filtrelere uyan görev yok.');
+    return UI.table(['', 'Görev', 'Etkinlik', 'Sorumlu', 'Son tarih', 'Öncelik', 'Durum', ''], list.map((t) => h('tr', { class: t.status === 'Tamamlandı' ? 'done' : '' },
+      UI.td('Tamam', h('input', { type: 'checkbox', checked: t.status === 'Tamamlandı', disabled: !canEdit, 'aria-label': `${t.title} tamamlandı`, onchange: (e) => setStatus(t.id, e.target.checked ? 'Tamamlandı' : 'Yapılacak') })),
+      UI.td('Görev', h('strong', null, t.title), t.notes ? h('div', { class: 'small muted' }, t.notes) : null, t.category_id ? h('div', { class: 'small muted' }, Calc.lookupName(t.category_id)) : null),
+      UI.td('Etkinlik', t.event_id ? h('button', { class: 'link-btn', type: 'button', onclick: () => EventsView.openEvent(t.event_id) }, Calc.eventTitle(t.event_id)) : h('span', { class: 'muted' }, 'Genel')),
+      UI.td('Sorumlu', Calc.memberName(t.assignee_id)),
+      UI.td('Son tarih', U.fmtDate(t.due_date), Calc.overdue(t) ? UI.badge('Gecikti', 'bad') : null),
+      UI.td('Öncelik', UI.badge(t.priority, prioTone(t.priority))), UI.td('Durum', statusSelect(t, canEdit)),
+      UI.td('', canEdit ? h('div', { class: 'row-actions no-print' }, UI.iconBtn('edit', 'Düzenle', () => taskForm(t)), UI.iconBtn('trash', 'Sil', () => del(t.id), 'danger')) : null))));
+  }
+  function board(list, canEdit) {
+    return h('div', { class: 'board' }, C.TASK_STATUS.map((s) => {
+      const col = list.filter((t) => t.status === s);
+      const el = h('div', { class: 'board-col', 'data-status': s },
+        h('h3', null, s, h('span', { class: 'count' }, col.length)),
+        col.length ? col.map((t) => h('article', { class: 'tcard' + (Calc.overdue(t) ? ' late' : ''), draggable: canEdit ? 'true' : null,
+          ondragstart: (ev) => { ev.dataTransfer.setData('text/plain', t.id); ev.dataTransfer.effectAllowed = 'move'; } },
+          h('div', { class: 'tcard-title' }, t.title),
+          h('div', { class: 'small muted' }, t.event_id ? Calc.eventTitle(t.event_id) : 'Genel görev'),
+          h('div', { class: 'tcard-meta' }, UI.badge(t.priority, prioTone(t.priority)), t.due_date ? h('span', { class: Calc.overdue(t) ? 'neg small' : 'small' }, U.fmtDate(t.due_date)) : null, h('span', { class: 'small muted' }, Calc.memberName(t.assignee_id))),
+          canEdit ? h('div', { class: 'tcard-actions no-print' }, statusSelect(t, true), UI.iconBtn('edit', 'Düzenle', () => taskForm(t))) : null))
+          : h('p', { class: 'muted small' }, 'Görev yok'));
+      if (canEdit) {
+        el.addEventListener('dragover', (ev) => { ev.preventDefault(); el.classList.add('drop'); });
+        el.addEventListener('dragleave', () => el.classList.remove('drop'));
+        el.addEventListener('drop', (ev) => { ev.preventDefault(); el.classList.remove('drop'); const id = ev.dataTransfer.getData('text/plain'); if (id) setStatus(id, s); });
+      }
+      return el;
+    }));
+  }
+
+  function render(root) {
+    const canEdit = Store.can('edit');
+    const results = h('div', { id: 'task-results' });
+    const draw = () => {
+      const list = filtered(); const stt = Calc.taskStats(list);
+      U.put(clear(results), h('p', { class: 'result-count', 'aria-live': 'polite' }, `${list.length} görev · ${stt.done} tamamlandı · ${stt.pending} bekliyor${stt.overdue ? ` · ${stt.overdue} gecikmiş` : ''}`), f.mode === 'list' ? listTable(list, canEdit) : board(list, canEdit));
+    };
+    const sel = (id, key, opts, all) => h('select', { id, onchange: (e) => { f[key] = e.target.value; draw(); } }, [UI.opt('', all, !f[key]), ...opts.map((o) => UI.opt(o.value, o.label, f[key] === o.value))]);
+    const fld = (id, label, ctl) => h('div', { class: 'field' }, h('label', { for: id }, label), ctl);
+    const seg = (v, label) => h('button', { class: 'seg' + (f.mode === v ? ' on' : ''), type: 'button', 'aria-pressed': f.mode === v, onclick: () => { f.mode = v; App.render(); } }, label);
+    U.put(root, 
+      UI.pageHead('Görevler', 'Etkinlik hazırlıklarını listeden veya kanban panosundan yönetin.', [h('div', { class: 'segs', role: 'group', 'aria-label': 'Görünüm' }, seg('list', 'Liste'), seg('board', 'Kanban')), canEdit ? UI.btn('Yeni görev', { ic: 'plus', variant: 'primary', onclick: () => taskForm(null) }) : null]),
+      h('div', { class: 'filters card no-print' },
+        fld('t-q', 'Ara', h('input', { id: 't-q', type: 'search', value: f.q, placeholder: 'Görev adı veya not…', oninput: (e) => { f.q = e.target.value; draw(); } })),
+        fld('t-ev', 'Etkinlik', sel('t-ev', 'event', [{ value: '__none', label: 'Genel görevler' }, ...eventOpts()], 'Tümü')),
+        fld('t-as', 'Sorumlu', sel('t-as', 'assignee', Store.D().members.map((m) => ({ value: m.id, label: m.name })), 'Tümü')),
+        fld('t-st', 'Durum', sel('t-st', 'status', C.TASK_STATUS.map((s) => ({ value: s, label: s })), 'Tümü')),
+        fld('t-pr', 'Öncelik', sel('t-pr', 'priority', C.PRIORITY.map((s) => ({ value: s, label: s })), 'Tümü')),
+        fld('t-ca', 'Kategori', sel('t-ca', 'category', Store.lookups('task_category').map((l) => ({ value: l.id, label: l.name })), 'Tümü')),
+        h('label', { class: 'check inline' }, h('input', { type: 'checkbox', checked: f.overdue, onchange: (e) => { f.overdue = e.target.checked; draw(); } }), h('span', null, 'Yalnızca geciken'))),
+      results);
+    draw();
+  }
+  return { render, taskForm, setStatus };
+})();
+
+/* ---------------- Yönetim kurulu ---------------- */
+const TeamView = (() => {
+  const { h } = U;
+  function memberForm(m) {
+    if (!Store.can('admin')) return UI.toast('Bu işlem için yönetici yetkisi gerekir.', 'error');
+    const isNew = !m;
+    UI.form({
+      title: isNew ? 'Yönetim üyesi ekle' : 'Yönetim üyesini düzenle', values: m || {},
+      fields: [
+        { key: 'name', label: 'Ad soyad', type: 'text', required: true },
+        { key: 'role_title', label: 'Görev unvanı', type: 'text', required: true, placeholder: 'ör. Kulüp Başkanı' },
+        { key: 'responsibilities', label: 'Sorumluluklar', type: 'lines', full: true, help: 'Bir üyeye birden fazla sorumluluk yazabilirsiniz; her satıra bir tane.' },
+      ],
+      onSubmit: async (v) => {
+        await Store.save('members', { ...v, id: m ? m.id : U.uid('m'), sort: m ? m.sort : Store.D().members.length }, { log: `${isNew ? 'Yönetim üyesi eklendi' : 'Yönetim üyesi güncellendi'}: ${v.name}` });
+        UI.toast('Kaydedildi.');
+      },
+    });
+  }
+  async function del(id) {
+    const m = Store.get('members', id); if (!m) return;
+    const s = Calc.memberStats(id);
+    if (!(await UI.confirmDelete(`${m.name} silinecek. Üzerindeki ${s.total} görev ve ${s.led} etkinlik "sorumlu atanmamış" olarak kalır. Bu işlem geri alınamaz.`))) return;
+    await Store.removeMember(id, { log: `Yönetim üyesi silindi: ${m.name}` });
+    UI.toast('Üye silindi.');
+  }
+  function openMember(id) {
+    UI.liveDialog({ title: 'Üye ayrıntısı', size: 'lg', render: () => {
+      const m = Store.get('members', id); if (!m) return null;
+      const tasks = Calc.activeTasks().filter((t) => t.assignee_id === id).sort((a, b) => ((a.due_date || '9') < (b.due_date || '9') ? -1 : 1));
+      const led = Calc.activeEvents().filter((e) => e.lead_id === id);
+      return h('div', null, h('h3', { class: 'detail-title' }, m.name), h('p', { class: 'muted' }, m.role_title),
+        h('h4', null, 'Sorumluluklar'), (m.responsibilities || []).length ? h('ul', { class: 'plain' }, m.responsibilities.map((r) => h('li', null, r))) : h('p', { class: 'muted' }, '—'),
+        h('h4', null, `Sorumlu olduğu etkinlikler (${led.length})`), led.length ? h('ul', { class: 'plain' }, led.map((e) => h('li', null, h('button', { class: 'link-btn', type: 'button', onclick: () => EventsView.openEvent(e.id) }, e.title), ' ', UI.statusBadge(e.status)))) : h('p', { class: 'muted' }, '—'),
+        h('h4', null, `Görevleri (${tasks.length})`), tasks.length ? UI.table(['Görev', 'Etkinlik', 'Son tarih', 'Durum'], tasks.map((t) => h('tr', null, UI.td('Görev', t.title), UI.td('Etkinlik', t.event_id ? Calc.eventTitle(t.event_id) : 'Genel'), UI.td('Son tarih', U.fmtDate(t.due_date), Calc.overdue(t) ? UI.badge('Gecikti', 'bad') : null), UI.td('Durum', UI.statusBadge(t.status))))) : UI.empty('Atanmış görev yok.'));
+    } });
+  }
+  function render(root) {
+    const members = Store.D().members;
+    const stats = members.map((m) => ({ m, s: Calc.memberStats(m.id) }));
+    const max = Math.max(1, ...stats.map((x) => x.s.pending));
+    U.put(root, 
+      UI.pageHead('Yönetim kurulu', 'Üyeler, sorumluluklar ve iş yükü.', Store.can('admin') ? UI.btn('Üye ekle', { ic: 'plus', variant: 'primary', onclick: () => memberForm(null) }) : null),
+      members.length ? h('div', { class: 'team-grid' }, stats.map(({ m, s }) => h('article', { class: 'card member' },
+        h('div', { class: 'avatar', 'aria-hidden': 'true' }, m.name.trim().split(/\s+/).map((p) => p[0]).slice(0, 2).join('').toLocaleUpperCase('tr')),
+        h('h3', null, m.name), h('p', { class: 'muted' }, m.role_title),
+        h('div', { class: 'chips' }, (m.responsibilities || []).map((r) => h('span', { class: 'tag' }, r))),
+        h('div', { class: 'load' }, h('div', { class: 'load-label' }, h('span', null, 'İş yükü'), h('span', null, `${s.pending} bekleyen`)), UI.progress(Math.round(s.pending / max * 100), `${m.name} iş yükü`)),
+        h('dl', { class: 'mini-stats' }, h('div', null, h('dt', null, 'Tamamlanan'), h('dd', null, s.done)), h('div', null, h('dt', null, 'Bekleyen'), h('dd', null, s.pending)), h('div', null, h('dt', null, 'Geciken'), h('dd', { class: s.overdue ? 'neg' : '' }, s.overdue)), h('div', null, h('dt', null, 'Sorumlu etkinlik'), h('dd', null, s.led))),
+        h('div', { class: 'card-foot no-print' }, UI.btn('Görevler', { small: true, onclick: () => openMember(m.id) }), Store.can('admin') ? [UI.iconBtn('edit', 'Düzenle', () => memberForm(m)), UI.iconBtn('trash', 'Sil', () => del(m.id), 'danger')] : null))))
+        : UI.empty('Henüz yönetim üyesi yok.', Store.can('admin') ? UI.btn('Üye ekle', { variant: 'primary', onclick: () => memberForm(null) }) : null));
+  }
+  return { render, memberForm };
+})();
+
+/* ---------------- Üniversite destek ve izin talepleri ---------------- */
+const SupportView = (() => {
+  const { h, clear } = U;
+  const f = { status: '', event: '' };
+
+  function supportForm(s, preset = {}) {
+    if (!Store.can('edit')) return UI.toast('Düzenleme yetkiniz yok.', 'error');
+    const isNew = !s;
+    UI.form({
+      title: isNew ? 'Destek / izin talebi ekle' : 'Talebi düzenle', values: s || { status: 'Hazırlanıyor', ...preset },
+      fields: [
+        { key: 'title', label: 'Talep edilen destek', type: 'text', required: true, full: true, placeholder: 'ör. Üniversite aracı, Konferans salonu, Projeksiyon…' },
+        { key: 'unit', label: 'Talep edilen birim', type: 'text', placeholder: 'ör. SKS Daire Başkanlığı' },
+        { key: 'event_id', label: 'İlgili etkinlik', type: 'select', options: Calc.sortEvents(Calc.activeEvents()).map((e) => ({ value: e.id, label: `${e.code} · ${e.title}` })) },
+        { key: 'request_date', label: 'Talep tarihi', type: 'date' },
+        { key: 'status', label: 'Durum', type: 'select', required: true, options: C.SUPPORT.map((x) => ({ value: x, label: x })) },
+        { key: 'description', label: 'Açıklama', type: 'textarea', full: true, rows: 2 },
+      ],
+      onSubmit: async (v) => {
+        const rec = { ...v, id: s ? s.id : U.uid('sp') };
+        if (isNew) Object.assign(rec, { is_sample: false, created_at: new Date().toISOString() });
+        await Store.save('supports', rec, { log: `${isNew ? 'Destek talebi eklendi' : 'Destek talebi güncellendi'}: ${v.title}` });
+        UI.toast('Talep kaydedildi.');
+      },
+    });
+  }
+  async function setStatus(id, status) {
+    const s = Store.get('supports', id); if (!s || s.status === status) return;
+    try { await Store.save('supports', { id, status }, { log: `Destek talebi durumu: ${s.title} → ${status}` }); } catch (e) { /* bildirildi */ }
+  }
+  async function del(id) {
+    const s = Store.get('supports', id); if (!s) return;
+    if (!(await UI.confirmDelete(`"${s.title}" talebi silinecek.`))) return;
+    await Store.remove('supports', id, { log: `Destek talebi silindi: ${s.title}` });
+    UI.toast('Talep silindi.');
+  }
+  /** Etkinlik kayıtlarındaki "talep edilecek destekler" listesinden, henüz talebi olmayanları oluşturur. */
+  async function generateFromEvents() {
+    const existing = new Set(Store.D().supports.map((s) => s.event_id + '|' + s.title.toLocaleLowerCase('tr')));
+    const rows = [];
+    Calc.activeEvents().filter((e) => !Calc.isFinal(e)).forEach((e) => (e.univ_supports || []).forEach((t) => {
+      if (!existing.has(e.id + '|' + t.toLocaleLowerCase('tr'))) rows.push({ id: U.uid('sp'), event_id: e.id, title: t, unit: '', request_date: null, status: 'Hazırlanıyor', description: '', is_sample: false, created_at: new Date().toISOString() });
+    }));
+    if (!rows.length) return UI.toast('Eksik talep yok; tüm etkinlik destekleri zaten listede.');
+    if (!(await UI.confirmBox({ title: 'Talepleri oluştur', message: `Etkinliklerde listelenen ve henüz talebi olmayan ${rows.length} destek için "Hazırlanıyor" durumunda talep oluşturulacak.`, okLabel: 'Oluştur' }))) return;
+    await Store.saveMany('supports', rows, { log: `${rows.length} destek talebi etkinliklerden oluşturuldu` });
+    UI.toast(`${rows.length} talep oluşturuldu.`);
+  }
+
+  function render(root) {
+    if (!Store.internal()) { U.put(root, UI.pageHead('Üniversite destekleri'), lockedNote()); return; }
+    const canEdit = Store.can('edit');
+    const results = h('div');
+    const draw = () => {
+      const list = Store.D().supports.filter((s) => (!f.status || s.status === f.status) && (!f.event || s.event_id === f.event)).sort((a, b) => U.sortTr(Calc.eventTitle(a.event_id), Calc.eventTitle(b.event_id)));
+      U.put(clear(results), h('p', { class: 'result-count', 'aria-live': 'polite' }, `${list.length} talep`),
+        list.length ? UI.table(['Destek', 'Birim', 'Etkinlik', 'Tarih', 'Durum', 'Açıklama', ''], list.map((s) => h('tr', null,
+          UI.td('Destek', h('strong', null, s.title), s.is_sample ? UI.badge('Örnek', 'sample') : null), UI.td('Birim', s.unit || '—'),
+          UI.td('Etkinlik', s.event_id ? h('button', { class: 'link-btn', type: 'button', onclick: () => EventsView.openEvent(s.event_id) }, Calc.eventTitle(s.event_id)) : h('span', { class: 'muted' }, 'Bağlı değil')),
+          UI.td('Tarih', U.fmtDate(s.request_date)),
+          UI.td('Durum', canEdit ? h('select', { class: 'inline-sel', 'aria-label': `${s.title} durumu`, onchange: (e) => setStatus(s.id, e.target.value) }, C.SUPPORT.map((x) => UI.opt(x, x, s.status === x))) : UI.statusBadge(s.status)),
+          UI.td('Açıklama', s.description || '—'),
+          UI.td('', canEdit ? h('div', { class: 'row-actions no-print' }, UI.iconBtn('edit', 'Düzenle', () => supportForm(s)), UI.iconBtn('trash', 'Sil', () => del(s.id), 'danger')) : null)))) : UI.empty('Talep bulunamadı.'));
+    };
+    const counts = C.SUPPORT.map((s) => [s, Store.D().supports.filter((x) => x.status === s).length]);
+    U.put(root, 
+      UI.pageHead('Üniversite destekleri ve izinler', 'Üniversiteden talep edilen araç, salon, baskı ve diğer destekler.', canEdit ? [UI.btn('Etkinliklerden oluştur', { ic: 'download', onclick: generateFromEvents }), UI.btn('Talep ekle', { ic: 'plus', variant: 'primary', onclick: () => supportForm(null) })] : null),
+      h('div', { class: 'kpis small-kpis' }, counts.map(([s, n]) => UI.kpi(s, n))),
+      h('div', { class: 'filters card no-print' },
+        h('div', { class: 'field' }, h('label', { for: 's-st' }, 'Durum'), h('select', { id: 's-st', onchange: (e) => { f.status = e.target.value; draw(); } }, [UI.opt('', 'Tümü', !f.status), ...C.SUPPORT.map((s) => UI.opt(s, s, f.status === s))])),
+        h('div', { class: 'field' }, h('label', { for: 's-ev' }, 'Etkinlik'), h('select', { id: 's-ev', onchange: (e) => { f.event = e.target.value; draw(); } }, [UI.opt('', 'Tümü', !f.event), ...Calc.sortEvents(Calc.activeEvents()).map((e) => UI.opt(e.id, e.title, f.event === e.id))]))),
+      results);
+    draw();
+  }
+  const lockedNote = () => UI.card(null, h('div', { class: 'locked' }, UI.icon('lock', 28), h('p', null, 'Destek talepleri yalnızca giriş yapmış yönetim üyelerine açıktır.'), UI.btn('Giriş yap', { variant: 'primary', onclick: () => App.loginDialog() })));
+  return { render, supportForm };
+})();
+
+</script>
+  <script>
+/* js/views-admin.js */
+/* Genel bakış, raporlar, ayarlar */
+'use strict';
+
+const DashboardView = (() => {
+  const { h } = U;
+
+  function barChart(items) {
+    const max = Math.max(1, ...items.flatMap((i) => i.series.map((s) => s.v)));
+    return h('div', { class: 'chart', role: 'img', 'aria-label': 'Aylık grafik: ' + items.map((i) => `${i.label}: ${i.series.map((s) => s.v).join(', ')}`).join('; ') },
+      h('div', { class: 'bars' }, items.map((i) => h('div', { class: 'bar-group' },
+        h('div', { class: 'bar-stack' }, i.series.map((s) => h('div', { class: 'bar ' + s.cls, style: `height:${Math.max(2, s.v / max * 100)}%`, title: `${i.label}: ${s.v}` }, h('span', { class: 'bar-val' }, s.v)))),
+        h('div', { class: 'bar-label' }, i.label)))));
+  }
+
+  function miniCalendar() {
+    const now = new Date(), y = now.getFullYear(), m = now.getMonth(), today = U.todayISO();
+    const start = U.weekStart(new Date(y, m, 1));
+    const byDay = new Map();
+    Calc.activeEvents().forEach((e) => Calc.daysOf(e).forEach((d) => (byDay.get(d) || byDay.set(d, []).get(d)).push(e)));
+    const cells = U.DAYS_SHORT.map((d) => h('div', { class: 'mc-dow' }, d[0]));
+    for (let i = 0; i < 42; i++) {
+      const day = U.addDays(start, i), iso = U.iso(day), list = byDay.get(iso) || [];
+      const cls = 'mc-day' + (day.getMonth() !== m ? ' other' : '') + (iso === today ? ' today' : '') + (list.length ? ' has' : '');
+      cells.push(list.length
+        ? h('button', { class: cls, type: 'button', title: list.map((e) => e.title).join(', '), 'aria-label': `${U.fmtDateLong(iso)}: ${list.map((e) => e.title).join(', ')}`, onclick: () => (list.length === 1 ? EventsView.openEvent(list[0].id) : App.go('calendar')) }, day.getDate())
+        : h('div', { class: cls }, day.getDate()));
+    }
+    return h('div', null, h('div', { class: 'mc-title' }, `${U.MONTHS[m]} ${y}`), h('div', { class: 'mc' }, cells));
+  }
+
+  function render(root) {
+    const internal = Store.internal(), canEdit = Store.can('edit');
+    const evs = Calc.activeEvents(), today = U.todayISO();
+    const upcoming = Calc.sortEvents(evs.filter((e) => e.start_date && e.start_date >= today && !Calc.isFinal(e)));
+    const undated = Calc.sortEvents(evs.filter((e) => !e.start_date && !Calc.isFinal(e)));
+    const done = evs.filter((e) => e.status === 'Gerçekleştirildi').length;
+    const preparing = evs.filter((e) => C.PREPARING.includes(e.status)).length;
+    const ts = Calc.taskStats(Calc.activeTasks());
+    const conf = Calc.conflicts();
+
+    const months = [...new Set(evs.map(Calc.evMonth).filter(Boolean))].sort();
+    const countItems = months.map((ym) => ({ label: U.MONTHS[+ym.slice(5, 7) - 1].slice(0, 3), series: [{ v: evs.filter((e) => Calc.evMonth(e) === ym).length, cls: 'b1' }] }));
+    const nextList = [...upcoming.slice(0, 6), ...undated.slice(0, Math.max(0, 8 - Math.min(upcoming.length, 6)))];
+
+    U.put(root, 
+      UI.pageHead('Genel bakış', `${Store.settings().name}${Store.settings().academic_year ? ' · ' + Store.settings().academic_year : ''}`, canEdit ? UI.btn('Hızlı etkinlik ekle', { ic: 'plus', variant: 'primary', onclick: () => EventsView.eventForm(null, { quick: true }) }) : null),
+      conf.size || ts.overdue ? h('div', { class: 'alert warn', role: 'status' }, UI.icon('warn', 18), h('div', null,
+        conf.size ? h('span', null, h('strong', null, `${conf.size} etkinlik`), ' tarih çakışması içeriyor. ') : null,
+        ts.overdue ? h('span', null, h('strong', null, `${ts.overdue} görev`), ' gecikmiş. ') : null)) : null,
+      h('div', { class: 'kpis' },
+        UI.kpi('Toplam etkinlik', evs.length, 'Arşiv hariç'), UI.kpi('Yaklaşan etkinlik', upcoming.length, `${undated.length} etkinliğin tarihi belirlenmedi`),
+        UI.kpi('Tamamlanan etkinlik', done), UI.kpi('Hazırlık aşamasında', preparing, 'Planlanıyor · Onay · Hazırlanıyor'),
+        UI.kpi('Tamamlanan görev', `${ts.done} / ${ts.total}`, ts.total ? `%${Math.round(ts.done / ts.total * 100)}` : ''), UI.kpi('Bekleyen görev', ts.pending, ts.overdue ? `${ts.overdue} gecikmiş` : 'Gecikme yok', ts.overdue ? 'warn' : '')),
+      h('div', { class: 'dash-grid' },
+        UI.card('Yaklaşan etkinlikler', nextList.length ? h('ul', { class: 'agenda' }, nextList.map((e) => { const p = Calc.readiness(e); return h('li', null,
+          h('div', { class: 'agenda-date' }, e.start_date ? U.fmtDate(e.start_date) : U.fmtMonth(e.month_hint), e.start_date ? null : h('div', { class: 'small muted' }, 'tarih belirlenmedi')),
+          h('div', { class: 'agenda-main' }, h('button', { class: 'link-btn', type: 'button', onclick: () => EventsView.openEvent(e.id) }, e.title), h('div', { class: 'small muted' }, Calc.lookupName(e.type_id) + (p === null ? '' : ` · hazırlık %${p}`))), UI.statusBadge(e.status)); })) : UI.empty('Yaklaşan etkinlik yok.'),
+          UI.btn('Tümü', { small: true, onclick: () => App.go('events') })),
+        UI.card('Takvim', miniCalendar(), UI.btn('Takvimi aç', { small: true, onclick: () => App.go('calendar') })),
+        UI.card('Aylara göre etkinlik sayısı', countItems.length ? barChart(countItems) : UI.empty('Veri yok.')),
+        internal ? UI.card('Son yapılan değişiklikler', Store.D().log.length ? h('ul', { class: 'log' }, Store.D().log.slice(0, 8).map((l) => h('li', null, h('div', null, l.summary), h('div', { class: 'small muted' }, `${U.fmtDateTime(l.at)}${l.actor ? ' · ' + l.actor : ''}`)))) : UI.empty('Henüz kayıtlı değişiklik yok.'))
+          : UI.card('Yönetim paneli', h('div', { class: 'locked' }, UI.icon('lock', 26), h('p', null, 'Destek talepleri ve değişiklik geçmişi yönetim üyelerine açıktır.'), UI.btn('Giriş yap', { variant: 'primary', onclick: () => App.loginDialog() })))));
+  }
+  return { render };
+})();
+
+/* ---------------- Raporlar ---------------- */
+const ReportsView = (() => {
+  const { h, clear } = U;
+  const st = { id: 'annual', month: '' };
+
+  const col = (name, t = 'text') => ({ name, t });
+  const fmt = (c, v) => v === null || v === undefined || v === '' ? '—' : c.t === 'date' ? U.fmtDate(v) : c.t === 'num' ? U.fmtNum(v) : c.t === 'pct' ? `%${v}` : String(v);
+  const exp = (c, v) => v === null || v === undefined ? '' : c.t === 'date' ? U.fmtDate(v) : c.t === 'pct' ? `%${v}` : v;
+
+  const eventRowBase = (e) => [Calc.lookupName(e.type_id), Calc.dateLabel(e), [e.venue, e.city].filter(Boolean).join(', '), Calc.memberName(e.lead_id), e.status];
+
+  const REPORTS = [
+    { id: 'annual', title: 'Yıllık faaliyet planı', internal: false, build() {
+      const yr = Store.settings().academic_year; const all = Calc.sortEvents(Calc.activeEvents().filter((e) => e.status !== 'İptal edildi'));
+      const list = all.filter((e) => Calc.inYear(e, yr)); const out = all.length - list.length;
+      const cols = [col('Ay'), col('No'), col('Etkinlik'), col('Tür'), col('Tarih'), col('Mekân'), col('Sorumlu'), col('Durum')];
+      return { title: `${yr ? yr + ' ' : ''}Akademik Yılı Faaliyet Planı`, cols, rows: list.map((e) => [U.fmtMonth(Calc.evMonth(e)), e.code, e.title, ...eventRowBase(e)]),
+        summary: [['Toplam etkinlik', list.length]], note: out ? `${out} etkinlik seçili akademik yılın (${yr}) dışında olduğu için listelenmedi.` : '' };
+    } },
+    { id: 'monthly', title: 'Aylık etkinlik listesi', internal: false, build() {
+      const months = [...new Set(Calc.activeEvents().map(Calc.evMonth).filter(Boolean))].sort(); const ym = st.month || months[0] || '';
+      const list = Calc.sortEvents(Calc.activeEvents().filter((e) => Calc.evMonth(e) === ym));
+      return { title: `${U.fmtMonth(ym)} Etkinlik Listesi`, cols: [col('No'), col('Etkinlik'), col('Tür'), col('Tarih'), col('Mekân'), col('Sorumlu'), col('Durum')], rows: list.map((e) => [e.code, e.title, ...eventRowBase(e)]), summary: [['Etkinlik sayısı', list.length]], months, ym };
+    } },
+    { id: 'board', title: 'Yönetim kurulu görev raporu', internal: false, build() {
+      const rows = Store.D().members.map((m) => { const s = Calc.memberStats(m.id); return [m.name, m.role_title, s.total, s.done, s.pending, s.overdue, s.led]; });
+      const un = Calc.taskStats(Calc.activeTasks().filter((t) => !t.assignee_id));
+      rows.push(['(Atanmamış)', '', un.total, un.done, un.pending, un.overdue, '']);
+      return { title: 'Yönetim Kurulu Görev Raporu', cols: [col('Üye'), col('Görev'), col('Toplam', 'num'), col('Tamamlanan', 'num'), col('Bekleyen', 'num'), col('Geciken', 'num'), col('Sorumlu etkinlik', 'num')], rows, summary: [['Toplam görev', Calc.activeTasks().length]] };
+    } },
+    { id: 'done', title: 'Gerçekleşen ve iptal edilen etkinlikler', internal: false, build() {
+      const list = Calc.sortEvents(Calc.activeEvents().filter((e) => Calc.isFinal(e)));
+      return { title: 'Gerçekleşen ve İptal Edilen Etkinlikler', cols: [col('No'), col('Etkinlik'), col('Durum'), col('Tarih'), col('Gerçek katılımcı', 'num'), col('Değerlendirme')],
+        rows: list.map((e) => [e.code, e.title, e.status, Calc.dateLabel(e), e.actual_participants, e.evaluation || '']),
+        summary: [['Gerçekleştirilen', list.filter((e) => e.status === 'Gerçekleştirildi').length], ['İptal edilen', list.filter((e) => e.status === 'İptal edildi').length]] };
+    } },
+    { id: 'support', title: 'Üniversiteden istenen destekler', internal: true, build() {
+      const list = [...Store.D().supports].sort((a, b) => U.sortTr(Calc.eventTitle(a.event_id), Calc.eventTitle(b.event_id)));
+      return { title: 'Üniversiteden İstenen Destekler', cols: [col('Destek'), col('Birim'), col('Etkinlik'), col('Talep tarihi', 'date'), col('Durum'), col('Açıklama')], rows: list.map((s) => [s.title, s.unit, s.event_id ? Calc.eventTitle(s.event_id) : '', s.request_date, s.status, s.description]),
+        summary: C.SUPPORT.map((s) => [s, list.filter((x) => x.status === s).length]) };
+    } },
+    { id: 'participation', title: 'Etkinlik katılım istatistikleri', internal: false, build() {
+      const list = Calc.sortEvents(Calc.activeEvents().filter((e) => e.status !== 'İptal edildi'));
+      const withActual = list.filter((e) => e.actual_participants !== null && e.actual_participants !== undefined);
+      const sa = Calc.sum(withActual, (e) => e.actual_participants), se = Calc.sum(list, (e) => e.est_participants);
+      return { title: 'Etkinlik Katılım İstatistikleri', cols: [col('No'), col('Etkinlik'), col('Tür'), col('Tarih'), col('Tahmini katılımcı', 'num'), col('Gerçek katılımcı', 'num'), col('Gerçekleşme', 'pct')],
+        rows: list.map((e) => [e.code, e.title, Calc.lookupName(e.type_id), Calc.dateLabel(e), e.est_participants, e.actual_participants, e.est_participants && e.actual_participants != null ? Math.round(e.actual_participants / e.est_participants * 100) : null]),
+        summary: [['Toplam tahmini katılımcı', U.fmtNum(se)], ['Toplam gerçek katılımcı', U.fmtNum(sa)], ['Katılım verisi girilen etkinlik', withActual.length], ['Etkinlik başına ortalama gerçek katılım', withActual.length ? U.fmtNum(Math.round(sa / withActual.length)) : '—']] };
+    } },
+    { id: 'summary', title: 'Yıl sonu faaliyet özeti', internal: false, build() {
+      const yr = Store.settings().academic_year; const evs = Calc.activeEvents().filter((e) => Calc.inYear(e, yr));
+      const done = evs.filter((e) => e.status === 'Gerçekleştirildi'), canc = evs.filter((e) => e.status === 'İptal edildi');
+      const ts = Calc.taskStats(Calc.activeTasks()); const rows = [
+        ['Planlanan toplam etkinlik', evs.length], ['Gerçekleştirilen etkinlik', done.length], ['İptal edilen etkinlik', canc.length], ['Devam eden / bekleyen etkinlik', evs.length - done.length - canc.length],
+        ['Toplam gerçek katılımcı', U.fmtNum(Calc.sum(done, (e) => e.actual_participants))], ['Görev tamamlanma oranı', ts.total ? `%${Math.round(ts.done / ts.total * 100)} (${ts.done}/${ts.total})` : '—'],
+      ];
+      Store.lookups('event_type').forEach((l) => { const n = evs.filter((e) => e.type_id === l.id && e.status !== 'İptal edildi').length; if (n) rows.push([`Etkinlik türü: ${l.name}`, n]); });
+      return { title: `${yr ? yr + ' ' : ''}Akademik Yılı Faaliyet Özeti`, cols: [col('Gösterge'), col('Değer')], rows, summary: [] };
+    } },
+  ];
+  const visible = () => REPORTS.filter((r) => !r.internal || Store.internal());
+
+  function table(rep, cls = '') {
+    return UI.table(rep.cols.map((c) => c.name), rep.rows.map((r) => h('tr', null, r.map((v, i) => UI.td(rep.cols[i].name, fmt(rep.cols[i], v))))), cls);
+  }
+  function doc(rep) {
+    const s = Store.settings();
+    return h('article', { class: 'sheet report-sheet' }, h('header', { class: 'sheet-head' }, h('div', null, h('div', { class: 'sheet-org' }, s.name), h('h1', null, rep.title), h('div', { class: 'sheet-meta' }, `Düzenleme tarihi: ${U.fmtDate(U.todayISO())}${s.academic_year ? ' · Akademik yıl: ' + s.academic_year : ''}`))),
+      rep.rows.length ? table(rep, 'sheet-tbl2') : UI.empty('Bu rapor için veri yok.'),
+      rep.summary && rep.summary.length ? h('dl', { class: 'facts summary' }, rep.summary.map(([k, v]) => h('div', null, h('dt', null, k), h('dd', null, v)))) : null,
+      rep.note ? h('p', { class: 'muted small' }, rep.note) : null);
+  }
+  const exportRows = (rep) => rep.rows.map((r) => r.map((v, i) => exp(rep.cols[i], v)));
+
+  function render(root) {
+    const list = visible(); if (!list.some((r) => r.id === st.id)) st.id = list[0].id;
+    const def = list.find((r) => r.id === st.id); const rep = def.build();
+    const out = h('div', { id: 'report-out' }, doc(rep));
+    const fname = U.slug(rep.title) + '-' + U.todayISO();
+    U.put(root, 
+      UI.pageHead('Raporlar', 'Raporu seçin; yazdırın, PDF olarak kaydedin veya CSV / Excel olarak dışa aktarın.',
+        [UI.btn('Yazdır / PDF', { ic: 'print', variant: 'primary', onclick: () => UI.printNode(doc(def.build())) }),
+          UI.btn('CSV', { ic: 'download', onclick: () => U.download(fname + '.csv', U.toCSV(rep.cols.map((c) => c.name), exportRows(rep)), 'text/csv;charset=utf-8') }),
+          UI.btn('Excel', { ic: 'download', onclick: async () => { try { await U.downloadXLSX(fname + '.xlsx', [{ name: rep.title, columns: rep.cols.map((c) => c.name), rows: exportRows(rep) }]); } catch (e) { UI.toast(e.message, 'error'); } } })]),
+      h('div', { class: 'report-layout' },
+        h('nav', { class: 'report-list card no-print', 'aria-label': 'Rapor listesi' }, list.map((r) => h('button', { class: 'report-item' + (r.id === st.id ? ' on' : ''), type: 'button', 'aria-current': r.id === st.id ? 'true' : null, onclick: () => { st.id = r.id; App.render(); } }, r.title)),
+          h('hr'), h('p', { class: 'small muted' }, 'Etkinlik bazlı resmî faaliyet raporu için etkinlik ayrıntısındaki "Faaliyet raporu" düğmesini kullanın.')),
+        h('div', null,
+          def.id === 'monthly' ? h('div', { class: 'filters card no-print' }, h('div', { class: 'field' }, h('label', { for: 'r-month' }, 'Ay'), h('select', { id: 'r-month', onchange: (e) => { st.month = e.target.value; App.render(); } }, (rep.months || []).map((m) => UI.opt(m, U.fmtMonth(m), m === rep.ym))))) : null,
+          out)));
+  }
+  return { render };
+})();
+
+/* ---------------- Ayarlar ---------------- */
+const SettingsView = (() => {
+  const { h, clear } = U;
+  const ROLE = { admin: 'Yönetici', editor: 'Editör', viewer: 'Görüntüleyici' };
+  const ROLE_HELP = 'Yönetici: her şey (üyeler, ayarlar, yetkili kişiler). Editör: etkinlik, görev ve destek talebi ekler/düzenler. Görüntüleyici: yalnızca okur.';
+  const pwFields = (label = 'Yeni şifre') => [
+    { key: 'p1', label, type: 'password', required: true, autocomplete: 'new-password', help: 'En az 6 karakter.' },
+    { key: 'p2', label: label + ' (tekrar)', type: 'password', required: true, autocomplete: 'new-password' },
+  ];
+  const pwValidate = (v) => { const e = {}; if (v.p1 && v.p1.length < 6) e.p1 = 'Şifre en az 6 karakter olmalı.'; if (v.p2 && v.p1 !== v.p2) e.p2 = 'Şifreler aynı değil.'; return e; };
+  const appLink = () => (/^https?:/.test(location.protocol) && !/^(localhost|127\.)/.test(location.hostname) ? location.origin + location.pathname : '');
+
+  // ---- Hesabım ----
+  function accountCard() {
+    const st = Store.state;
+    if (st.mode !== 'remote' || !st.user) return null;
+    return UI.card('Hesabım', h('div', null,
+      h('dl', { class: 'facts' }, [['Ad', st.user.name || '—'], ['E-posta', st.user.email], ['Yetki', st.role ? ROLE[st.role] : 'Yetkisiz']].map(([k, v]) => h('div', null, h('dt', null, k), h('dd', null, v)))),
+      h('div', { class: 'btn-row' }, UI.btn('Şifremi değiştir', { ic: 'lock', onclick: () => UI.form({
+        title: 'Şifremi değiştir', size: 'sm', fields: pwFields(), validate: pwValidate,
+        onSubmit: async (v) => { await Store.changePassword(v.p1); UI.toast('Şifreniz değiştirildi.'); },
+      }) }), UI.btn('Çıkış yap', { onclick: async () => { await Store.signOut(); UI.toast('Çıkış yapıldı.'); } }))));
+  }
+
+  // ---- Yetkili kişiler (yalnızca yönetici, ortak mod) ----
+  function accessForm(r) {
+    UI.form({
+      title: r ? 'Yetkili kişiyi düzenle' : 'Yetkili kişi ekle', size: 'sm', values: r || { role: 'editor' },
+      intro: r ? null : 'Bu e-postayla kişi uygulamada "Hesap oluştur" diyerek kendi şifresini belirleyip hemen giriş yapabilir.',
+      fields: [
+        { key: 'email', label: 'E-posta', type: 'email', required: true, disabled: !!r },
+        { key: 'full_name', label: 'Ad soyad', type: 'text' },
+        { key: 'role', label: 'Yetki', type: 'select', required: true, options: ['editor', 'admin', 'viewer'].map((x) => ({ value: x, label: ROLE[x] })), help: ROLE_HELP },
+      ],
+      onSubmit: async (v) => {
+        await Store.saveAccess({ email: r ? r.email : v.email, full_name: v.full_name, role: v.role });
+        UI.toast(r ? 'Kaydedildi.' : `${v.email} eklendi. Davet mesajını kopyalayıp gönderebilirsiniz.`);
+        App.render();
+      },
+    });
+  }
+  async function accessDel(r) {
+    if (!(await UI.confirmDelete(`${r.email} yetkili kişiler listesinden kaldırılacak. Hesap açtıysa uygulamadaki yetkisi hemen kalkar (herkese açık bilgileri görmeye devam eder).`))) return;
+    try { await Store.removeAccess(r.email); UI.toast('Kaldırıldı.'); App.render(); } catch (e) { UI.toast(e.message, 'error'); }
+  }
+  function accessReset(r) {
+    UI.form({
+      title: 'Şifre sıfırla', size: 'sm', intro: `${r.full_name || r.email} için yeni bir şifre belirleyin ve kişiye iletin. Kişi giriş yaptıktan sonra Ayarlar > Hesabım'dan değiştirebilir.`,
+      fields: pwFields(), validate: pwValidate,
+      onSubmit: async (v) => { await Store.adminSetPassword(r.email, v.p1); UI.toast('Şifre sıfırlandı. Yeni şifreyi kişiye iletin.'); },
+    });
+  }
+  async function copyInvite() {
+    const link = appLink();
+    const text = `Merhaba, Fotoğrafçılık Topluluğu yönetim paneline seni ekledim.\n` +
+      (link ? `1) Şu bağlantıyı aç: ${link}\n` : '1) Sana gönderdiğim uygulamayı kur ve aç.\n') +
+      `2) Sağ üstteki "Giriş yap"a, sonra "Hesap oluşturun"a tıkla.\n3) Bu mesajı gönderdiğim e-posta adresinle kendi şifreni belirle. Hepsi bu!`;
+    try { await navigator.clipboard.writeText(text); UI.toast('Davet mesajı kopyalandı; WhatsApp veya e-postaya yapıştırabilirsiniz.'); }
+    catch (e) { UI.dialog({ title: 'Davet mesajı', size: 'sm', content: h('textarea', { rows: 7, readonly: true, value: text, style: 'width:100%' }) }); }
+  }
+  function accessCard() {
+    if (Store.state.mode !== 'remote' || !Store.can('admin')) return null;
+    const box = h('div', null, UI.loading('Liste yükleniyor…'));
+    const me = ((Store.state.user && Store.state.user.email) || '').toLowerCase();
+    Store.listAccess().then((rows) => {
+      U.put(clear(box), rows.length ? UI.table(['Kişi', 'E-posta', 'Yetki', 'Durum', ''], rows.map((r) => h('tr', null,
+        UI.td('Kişi', r.full_name || '—'), UI.td('E-posta', r.email),
+        UI.td('Yetki', UI.badge(ROLE[r.role] || r.role, r.role === 'admin' ? 'warn' : 'info')),
+        UI.td('Durum', r.registered ? UI.badge(r.last_sign_in_at ? 'Aktif · son giriş ' + U.fmtDateTime(r.last_sign_in_at) : 'Hesap açtı', 'ok') : UI.badge('Henüz hesap açmadı', 'muted')),
+        UI.td('', h('div', { class: 'row-actions' },
+          UI.iconBtn('edit', 'Düzenle', () => accessForm(r)),
+          r.registered && r.email !== me ? UI.iconBtn('lock', 'Şifre sıfırla', () => accessReset(r)) : null,
+          r.email !== me ? UI.iconBtn('trash', 'Listeden kaldır', () => accessDel(r), 'danger') : null)))))
+        : UI.empty('Henüz kimse eklenmedi.'));
+    }).catch((e) => U.put(clear(box), h('p', { class: 'neg' }, e.message)));
+    return UI.card('Yetkili kişiler', h('div', null,
+      h('p', { class: 'muted small' }, 'Listeye eklediğiniz kişiler "Giriş yap > Hesap oluşturun" ile kendi şifrelerini belirleyip hemen girer. Listede olmayan kimse hesap açamaz.'),
+      box,
+      h('div', { class: 'btn-row' }, UI.btn('Kişi ekle', { ic: 'plus', variant: 'primary', small: true, onclick: () => accessForm(null) }), UI.btn('Davet mesajını kopyala', { ic: 'copy', small: true, onclick: copyInvite }))), null, 'wide');
+  }
+  const KINDS = [['event_type', 'Etkinlik türleri'], ['task_category', 'Görev kategorileri']];
+
+  function profileForm() {
+    const s = Store.settings();
+    const years = []; const y0 = new Date().getFullYear(); for (let y = y0 - 2; y <= y0 + 2; y++) years.push(`${y}-${y + 1}`);
+    if (s.academic_year && !years.includes(s.academic_year)) years.push(s.academic_year);
+    UI.form({
+      title: 'Topluluk bilgileri', values: s,
+      fields: [
+        { key: 'name', label: 'Topluluk adı', type: 'text', required: true, full: true },
+        { key: 'academic_year', label: 'Akademik yıl', type: 'select', options: years.sort().map((y) => ({ value: y, label: y })) },
+        { key: 'advisor', label: 'Danışman öğretim üyesi (raporlarda imza alanı)', type: 'text' },
+        { key: 'confirm_delete', label: 'Silme onayı', type: 'checkbox', checkLabel: 'Silme işlemlerinde onay iste (önerilir)', full: true },
+      ],
+      onSubmit: async (v) => { await Store.saveSettings({ name: v.name, academic_year: v.academic_year || '', advisor: v.advisor || '', confirm_delete: v.confirm_delete }, 'Topluluk ayarları güncellendi'); UI.toast('Ayarlar kaydedildi.'); },
+    });
+  }
+  function logoPick() {
+    const inp = h('input', { type: 'file', accept: 'image/png,image/jpeg,image/svg+xml,image/webp', hidden: true });
+    inp.addEventListener('change', () => {
+      const file = inp.files[0]; if (!file) return;
+      if (file.size > 300 * 1024) return UI.toast('Logo en fazla 300 KB olmalı.', 'error');
+      const rd = new FileReader();
+      rd.onload = async () => { try { await Store.saveSettings({ logo_url: String(rd.result) }, 'Logo güncellendi'); UI.toast('Logo güncellendi.'); } catch (e) { /* bildirildi */ } };
+      rd.readAsDataURL(file);
+    });
+    document.body.append(inp); inp.click(); setTimeout(() => inp.remove(), 60000);
+  }
+  function lookupForm(kind, l) {
+    UI.form({
+      title: l ? 'Adı düzenle' : 'Yeni ekle', size: 'sm', values: l || {},
+      fields: [{ key: 'name', label: 'Ad', type: 'text', required: true }],
+      validate: (v) => Store.lookups(kind).some((x) => x.name.toLocaleLowerCase('tr') === (v.name || '').toLocaleLowerCase('tr') && (!l || x.id !== l.id)) ? { name: 'Bu ad zaten var.' } : {},
+      onSubmit: async (v) => { await Store.save('lookups', { id: l ? l.id : U.uid('lk'), kind, name: v.name, sort: l ? l.sort : Store.D().lookups.filter((x) => x.kind === kind).length }, { log: `Liste öğesi ${l ? 'güncellendi' : 'eklendi'}: ${v.name}` }); UI.toast('Kaydedildi.'); },
+    });
+  }
+  async function lookupDel(l) {
+    if (Store.lookupInUse(l.id)) return UI.toast(`"${l.name}" kayıtlarda kullanılıyor; önce o kayıtları başka bir değere taşıyın.`, 'error');
+    if (!(await UI.confirmDelete(`"${l.name}" silinecek.`))) return;
+    await Store.remove('lookups', l.id, { log: `Liste öğesi silindi: ${l.name}` }); UI.toast('Silindi.');
+  }
+
+  function datasets() {
+    const D = Store.D(); const internal = Store.internal();
+    const sets = [
+      { key: 'etkinlikler', name: 'Etkinlikler', columns: ['No', 'Etkinlik', 'Tür', 'Durum', 'Başlangıç', 'Bitiş', 'Planlanan ay', 'Saat', 'Mekân', 'Şehir', 'Tahmini katılımcı', 'Gerçek katılımcı', 'Sorumlu', 'Destek ekibi', 'İzin/onay', 'Hazırlık %', 'Malzemeler', 'Üniversite destekleri', 'Değerlendirme', 'Notlar', 'Arşivli'],
+        rows: D.events.map((e) => { const p = Calc.readiness(e); return [e.code, e.title, Calc.lookupName(e.type_id), e.status, U.fmtDate(e.start_date), U.fmtDate(e.end_date), e.month_hint || '', Calc.timeLabel(e), e.venue, e.city, e.est_participants, e.actual_participants, Calc.memberName(e.lead_id), (e.support_ids || []).map(Calc.memberName).join(', '), e.approval, p === null ? '' : p, (e.materials || []).join('; '), (e.univ_supports || []).join('; '), e.evaluation, e.notes, e.archived ? 'Evet' : 'Hayır']; }) },
+      { key: 'gorevler', name: 'Görevler', columns: ['Görev', 'Etkinlik', 'Sorumlu', 'Son tarih', 'Öncelik', 'Durum', 'Kategori', 'Not'],
+        rows: D.tasks.map((t) => [t.title, t.event_id ? Calc.eventTitle(t.event_id) : 'Genel', Calc.memberName(t.assignee_id), U.fmtDate(t.due_date), t.priority, t.status, Calc.lookupName(t.category_id), t.notes]) },
+      { key: 'yonetim-kurulu', name: 'Yönetim kurulu', columns: ['Ad', 'Görev', 'Sorumluluklar'], rows: D.members.map((m) => [m.name, m.role_title, (m.responsibilities || []).join('; ')]) },
+    ];
+    if (internal) {
+      sets.push({ key: 'destekler', name: 'Destek talepleri', columns: ['Destek', 'Birim', 'Etkinlik', 'Tarih', 'Durum', 'Açıklama'], rows: D.supports.map((s) => [s.title, s.unit, s.event_id ? Calc.eventTitle(s.event_id) : '', U.fmtDate(s.request_date), s.status, s.description]) });
+    }
+    return sets;
+  }
+
+  function importJSON() {
+    const inp = h('input', { type: 'file', accept: 'application/json,.json', hidden: true });
+    inp.addEventListener('change', async () => {
+      const file = inp.files[0]; if (!file) return;
+      try {
+        const obj = JSON.parse(await file.text());
+        const nd = Store.validateBackup(obj);
+        const remote = Store.state.mode === 'remote';
+        const ok = await UI.confirmBox({ title: 'Yedekten geri yükle', danger: !remote, okLabel: 'Geri yükle',
+          message: `Yedekte ${nd.events.length} etkinlik, ${nd.tasks.length} görev, ${nd.supports.length} destek talebi, ${nd.members.length} üye var (${obj.exported_at ? U.fmtDateTime(obj.exported_at) : 'tarih yok'}). ` + (remote ? 'Ortak veritabanında aynı kimlikli kayıtlar güncellenir, yedekte olmayan kayıtlar silinmez.' : 'Bu cihazdaki mevcut TÜM veriler yedekle değiştirilecek. Önce mevcut verinin yedeğini almanız önerilir.') });
+        if (!ok) return;
+        await Store.restore(obj); UI.toast('Yedek geri yüklendi.');
+      } catch (e) { UI.toast(e instanceof SyntaxError ? 'Dosya okunamadı: geçerli bir JSON değil.' : e.message, 'error'); }
+    });
+    document.body.append(inp); inp.click(); setTimeout(() => inp.remove(), 60000);
+  }
+
+  function render(root) {
+    const admin = Store.can('admin'), internal = Store.internal(), s = Store.settings();
+    const remote = Store.state.mode === 'remote';
+    const sampleN = Store.sampleCount();
+    U.put(root, 
+      UI.pageHead('Ayarlar ve veri yönetimi'),
+      h('div', { class: 'settings-grid' },
+        UI.card('Topluluk', h('div', null,
+          s.logo_url ? h('img', { class: 'logo-prev', src: s.logo_url, alt: 'Topluluk logosu' }) : null,
+          h('dl', { class: 'facts' }, [['Ad', s.name], ['Akademik yıl', s.academic_year], ['Danışman', s.advisor], ['Silme onayı', s.confirm_delete === false ? 'Kapalı' : 'Açık']].map(([k, v]) => h('div', null, h('dt', null, k), h('dd', null, v || '—')))),
+          admin ? h('div', { class: 'btn-row' }, UI.btn('Düzenle', { ic: 'edit', onclick: profileForm }), UI.btn('Logo yükle', { ic: 'upload', onclick: logoPick }), s.logo_url ? UI.btn('Logoyu kaldır', { onclick: () => Store.saveSettings({ logo_url: '' }, 'Logo kaldırıldı') }) : null) : h('p', { class: 'muted small' }, 'Bu ayarları yalnızca yönetici düzenleyebilir.'))),
+        UI.card('Görünüm', h('div', null, h('p', null, 'Açık veya koyu tema seçin. Tercih bu cihazda saklanır.'), h('div', { class: 'btn-row' }, UI.btn('Açık tema', { ic: 'sun', onclick: () => App.setTheme('light') }), UI.btn('Koyu tema', { ic: 'moon', onclick: () => App.setTheme('dark') })))),
+        UI.card('Bağlantı ve hesap', h('dl', { class: 'facts' }, [
+          ['Çalışma modu', remote ? 'Ortak mod (Supabase veritabanı)' : 'Yerel prototip modu (yalnızca bu cihaz)'],
+          remote ? ['Oturum', Store.state.user ? `${Store.state.user.email} — ${Store.state.role ? ({ admin: 'Yönetici', editor: 'Editör', viewer: 'Görüntüleyici' })[Store.state.role] : 'yetkisiz hesap'}` : 'Ziyaretçi (giriş yapılmadı)'] : ['Veri konumu', Store.state.storageOk ? 'Bu cihazdaki yerel depolama' : 'Depolama kullanılamıyor'],
+        ].map(([k, v]) => h('div', null, h('dt', null, k), h('dd', null, v))))),
+        accountCard(),
+        accessCard(),
+        ...KINDS.map(([kind, title]) => UI.card(title, h('ul', { class: 'lookups' }, Store.lookups(kind).map((l) => h('li', null, h('span', null, l.name), admin ? h('div', { class: 'row-actions' }, UI.iconBtn('edit', `${l.name} adını düzenle`, () => lookupForm(kind, l)), UI.iconBtn('trash', `${l.name} sil`, () => lookupDel(l), 'danger')) : null))),
+          admin ? UI.btn('Ekle', { ic: 'plus', small: true, onclick: () => lookupForm(kind, null) }) : null)),
+        internal ? UI.card('Yedekleme ve dışa aktarma', h('div', null,
+          h('p', { class: 'muted small' }, remote ? 'Ortak veritabanının güncel görüntüsünü JSON olarak indirir. Düzenli yedek almanız önerilir.' : 'Veriler yalnızca bu cihazda durur; düzenli JSON yedeği alın.'),
+          h('div', { class: 'btn-row' },
+            UI.btn('JSON yedeği indir', { ic: 'download', variant: 'primary', onclick: () => { U.download(`kuft-yedek-${U.todayISO()}.json`, JSON.stringify(Store.exportJSON(), null, 2), 'application/json'); UI.toast('Yedek indirildi.'); } }),
+            admin ? UI.btn('Yedekten geri yükle', { ic: 'upload', onclick: importJSON }) : null),
+          h('h4', null, 'Tablo olarak dışa aktar'),
+          h('div', { class: 'btn-row' }, datasets().map((d) => UI.btn(d.name + ' (CSV)', { small: true, onclick: () => U.download(`${d.key}-${U.todayISO()}.csv`, U.toCSV(d.columns, d.rows), 'text/csv;charset=utf-8') })),
+            UI.btn('Tümü (Excel)', { small: true, ic: 'download', onclick: async () => { try { await U.downloadXLSX(`kuft-tum-veriler-${U.todayISO()}.xlsx`, datasets().map((d) => ({ name: d.name, columns: d.columns, rows: d.rows }))); } catch (e) { UI.toast(e.message, 'error'); } } })))) : null,
+        admin ? UI.card('Örnek veriler', h('div', null,
+          h('p', null, `Başlangıçta yüklenen örnek kayıtlardan değiştirilmemiş olanlar: ${sampleN}.`),
+          h('p', { class: 'muted small' }, 'Düzenlediğiniz kayıtlar gerçek veri sayılır ve silinmez. Örnek etkinlikler silinirse bağlı görevler de silinir.'),
+          h('div', { class: 'btn-row' }, UI.btn('Örnek verileri temizle', { ic: 'trash', variant: 'danger-ghost', disabled: !sampleN, onclick: async () => {
+            if (!(await UI.confirmBox({ title: 'Örnek verileri temizle', message: `${sampleN} değiştirilmemiş örnek kayıt silinecek. Bu işlem geri alınamaz.`, okLabel: 'Temizle', danger: true }))) return;
+            try { const n = await Store.purgeSamples(); UI.toast(`${n} örnek kayıt silindi.`); } catch (e) { /* bildirildi */ }
+          } }),
+          !remote ? UI.btn('Her şeyi sıfırla (örnek veriyle yeniden başla)', { variant: 'danger-ghost', onclick: async () => { if (await UI.confirmBox({ title: 'Sıfırla', message: 'Bu cihazdaki TÜM veriler silinip örnek veri yeniden yüklenecek. Emin misiniz?', okLabel: 'Sıfırla', danger: true })) { await Store.resetLocal(); UI.toast('Sıfırlandı.'); } } }) : null))) : null));
+  }
+  return { render };
+})();
+
+</script>
+  <script>
+/* js/app.js */
+/* Uygulama kabuğu: yönlendirme, tema, giriş, başlatma */
+'use strict';
+const App = (() => {
+  const { h, clear } = U;
+  const ROUTES = {
+    dashboard: { title: 'Genel bakış', view: () => DashboardView, icon: 'calendar' },
+    events: { title: 'Etkinlikler', view: () => EventsView },
+    calendar: { title: 'Takvim', view: () => CalendarView },
+    tasks: { title: 'Görevler', view: () => TasksView },
+    team: { title: 'Yönetim kurulu', view: () => TeamView },
+    support: { title: 'Üniversite destekleri', view: () => SupportView, internal: true },
+    reports: { title: 'Raporlar', view: () => ReportsView },
+    settings: { title: 'Ayarlar', view: () => SettingsView },
+  };
+  let current = 'dashboard';
+
+  const routeFromHash = () => { const k = (location.hash || '').replace(/^#\/?/, ''); return ROUTES[k] ? k : 'dashboard'; };
+  const go = (k) => { if (location.hash === '#/' + k) render(); else location.hash = '#/' + k; };
+
+  // ---- tema ----
+  function setTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    try { localStorage.setItem('kuft.theme', t); } catch (e) { /* yoksay */ }
+    const b = document.getElementById('theme-btn');
+    if (b) { U.put(clear(b), UI.icon(t === 'dark' ? 'sun' : 'moon')); b.setAttribute('aria-label', t === 'dark' ? 'Açık temaya geç' : 'Koyu temaya geç'); }
+  }
+  function initTheme() {
+    let t = null;
+    try { t = localStorage.getItem('kuft.theme'); } catch (e) { /* yoksay */ }
+    if (t !== 'dark' && t !== 'light') t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    setTheme(t);
+  }
+
+  // ---- giriş / hesap oluşturma ----
+  const switchLink = (text, label, onclick) => h('p', { class: 'auth-switch' }, text + ' ', h('button', { class: 'link-btn', type: 'button', onclick }, label));
+  function attachSwitch(dlg, el) {
+    const form = dlg.querySelector('form'); const actions = form && form.querySelector('.form-actions');
+    if (actions) form.insertBefore(el, actions);
+  }
+  function loginDialog() {
+    if (Store.state.mode !== 'remote') return UI.toast('Yerel modda giriş gerekmez.');
+    const dlg = UI.form({
+      title: 'Giriş yap', size: 'sm', submitLabel: 'Giriş yap',
+      intro: 'Yönetim kurulu üyeleri kendi e-posta ve şifreleriyle giriş yapar.',
+      fields: [
+        { key: 'email', label: 'E-posta', type: 'email', required: true, autocomplete: 'username' },
+        { key: 'password', label: 'Şifre', type: 'password', required: true, autocomplete: 'current-password' },
+      ],
+      onSubmit: async (v) => {
+        await Store.signIn(v.email.toLowerCase(), v.password);
+        if (!Store.state.role) UI.toast('Giriş yapıldı ancak e-postanız yetkili kişiler listesinde değil. Topluluk başkanına başvurun.', 'error');
+        else UI.toast('Hoş geldiniz' + (Store.state.user.name ? ', ' + Store.state.user.name : '') + '.');
+      },
+    });
+    attachSwitch(dlg, switchLink('Hesabınız yok mu?', 'Hesap oluşturun', () => { dlg.close(); signUpDialog(); }));
+  }
+  function signUpDialog() {
+    if (Store.state.mode !== 'remote') return UI.toast('Yerel modda hesap gerekmez.');
+    const dlg = UI.form({
+      title: 'Hesap oluştur', size: 'sm', submitLabel: 'Hesabı oluştur',
+      intro: 'Topluluk başkanının yetkili kişiler listesine eklediği e-posta adresinizle kendi şifrenizi belirleyin. Hesap hemen açılır.',
+      fields: [
+        { key: 'full_name', label: 'Ad soyad', type: 'text', required: true, autocomplete: 'name' },
+        { key: 'email', label: 'E-posta', type: 'email', required: true, autocomplete: 'username' },
+        { key: 'password', label: 'Şifre', type: 'password', required: true, autocomplete: 'new-password', help: 'En az 6 karakter.' },
+        { key: 'password2', label: 'Şifre (tekrar)', type: 'password', required: true, autocomplete: 'new-password' },
+      ],
+      validate: (v) => {
+        const e = {};
+        if (v.password && v.password.length < 6) e.password = 'Şifre en az 6 karakter olmalı.';
+        if (v.password2 && v.password !== v.password2) e.password2 = 'Şifreler aynı değil.';
+        return e;
+      },
+      onSubmit: async (v) => {
+        await Store.signUp(v.email, v.password, v.full_name);
+        UI.toast(Store.state.role ? 'Hesabınız açıldı, hoş geldiniz.' : 'Hesap açıldı ancak yetki tanımlanamadı. Topluluk başkanına başvurun.', Store.state.role ? 'ok' : 'error');
+      },
+    });
+    attachSwitch(dlg, switchLink('Zaten hesabınız var mı?', 'Giriş yapın', () => { dlg.close(); loginDialog(); }));
+  }
+  async function logout() { try { await Store.signOut(); UI.toast('Çıkış yapıldı.'); } catch (e) { UI.toast(e.message, 'error'); } }
+
+  // ---- kabuk ----
+  function renderShell() {
+    const s = Store.settings();
+    document.title = (s.name || 'Topluluk') + ' · Yönetim';
+    const brand = document.getElementById('brand');
+    U.put(clear(brand), 
+      s.logo_url && (U.isUrl(s.logo_url) || s.logo_url.startsWith('data:image/')) ? h('img', { class: 'brand-logo', src: s.logo_url, alt: '' }) : UI.icon('aperture', 28),
+      h('span', { class: 'brand-name' }, s.name));
+    const nav = document.getElementById('nav');
+    U.put(clear(nav), Object.entries(ROUTES).filter(([, r]) => !r.internal || Store.internal()).map(([k, r]) =>
+      h('a', { href: '#/' + k, class: 'nav-link' + (k === current ? ' on' : ''), 'aria-current': k === current ? 'page' : null, onclick: () => closeNav() }, r.title)));
+    const auth = document.getElementById('auth');
+    clear(auth);
+    const st = Store.state;
+    if (st.mode === 'local') U.put(auth, h('span', { class: 'mode-pill', title: 'Veriler yalnızca bu cihazda saklanır' }, 'Yerel prototip'));
+    else if (st.user) U.put(auth, h('span', { class: 'user-pill', title: st.user.email }, UI.icon('user', 16), h('span', null, st.role ? ({ admin: 'Yönetici', editor: 'Editör', viewer: 'Görüntüleyici' })[st.role] : 'Yetkisiz')), UI.btn('Çıkış', { small: true, onclick: logout }));
+    else U.put(auth, h('span', { class: 'mode-pill view', title: 'Salt okunur görünüm' }, UI.icon('eye', 14), 'Ziyaretçi'), UI.btn('Giriş yap', { small: true, variant: 'primary', ic: 'lock', onclick: loginDialog }));
+    const note = document.getElementById('banner');
+    clear(note);
+    if (st.mode === 'remote' && st.user && !st.role) { note.hidden = false; note.append('E-postanız yetkili kişiler listesinde değil; yalnızca herkese açık bilgileri görebilirsiniz. Topluluk başkanından sizi Ayarlar > Yetkili kişiler listesine eklemesini isteyin.'); }
+    else if (st.mode === 'local') { note.hidden = false; note.append('Yerel prototip modu: veriler yalnızca bu cihazda saklanır ve başkalarıyla paylaşılmaz. Ortak kullanım için README\'deki Supabase kurulumunu yapın. '); }
+    else note.hidden = true;
+  }
+
+  function render() {
+    if (!Store.state.ready) return;
+    current = routeFromHash();
+    const view = document.getElementById('view');
+    const active = document.activeElement;
+    const keep = active && active.id && view.contains(active) ? { id: active.id, s: active.selectionStart, e: active.selectionEnd } : null;
+    renderShell();
+    clear(view);
+    try { ROUTES[current].view().render(view); }
+    catch (e) { console.error(e); U.put(clear(view), UI.card('Bir hata oluştu', h('div', null, h('p', null, 'Bu bölüm görüntülenemedi: ' + e.message), UI.btn('Yeniden dene', { onclick: render })))); }
+    if (keep) { const el = document.getElementById(keep.id); if (el) { el.focus(); try { if (keep.s != null) el.setSelectionRange(keep.s, keep.e); } catch (err) { /* yoksay */ } } }
+    document.getElementById('main').dataset.route = current;
+  }
+
+  function closeNav() { document.body.classList.remove('nav-open'); const b = document.getElementById('menu-btn'); if (b) b.setAttribute('aria-expanded', 'false'); }
+
+  async function start() {
+    initTheme();
+    Store.hooks.notify = UI.toast;
+    document.getElementById('theme-btn').addEventListener('click', () => setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+    const mb = document.getElementById('menu-btn');
+    U.put(clear(mb), UI.icon('menu'));
+    mb.addEventListener('click', () => { const open = document.body.classList.toggle('nav-open'); mb.setAttribute('aria-expanded', String(open)); });
+    document.getElementById('scrim').addEventListener('click', closeNav);
+    const view = document.getElementById('view');
+    U.put(clear(view), UI.loading('Veriler yükleniyor…'));
+    try {
+      await Store.init();
+    } catch (e) {
+      console.error(e);
+      U.put(clear(view), UI.card('Veriler yüklenemedi', h('div', null, h('p', null, Store.friendly(e)), h('p', { class: 'muted small' }, 'Supabase adresi/anahtarı (js/config.js) ve şema kurulumunu kontrol edin.'), UI.btn('Yeniden dene', { variant: 'primary', onclick: () => location.reload() }))));
+      return;
+    }
+    Store.on(render);
+    window.addEventListener('hashchange', () => { closeNav(); render(); window.scrollTo(0, 0); });
+    render();
+  }
+  return { start, render, go, setTheme, loginDialog, signUpDialog, ROUTES };
+})();
+document.addEventListener('DOMContentLoaded', App.start);
+
+</script>
+</body>
+</html>
