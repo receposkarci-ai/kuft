@@ -325,6 +325,26 @@ button.user-pill { font: inherit; font-size: .78rem; cursor: pointer; }
 .ph-acts .icon-btn { width: 32px; height: 32px; min-width: 32px; }
 .lb-acts { display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
 
+/* ===== Katılımcılar ve oylamalar ===== */
+.att-list { margin: 0; padding-left: 1.4rem; columns: 2 260px; column-gap: 1.5rem; } .att-list li { padding: .2rem 0; break-inside: avoid; }
+.sec-title { font-family: var(--serif); font-size: 1.15rem; margin: 1.2rem 0 .6rem; }
+.poll-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 1rem; align-items: start; }
+.poll { margin-bottom: 0; } .poll.closed { opacity: .92; }
+.poll-head { display: flex; justify-content: space-between; gap: .6rem; align-items: flex-start; }
+.poll-head h3 { margin: 0 0 .35rem; font-size: 1.05rem; }
+.poll-opts { list-style: none; margin: .7rem 0 .4rem; padding: 0; display: grid; gap: .45rem; }
+.poll-opt { position: relative; width: 100%; display: flex; justify-content: space-between; align-items: center; gap: .6rem; text-align: left; padding: .6rem .8rem; min-height: 44px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); font: inherit; cursor: pointer; overflow: hidden; }
+.poll-opt:hover:not(:disabled) { border-color: var(--accent); }
+.poll-opt:disabled { cursor: default; }
+.poll-opt.chosen { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.poll-opt.winner { border-color: var(--ok); }
+.poll-bar { position: absolute; inset: 0 auto 0 0; background: var(--accent-soft); z-index: 0; transition: width .3s ease; }
+.poll-opt.winner .poll-bar { background: color-mix(in srgb, var(--ok) 18%, var(--surface)); }
+.poll-label, .poll-n { position: relative; z-index: 1; } .poll-label { display: flex; align-items: center; gap: .35rem; font-weight: 500; }
+.poll-n { font-size: .82rem; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.feed-polls .poll { box-shadow: none; border: 0; padding: 0; margin-bottom: .8rem; }
+.feed-polls .poll + .poll { border-top: 1px solid var(--line); padding-top: .8rem; }
+
 </style>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" href="icon-192.png">
@@ -652,7 +672,7 @@ const Store = (() => {
   const ADMIN_COLS = new Set(['lookups', 'members']);
   const ARRAY_FIELDS = ['support_ids', 'materials', 'univ_supports', 'attachments', 'responsibilities'];
 
-  const state = { mode: 'local', ready: false, data: emptyData(), user: null, role: null, member: null, features: { members: false }, storageOk: true, pending: 0 };
+  const state = { mode: 'local', ready: false, data: emptyData(), user: null, role: null, member: null, features: { members: false, polls: false }, storageOk: true, pending: 0 };
   const listeners = new Set();
   const hooks = { notify: () => {} };
   let sb = null;
@@ -660,7 +680,8 @@ const Store = (() => {
   function emptyData() {
     return { settings: { id: 'main', name: 'Fotoğrafçılık Topluluğu', logo_url: '', academic_year: '', advisor: '', confirm_delete: true }, lookups: [], members: [], events: [], tasks: [], supports: [], log: [],
       // Üye paneli (yalnızca ortak mod; yedeğe girmez)
-      photos: [], announcements: [], rsvpCounts: {}, myRsvps: [], myLikes: [], clubMembers: [] };
+      photos: [], announcements: [], rsvpCounts: {}, myRsvps: [], myLikes: [], clubMembers: [], rsvps: [],
+      polls: [], pollOptions: [], pollResults: [], myVotes: [] };
   }
   const emit = () => listeners.forEach((fn) => { try { fn(); } catch (e) { console.error(e); } });
   const on = (fn) => { listeners.add(fn); return () => listeners.delete(fn); };
@@ -748,7 +769,7 @@ const Store = (() => {
     const member = !!state.role;
     const uid = state.user ? state.user.id : null;
     const none = Promise.resolve({ data: [] });
-    const [st, lk, mb, ev, tk, sp, lg, ph, an, rc, mr, ml, cm] = await Promise.all([
+    const [st, lk, mb, ev, tk, sp, lg, ph, an, rc, mr, ml, cm, rs, pl, po, pr, mv] = await Promise.all([
       sb.from('settings').select('*').eq('id', 'main').maybeSingle(),
       sb.from('lookups').select('*').order('sort'),
       sb.from('members').select('*').order('sort'),
@@ -762,9 +783,15 @@ const Store = (() => {
       uid ? soft(sb.from('event_rsvps').select('event_id').eq('user_id', uid)) : none,
       uid ? soft(sb.from('photo_likes').select('photo_id').eq('user_id', uid)) : none,
       member ? soft(sb.from('club_members').select('*').order('created_at', { ascending: false })) : none,
+      member ? soft(sb.from('event_rsvps').select('event_id,user_id,created_at')) : none,
+      soft(sb.from('polls').select('*').order('created_at', { ascending: false }).limit(200)),
+      soft(sb.from('poll_options').select('*').order('sort')),
+      soft(sb.rpc('poll_results')),
+      uid ? soft(sb.from('poll_votes').select('poll_id,option_id').eq('user_id', uid)) : none,
     ]);
-    for (const r of [st, lk, mb, ev, tk, sp, lg, ph, an, rc, mr, ml, cm]) if (r.error) throw r.error;
+    for (const r of [st, lk, mb, ev, tk, sp, lg, ph, an, rc, mr, ml, cm, rs, pl, po, pr, mv]) if (r.error) throw r.error;
     state.features.members = !ph.missing;
+    state.features.polls = !pl.missing;
     if (uid && !member) await loadMyMember();
     const counts = {};
     (rc.data || []).forEach((r) => { counts[r.event_id] = Number(r.n) || 0; });
@@ -782,6 +809,11 @@ const Store = (() => {
       myRsvps: (mr.data || []).map((r) => r.event_id),
       myLikes: (ml.data || []).map((r) => r.photo_id),
       clubMembers: cm.data || [],
+      rsvps: rs.data || [],
+      polls: pl.data || [],
+      pollOptions: po.data || [],
+      pollResults: (pr.data || []).map((r) => ({ ...r, n: Number(r.n) || 0 })),
+      myVotes: mv.data || [],
     };
   }
 
@@ -1223,6 +1255,66 @@ const Store = (() => {
     await commit(() => remoteDeleteBy('announcements', 'id', a.id));
     await addLog(`Duyuru silindi: ${a.title}`, 'announcements');
   }
+  // ---- oylamalar ----
+  const pollOpen = (p) => !p.closed && (!p.closes_at || new Date(p.closes_at) > new Date());
+  async function vote(poll, optionId) {
+    needParticipant();
+    if (!pollOpen(poll)) throw new Error('Bu oylama kapandı.');
+    const d = state.data; const prev = d.myVotes.find((v) => v.poll_id === poll.id);
+    if (prev && prev.option_id === optionId) return;
+    const bump = (oid, k) => { const r = d.pollResults.find((x) => x.poll_id === poll.id && x.option_id === oid); if (r) r.n = Math.max(0, r.n + k); else if (k > 0) d.pollResults.push({ poll_id: poll.id, option_id: oid, n: 1 }); };
+    const visible = !poll.hide_results || !!state.role;
+    if (visible) { if (prev) bump(prev.option_id, -1); bump(optionId, 1); }
+    d.myVotes = [...d.myVotes.filter((v) => v.poll_id !== poll.id), { poll_id: poll.id, option_id: optionId }];
+    emit();
+    await commit(async () => {
+      if (prev) await must(sb.from('poll_votes').update({ option_id: optionId }).eq('poll_id', poll.id).eq('user_id', state.user.id));
+      else await must(sb.from('poll_votes').insert({ poll_id: poll.id, option_id: optionId, user_id: state.user.id }));
+    });
+  }
+  async function savePoll(poll, labels) {
+    need('edit');
+    const rec = { title: String(poll.title || '').trim(), description: String(poll.description || '').trim(), event_id: poll.event_id || null, closes_at: poll.closes_at || null, hide_results: !!poll.hide_results };
+    let row;
+    if (poll.id) {
+      const r = await sb.from('polls').update(rec).eq('id', poll.id).select('*').single();
+      if (r.error) throw new Error(friendly(r.error)); row = r.data;
+    } else {
+      const r = await sb.from('polls').insert(rec).select('*').single();
+      if (r.error) throw new Error(friendly(r.error)); row = r.data;
+    }
+    if (labels) {   // seçenekler yalnızca oy yokken yeniden yazılır
+      const old = state.data.pollOptions.filter((o) => o.poll_id === row.id).map((o) => o.id);
+      if (old.length) { const r = await sb.from('poll_options').delete().eq('poll_id', row.id); if (r.error) throw new Error(friendly(r.error)); }
+      const ins = await sb.from('poll_options').insert(labels.map((label, i) => ({ poll_id: row.id, label, sort: i }))).select('*');
+      if (ins.error) throw new Error(friendly(ins.error));
+      state.data.pollOptions = state.data.pollOptions.filter((o) => o.poll_id !== row.id).concat(ins.data || []);
+    }
+    const list = state.data.polls; const i = list.findIndex((x) => x.id === row.id);
+    if (i >= 0) list[i] = row; else list.unshift(row);
+    emit();
+    await addLog(`Oylama ${poll.id ? 'güncellendi' : 'açıldı'}: ${rec.title}`, 'polls');
+    return row;
+  }
+  async function setPollClosed(poll, closed) {
+    need('edit');
+    const patch = closed ? { closed: true } : { closed: false, closes_at: poll.closes_at && new Date(poll.closes_at) <= new Date() ? null : poll.closes_at };
+    const r = await sb.from('polls').update(patch).eq('id', poll.id).select('*').single();
+    if (r.error) throw new Error(friendly(r.error));
+    Object.assign(state.data.polls.find((x) => x.id === poll.id) || {}, r.data);
+    try { await reloadAll(); } catch (e) { /* yoksay */ }
+    emit();
+    await addLog(`Oylama ${closed ? 'kapatıldı' : 'yeniden açıldı'}: ${poll.title}`, 'polls');
+  }
+  async function deletePoll(poll) {
+    need('edit');
+    state.data.polls = state.data.polls.filter((x) => x.id !== poll.id);
+    emit();
+    await commit(() => remoteDeleteBy('polls', 'id', poll.id));
+    await addLog(`Oylama silindi: ${poll.title}`, 'polls');
+  }
+  async function refresh() { if (sb) { await reloadAll(); emit(); } }
+
   async function eventAttendees(eventId) { needUser(); return (await rpc('event_attendees', { p_event: eventId })) || []; }
   async function storageUsage() { if (!sb || !state.role) return null; try { return Number(await rpc('storage_usage')) || 0; } catch (e) { return null; } }
 
@@ -1257,7 +1349,7 @@ const Store = (() => {
     return 'ETK-' + String(max + 1).padStart(3, '0');
   };
 
-  return { state, D, on, emit, hooks, init, can, internal, isBoard, canParticipate, photoUrl, updateMyProfile, toggleRsvp, toggleLike, uploadPhoto, deletePhoto, reviewPhoto, reviewMember, deleteMemberAccount, saveAnnouncement, deleteAnnouncement, eventAttendees, storageUsage, get, save, saveMany, saveSettings, remove, removeEvent, removeMember, addLog, purgeSamples, sampleCount, exportJSON, restore, validateBackup, resetLocal, signIn, signUp, signOut, changePassword, listAccess, saveAccess, removeAccess, adminSetPassword, lookups, lookupInUse, nextEventCode, friendly, settings: () => state.data.settings };
+  return { state, D, on, emit, hooks, init, can, internal, isBoard, canParticipate, pollOpen, vote, savePoll, setPollClosed, deletePoll, refresh, photoUrl, updateMyProfile, toggleRsvp, toggleLike, uploadPhoto, deletePhoto, reviewPhoto, reviewMember, deleteMemberAccount, saveAnnouncement, deleteAnnouncement, eventAttendees, storageUsage, get, save, saveMany, saveSettings, remove, removeEvent, removeMember, addLog, purgeSamples, sampleCount, exportJSON, restore, validateBackup, resetLocal, signIn, signUp, signOut, changePassword, listAccess, saveAccess, removeAccess, adminSetPassword, lookups, lookupInUse, nextEventCode, friendly, settings: () => state.data.settings };
 })();
 
 </script>
@@ -1769,12 +1861,23 @@ const EventsView = (() => {
         h('div', null, h('h4', null, 'Gerekli malzemeler'), list(e.materials), h('h4', null, 'Üniversiteden talep edilecek destekler'), list(e.univ_supports),
           h('h4', null, 'Dosya ve fotoğraf ekleri'), (e.attachments || []).length ? h('ul', { class: 'plain' }, e.attachments.map((a) => h('li', null, UI.icon('link', 14), ' ', UI.link(a.url, a.title)))) : h('p', { class: 'muted' }, '—'))),
       UI.card('Görevler', taskList, canEdit ? UI.btn('Görev ekle', { ic: 'plus', small: true, onclick: () => TasksView.taskForm(null, { event_id: e.id }) }) : null, 'inner'),
-      Store.state.mode === 'remote' && internal && Store.state.features.members ? UI.card('Üye katılımı', h('p', null,
-        h('strong', null, `${Store.D().rsvpCounts[e.id] || 0} üye`), ' "Katılıyorum" dedi.',
-        Store.D().photos.some((p) => p.event_id === e.id && p.status === 'approved') ? ` Bu etkinlikten ${Store.D().photos.filter((p) => p.event_id === e.id && p.status === 'approved').length} fotoğraf yayında.` : ''),
-        UI.btn('Katılımcı listesi', { ic: 'user', small: true, onclick: () => BoardMembers.attendeesDialog(e) }), 'inner') : null,
+      Store.state.mode === 'remote' && internal && Store.state.features.members ? attendeeCard(e) : null,
       internal ? UI.card('Üniversite destek talepleri', sups.length ? UI.table(['Talep', 'Birim', 'Tarih', 'Durum'], sups.map((s) => h('tr', null, UI.td('Talep', s.title), UI.td('Birim', s.unit || '—'), UI.td('Tarih', U.fmtDate(s.request_date)), UI.td('Durum', UI.statusBadge(s.status))))) : UI.empty('Bu etkinlik için destek talebi yok.'),
         canEdit ? UI.btn('Talep ekle', { ic: 'plus', small: true, onclick: () => SupportView.supportForm(null, { event_id: e.id }) }) : null, 'inner') : null);
+  }
+
+  /** Kurul: etkinliğe "Katılıyorum" diyenlerin isimleri (ayrıntıda doğrudan görünür) */
+  function attendeeCard(e) {
+    const D = Store.D();
+    const byUser = new Map(D.clubMembers.map((m) => [m.user_id, m]));
+    const rows = D.rsvps.filter((r) => r.event_id === e.id).sort((a, b) => (a.created_at < b.created_at ? -1 : 1));
+    const people = rows.map((r) => { const m = byUser.get(r.user_id); return m ? { name: m.full_name, sub: [m.student_no, m.department, m.class_year].filter(Boolean).join(' · ') } : { name: 'Kurul üyesi', sub: '' }; });
+    const photos = D.photos.filter((p) => p.event_id === e.id && p.status === 'approved').length;
+    return UI.card(`Katılımcılar (${rows.length})`, rows.length
+      ? h('div', null, h('ol', { class: 'att-list' }, people.map((x) => h('li', null, h('strong', null, x.name), x.sub ? h('span', { class: 'muted small' }, ' · ' + x.sub) : null))),
+        photos ? h('p', { class: 'muted small' }, `Bu etkinlikten ${photos} fotoğraf yayında.`) : null)
+      : UI.empty('Henüz "Katılıyorum" diyen olmadı.'),
+      rows.length ? UI.btn('Excel / ayrıntılı liste', { ic: 'download', small: true, onclick: () => BoardMembers.attendeesDialog(e) }) : null, 'inner');
   }
 
   // ---------- resmî faaliyet raporu (yazdırılabilir) ----------
@@ -1834,7 +1937,8 @@ const EventsView = (() => {
           const pct = Calc.readiness(e);
           return h('tr', { class: e.status === 'İptal edildi' ? 'cancelled' : '' },
             UI.td('No', h('span', { class: 'code' }, e.code)),
-            UI.td('Etkinlik', h('button', { class: 'link-btn', type: 'button', onclick: () => openEvent(e.id) }, e.title), e.is_sample ? UI.badge('Örnek', 'sample') : null, conf.has(e.id) ? UI.badge('Çakışma', 'warn') : null),
+            UI.td('Etkinlik', h('button', { class: 'link-btn', type: 'button', onclick: () => openEvent(e.id) }, e.title), e.is_sample ? UI.badge('Örnek', 'sample') : null, conf.has(e.id) ? UI.badge('Çakışma', 'warn') : null,
+              Store.D().rsvpCounts[e.id] ? h('span', { class: 'badge info', title: `${Store.D().rsvpCounts[e.id]} üye katılıyor` }, `👥 ${Store.D().rsvpCounts[e.id]}`) : null),
             UI.td('Tür', Calc.lookupName(e.type_id)), UI.td('Tarih', Calc.dateLabel(e)), UI.td('Durum', UI.statusBadge(e.status)),
             UI.td('Hazırlık', pct === null ? '—' : h('div', { class: 'ready sm' }, `%${pct}`, UI.progress(pct, 'Hazırlık'))),
             UI.td('Sorumlu', Calc.memberName(e.lead_id)),
@@ -2734,8 +2838,9 @@ const Community = (() => {
               a.body ? h('p', { class: 'pre' }, a.body) : null,
               h('div', { class: 'muted small' }, [a.author_name, U.fmtDateTime(a.created_at)].filter(Boolean).join(' · ')))))
               : UI.empty('Henüz duyuru yok.')),
-            UI.card('Son fotoğraflar', photoGrid(recent, 'Henüz paylaşılan fotoğraf yok.', true), UI.btn('Galeri', { small: true, ic: 'image', onclick: () => App.go('gallery') }))),
+            UI.card('Son fotoğraflar', photoGrid(recent, 'Henüz paylaşılan fotoğraf yok.', true), (Store.isBoard() ? UI.btn('Fotoğraf onayı', { small: true, ic: 'image', onclick: () => App.go('moderation') }) : UI.btn('Galeri', { small: true, ic: 'image', onclick: () => App.go('gallery') })))),
           h('div', null,
+            Polls.feedCard(),
             UI.card('Yaklaşan etkinlikler', upcoming.length ? h('ul', { class: 'ev-mini' }, upcoming.map((e) => h('li', null,
               h('button', { class: 'link-btn ev-mini-title', type: 'button', onclick: () => openEvent(e.id) }, e.title),
               h('div', { class: 'muted small' }, Calc.dateLabel(e), e.venue ? ' · ' + e.venue : ''),
@@ -3115,6 +3220,154 @@ const BoardMembers = (() => {
 
 </script>
   <script>
+/* js/views-polls.js */
+/* Oylamalar: yalnızca kurul açar/kapatır; onaylı üyeler oy verir (ör. film gecesi için film seçimi) */
+'use strict';
+const Polls = (() => {
+  const { h } = U;
+  const D = () => Store.D();
+  const optionsOf = (p) => D().pollOptions.filter((o) => o.poll_id === p.id).sort((a, b) => a.sort - b.sort);
+  const resultsOf = (p) => { const m = {}; D().pollResults.filter((r) => r.poll_id === p.id).forEach((r) => { m[r.option_id] = r.n; }); return m; };
+  const myVote = (p) => { const v = D().myVotes.find((x) => x.poll_id === p.id); return v ? v.option_id : null; };
+  const isOpen = (p) => Store.pollOpen(p);
+  const resultsVisible = (p) => !p.hide_results || !isOpen(p) || Store.isBoard();
+  const fmtWhen = (iso) => U.fmtDateTime(iso);
+  const timeLeft = (iso) => {
+    const ms = new Date(iso) - new Date(); if (ms <= 0) return 'süresi doldu';
+    const m = Math.round(ms / 60000); if (m < 60) return `${m} dk kaldı`;
+    const hh = Math.round(m / 60); if (hh < 48) return `${hh} saat kaldı`;
+    return `${Math.round(hh / 24)} gün kaldı`;
+  };
+
+  async function castVote(p, o) {
+    const st = Store.state;
+    if (!st.user) { UI.toast('Oy vermek için giriş yapmalısın.', 'error'); App.loginDialog(); return; }
+    if (!Store.canParticipate()) { UI.toast(st.member && st.member.status === 'pending' ? 'Üyeliğin kurul onayı bekliyor; onaylanınca oy verebilirsin.' : 'Oy vermek için onaylı üye olmalısın.', 'error'); return; }
+    const had = myVote(p);
+    try { await Store.vote(p, o.id); UI.toast(had ? `Oyun "${o.label}" olarak değiştirildi.` : `Oyun kaydedildi: ${o.label}`); }
+    catch (e) { UI.toast(Store.friendly(e), 'error'); }
+  }
+
+  function pollCard(p, { compact = false } = {}) {
+    const opts = optionsOf(p), res = resultsOf(p), mine = myVote(p), open = isOpen(p), visible = resultsVisible(p);
+    const total = Object.values(res).reduce((a, b) => a + b, 0);
+    const max = Math.max(0, ...Object.values(res));
+    const board = Store.can('edit');
+    const status = open ? (p.closes_at ? UI.badge('Açık · ' + timeLeft(p.closes_at), 'ok') : UI.badge('Açık', 'ok')) : UI.badge('Kapandı', 'muted');
+    const rows = opts.map((o) => {
+      const n = res[o.id] || 0, pct = total ? Math.round(n / total * 100) : 0;
+      const chosen = mine === o.id, winner = !open && visible && total > 0 && n === max;
+      return h('li', null, h('button', {
+        class: 'poll-opt' + (chosen ? ' chosen' : '') + (winner ? ' winner' : ''), type: 'button', disabled: !open,
+        'aria-pressed': String(chosen), onclick: () => castVote(p, o),
+      },
+      visible ? h('span', { class: 'poll-bar', style: `width:${pct}%` }) : null,
+      h('span', { class: 'poll-label' }, chosen ? UI.icon('check', 16) : null, winner ? '🏆 ' : '', o.label),
+      visible ? h('span', { class: 'poll-n' }, `${n} oy · %${pct}`) : null));
+    });
+    return h('article', { class: 'card poll' + (open ? '' : ' closed') },
+      h('div', { class: 'poll-head' },
+        h('div', null, h('h3', null, p.title), h('div', { class: 'badges' }, status, p.hide_results && open ? UI.badge(Store.isBoard() ? 'Sonuçlar üyelerden gizli' : 'Sonuçlar oylama bitince', 'warn') : null,
+          p.event_id ? UI.badge(Calc.eventTitle(p.event_id), 'neutral') : null)),
+        board && !compact ? h('div', { class: 'row-actions' },
+          open ? UI.btn('Kapat', { small: true, onclick: () => closePoll(p, true) }) : UI.btn('Yeniden aç', { small: true, onclick: () => closePoll(p, false) }),
+          UI.iconBtn('edit', 'Düzenle', () => pollForm(p)), UI.iconBtn('trash', 'Sil', () => removePoll(p), 'danger')) : null),
+      p.description && !compact ? h('p', { class: 'pre' }, p.description) : null,
+      h('ul', { class: 'poll-opts' }, rows),
+      h('div', { class: 'poll-foot muted small' },
+        visible ? `${total} oy` : 'Sonuçlar oylama bitince açıklanacak',
+        open && p.closes_at ? ` · bitiş: ${fmtWhen(p.closes_at)}` : '',
+        open ? (mine ? ' · Oyunu değiştirmek için başka seçeneğe dokun.' : !Store.state.user ? ' · Oy vermek için giriş yap.' : '') : '',
+        p.author_name && !compact ? ` · açan: ${p.author_name}` : ''));
+  }
+
+  async function closePoll(p, closed) {
+    try { await Store.setPollClosed(p, closed); UI.toast(closed ? 'Oylama kapatıldı; sonuçlar herkese açıldı.' : 'Oylama yeniden açıldı.'); }
+    catch (e) { UI.toast(Store.friendly(e), 'error'); }
+  }
+  async function removePoll(p) {
+    if (!(await UI.confirmDelete(`"${p.title}" oylaması ve tüm oyları silinecek.`))) return;
+    try { await Store.deletePoll(p); UI.toast('Oylama silindi.'); } catch (e) { UI.toast(Store.friendly(e), 'error'); }
+  }
+
+  function pollForm(p) {
+    const hasVotes = p && D().pollResults.some((r) => r.poll_id === p.id && r.n > 0);
+    const closes = p && p.closes_at ? new Date(p.closes_at) : null;
+    const pad = (n) => String(n).padStart(2, '0');
+    const values = p ? {
+      title: p.title, description: p.description, event_id: p.event_id, hide_results: p.hide_results,
+      options: optionsOf(p).map((o) => o.label),
+      close_date: closes ? `${closes.getFullYear()}-${pad(closes.getMonth() + 1)}-${pad(closes.getDate())}` : null,
+      close_time: closes ? `${pad(closes.getHours())}:${pad(closes.getMinutes())}` : null,
+    } : { hide_results: false };
+    UI.form({
+      title: p ? 'Oylamayı düzenle' : 'Yeni oylama', size: 'md', values, submitLabel: p ? 'Kaydet' : 'Oylamayı aç',
+      intro: hasVotes ? 'Bu oylamada oy kullanıldığı için seçenekler değiştirilemez; başlık, açıklama ve bitiş zamanı düzenlenebilir.' : 'Onaylı üyeler ve kurul üyeleri oy verebilir. Herkesin tek oyu vardır, oylama açıkken oyunu değiştirebilir.',
+      fields: [
+        { key: 'title', label: 'Soru / başlık', type: 'text', required: true, maxlength: 140, full: true, placeholder: 'Ör. Film gecesinde hangi filmi izleyelim?' },
+        { key: 'description', label: 'Açıklama', type: 'textarea', rows: 2, maxlength: 1000, full: true },
+        { key: 'options', label: 'Seçenekler', type: 'lines', rows: 5, required: !hasVotes, full: true, disabled: hasVotes, placeholder: 'Her satıra bir seçenek (en az 2)' },
+        { key: 'event_id', label: 'İlgili etkinlik', type: 'select', options: Calc.sortEvents(D().events.filter((e) => !e.archived)).map((e) => ({ value: e.id, label: e.title })) },
+        { key: 'close_date', label: 'Bitiş tarihi', type: 'date', help: 'Boş bırakırsan sen kapatana kadar açık kalır.' },
+        { key: 'close_time', label: 'Bitiş saati', type: 'time' },
+        { key: 'hide_results', label: 'Sonuçlar', type: 'checkbox', full: true, checkLabel: 'Sonuçları oylama bitene kadar üyelerden gizle (kurul her zaman görür)' },
+      ],
+      validate: (v) => {
+        const e = {};
+        if (!hasVotes) {
+          const opts = [...new Set((v.options || []).map((x) => x.trim()).filter(Boolean))];
+          if (opts.length < 2) e.options = 'En az 2 seçenek yazın.';
+          else if (opts.length > 15) e.options = 'En fazla 15 seçenek olabilir.';
+          else if (opts.some((x) => x.length > 140)) e.options = 'Bir seçenek en fazla 140 karakter olabilir.';
+        }
+        if (v.close_time && !v.close_date) e.close_date = 'Saat için tarih de seçin.';
+        if (v.close_date) { const d = new Date(`${v.close_date}T${v.close_time || '23:59'}`); if (!p && d <= new Date()) e.close_date = 'Bitiş zamanı ileride olmalı.'; }
+        return e;
+      },
+      onSubmit: async (v) => {
+        const closes_at = v.close_date ? new Date(`${v.close_date}T${v.close_time || '23:59'}`).toISOString() : null;
+        const labels = hasVotes ? null : [...new Set(v.options.map((x) => x.trim()).filter(Boolean))];
+        await Store.savePoll({ id: p ? p.id : undefined, title: v.title, description: v.description, event_id: v.event_id, closes_at, hide_results: v.hide_results }, labels);
+        UI.toast(p ? 'Oylama güncellendi.' : 'Oylama açıldı. Üyeler Oylamalar sayfasından oy verebilir.');
+      },
+    });
+  }
+
+  const notReady = () => UI.card('Oylamalar henüz kurulmadı', h('p', null, Store.isBoard()
+    ? 'Veritabanında oylama tabloları bulunamadı. Supabase SQL Editor\'de supabase/oylama.sql dosyasını çalıştırın.' : 'Oylamalar yakında açılacak.'));
+
+  const PollsView = {
+    render(root) {
+      if (Store.state.mode !== 'remote') return U.put(root, UI.pageHead('Oylamalar'), UI.card(null, UI.empty('Oylamalar yalnızca ortak modda çalışır.')));
+      const board = Store.can('edit');
+      const all = D().polls;
+      const open = all.filter(isOpen), closed = all.filter((p) => !isOpen(p));
+      U.put(root,
+        UI.pageHead('Oylamalar', board ? 'Oylamaları yalnızca kurul açar; onaylı üyeler oy verir.' : 'Topluluk kararlarına oyunla katıl.',
+          h('div', { class: 'btn-row' }, UI.btn('Yenile', { onclick: async () => { try { await Store.refresh(); UI.toast('Sonuçlar güncellendi.'); } catch (e) { UI.toast(Store.friendly(e), 'error'); } } }),
+            board && Store.state.features.polls ? UI.btn('Yeni oylama', { variant: 'primary', ic: 'plus', onclick: () => pollForm(null) }) : null)),
+        !Store.state.features.polls ? notReady() : null,
+        Store.state.features.polls ? [
+          h('h2', { class: 'sec-title' }, `Açık oylamalar (${open.length})`),
+          open.length ? h('div', { class: 'poll-grid' }, open.map((p) => pollCard(p))) : UI.card(null, UI.empty(board ? 'Açık oylama yok.' : 'Şu an açık oylama yok.', board ? UI.btn('Oylama aç', { small: true, onclick: () => pollForm(null) }) : null)),
+          closed.length ? [h('h2', { class: 'sec-title' }, `Sonuçlanan oylamalar (${closed.length})`), h('div', { class: 'poll-grid' }, closed.map((p) => pollCard(p)))] : null,
+        ] : null);
+    },
+  };
+  /** Akış için: açık oylamalar kartı */
+  function feedCard() {
+    if (!Store.state.features.polls) return null;
+    const open = D().polls.filter(isOpen);
+    if (!open.length) return null;
+    return UI.card('Açık oylamalar', h('div', null, open.slice(0, 2).map((p) => pollCard(p, { compact: true }))), UI.btn('Tümü', { small: true, onclick: () => App.go('polls') }), 'feed-polls');
+  }
+  const openCount = () => (Store.state.features.polls ? D().polls.filter(isOpen).length : 0);
+
+  return { PollsView, feedCard, openCount, pollForm };
+})();
+
+</script>
+  <script>
 /* js/app.js */
 /* Uygulama kabuğu: yönlendirme, tema, giriş, başlatma */
 'use strict';
@@ -3135,7 +3388,8 @@ const App = (() => {
     settings: { title: 'Ayarlar', view: () => SettingsView, group: 'board' },
     feed: { title: 'Akış', view: () => Community.FeedView, group: 'community', remote: true },
     program: { title: 'Etkinlikler', view: () => Community.ProgramView, group: 'community', remote: true, membersOnly: true },
-    gallery: { title: 'Galeri', view: () => Community.GalleryView, group: 'community', remote: true },
+    gallery: { title: 'Galeri', view: () => Community.GalleryView, group: 'community', remote: true, membersOnly: true },
+    polls: { title: 'Oylamalar', view: () => Polls.PollsView, group: 'community', remote: true, count: () => Polls.openCount(), countLabel: 'açık oylama' },
     profile: { title: 'Profilim', view: () => Community.ProfileView, group: 'community', remote: true, needUser: true },
   };
   let current = 'dashboard';
@@ -3243,9 +3497,9 @@ const App = (() => {
       h('span', { class: 'brand-name' }, s.name));
     const nav = document.getElementById('nav');
     const link = (k, r) => {
-      const n = r.count && Store.state.features.members ? r.count() : 0;
+      const n = r.count && Store.state.features.members ? r.count() : 0;   // (oylamalar sayacı kendi kurulum kontrolünü yapar)
       return h('a', { href: '#/' + k, class: 'nav-link' + (k === current ? ' on' : ''), 'aria-current': k === current ? 'page' : null, onclick: () => closeNav() },
-        h('span', null, r.title), n ? h('span', { class: 'nav-count', 'aria-label': `${n} bekleyen` }, String(n)) : null);
+        h('span', null, r.title), n ? h('span', { class: 'nav-count', 'aria-label': `${n} ${r.countLabel || 'bekleyen'}` }, String(n)) : null);
     };
     const groups = Store.isBoard() ? [['board', 'Yönetim'], ['community', 'Topluluk']] : [['community', null]];
     U.put(clear(nav), groups.map(([g, label]) => {
