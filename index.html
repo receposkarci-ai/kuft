@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Fotoğrafçılık Topluluğu · Yönetim</title>
-  <meta name="description" content="Kırıkkale Üniversitesi Fotoğrafçılık Topluluğu etkinlik ve yönetim sistemi">
+  <title>Fotoğrafçılık Topluluğu</title>
+  <meta name="description" content="Kırıkkale Üniversitesi Fotoğrafçılık Topluluğu: etkinlikler, fotoğraf galerisi ve üye paneli">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -228,6 +228,99 @@ dialog.dlg::backdrop { background: rgb(10 8 5 / .55); }
 }
 .settings-grid .card.wide { grid-column: 1 / -1; }
 .auth-switch { margin: .4rem 0 0; font-size: .9rem; color: var(--muted); } .auth-switch .link-btn { color: var(--accent); }
+
+/* ===== Üye paneli ===== */
+.nav-link { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.nav-group { font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--side-muted); opacity: .75; padding: 1rem .75rem .3rem; }
+.nav-group:first-child { padding-top: .2rem; }
+.nav-count { background: #f0a64a; color: #1a1206; border-radius: 99px; font-size: .72rem; font-weight: 700; min-width: 1.4rem; height: 1.4rem; display: inline-grid; place-items: center; padding: 0 .35rem; }
+button.user-pill { font: inherit; font-size: .78rem; cursor: pointer; }
+.alert.info { background: color-mix(in srgb, var(--info) 10%, var(--surface)); border-color: color-mix(in srgb, var(--info) 35%, var(--line)); }
+.alert a { color: inherit; }
+.btn.going { background: color-mix(in srgb, var(--ok) 14%, var(--surface)); border-color: color-mix(in srgb, var(--ok) 45%, var(--line)); color: var(--ok); }
+.note { display: flex; gap: .45rem; align-items: flex-start; margin: 0; }
+.note.warn { color: var(--warn); } .note.bad, .bad-text { color: var(--bad); }
+.join-card { background: linear-gradient(120deg, var(--accent-soft), var(--surface)); }
+.join { display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.join h2 { font-family: var(--serif); margin: 0 0 .25rem; font-size: 1.35rem; } .join p { margin: 0; max-width: 52ch; } .join .btn-row { margin: 0; }
+.feed-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
+
+/* duyurular */
+.ann-list { list-style: none; margin: 0; padding: 0; }
+.ann-list > li { padding: .8rem 0; border-bottom: 1px solid var(--line); } .ann-list > li:last-child { border-bottom: 0; }
+.ann-list.card > li { padding: .9rem .2rem; }
+.ann-list li.pinned { border-left: 3px solid var(--warn); padding-left: .7rem; }
+.ann-head { display: flex; gap: .5rem; align-items: center; } .ann-head h3 { margin: 0; font-size: 1rem; flex: 1; }
+.ann-list p { margin: .35rem 0; }
+
+/* etkinlikler */
+.ev-mini { list-style: none; margin: 0; padding: 0; }
+.ev-mini > li { padding: .65rem 0; border-bottom: 1px solid var(--line); } .ev-mini > li:last-child { border-bottom: 0; }
+.ev-mini-title { text-align: left; }
+.ev-mini-foot { display: flex; justify-content: space-between; align-items: center; gap: .5rem; margin-top: .35rem; flex-wrap: wrap; }
+.prog { margin-top: 1rem; }
+.prog-month h2 { font-family: var(--serif); font-size: 1.15rem; margin: 1.2rem 0 .5rem; }
+.prog-item { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 1rem; align-items: start; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: .9rem 1rem; margin-bottom: .6rem; box-shadow: var(--shadow); }
+.prog-item.cancelled { opacity: .65; } .prog-item.cancelled .prog-title { text-decoration: line-through; }
+.prog-date { display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--accent-soft); border-radius: 8px; min-height: 64px; text-align: center; white-space: pre-line; }
+.prog-date .d { font-family: var(--serif); font-size: 1.6rem; line-height: 1; font-weight: 600; color: var(--accent); } .prog-date .m { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.prog-title { font-size: 1.05rem; text-align: left; }
+.prog-body .badges { margin: .3rem 0; } .prog-desc { margin: .35rem 0 0; color: var(--muted); font-size: .92rem; }
+.prog-act { display: flex; flex-direction: column; align-items: flex-end; gap: .4rem; text-align: right; }
+
+/* galeri */
+.gal-tools { display: flex; gap: .8rem; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 1rem; }
+.gal-tools select, .gal-tools input[type=search] { min-width: 220px; max-width: 100%; }
+.ph-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: .8rem; }
+.ph-card { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; }
+.ph-img { display: block; width: 100%; aspect-ratio: 1 / 1; padding: 0; border: 0; background: var(--surface2); cursor: zoom-in; overflow: hidden; }
+.ph-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s ease; }
+.ph-img:hover img { transform: scale(1.03); }
+.ph-gone { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .3rem; color: var(--muted); cursor: default; font-size: .8rem; }
+.ph-card figcaption { padding: .5rem .6rem .6rem; font-size: .85rem; }
+.ph-meta { display: flex; justify-content: space-between; align-items: center; gap: .4rem; }
+.ph-author { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ph-cap { margin: .3rem 0 0; color: var(--ink); overflow-wrap: anywhere; } .ph-ev { margin: .25rem 0 0; color: var(--muted); font-size: .78rem; display: flex; align-items: center; gap: .2rem; }
+.like { display: inline-flex; align-items: center; gap: .25rem; border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 99px; padding: .15rem .55rem; min-height: 32px; cursor: pointer; font: inherit; font-size: .82rem; font-weight: 600; }
+.like:hover { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 40%, var(--line)); }
+.like.on { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, var(--line)); background: color-mix(in srgb, var(--bad) 8%, var(--surface)); }
+.like.on svg { fill: currentColor; }
+.more { text-align: center; margin: 1rem 0; }
+
+/* büyük görünüm */
+.lb-stage { position: relative; background: #0d0c0b; border-radius: 8px; display: flex; align-items: center; justify-content: center; min-height: 240px; }
+.lb-stage img { max-width: 100%; max-height: 72vh; display: block; }
+.lb-nav { position: absolute; top: 50%; transform: translateY(-50%); background: #000a; color: #fff; border-radius: 50%; }
+.lb-nav.prev { left: .5rem; } .lb-nav.next { right: .5rem; }
+.lb-info { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; margin-top: .8rem; } .lb-info p { margin: .3rem 0 0; }
+
+/* yükleme */
+.up-preview { border: 2px dashed var(--line); border-radius: var(--radius); margin: .6rem 0 1rem; position: relative; overflow: hidden; background: var(--surface2); }
+.up-preview img { display: block; width: 100%; max-height: 320px; object-fit: contain; background: #0d0c0b; }
+.up-drop { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .3rem; min-height: 180px; cursor: pointer; color: var(--muted); font-weight: 600; }
+.up-drop:hover { color: var(--accent); }
+.up-change { position: absolute; right: .5rem; bottom: .5rem; }
+
+/* fotoğraf onayı */
+.mod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 1rem; }
+.mod-item { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; }
+.mod-item .ph-img { aspect-ratio: 4 / 3; }
+.mod-body { padding: .7rem .8rem .8rem; display: flex; flex-direction: column; gap: .3rem; flex: 1; } .mod-body p { margin: 0; overflow-wrap: anywhere; }
+.mod-body .row-actions { justify-content: flex-start; gap: .4rem; margin-top: auto; padding-top: .4rem; }
+
+@media (max-width: 900px) { .feed-grid { grid-template-columns: 1fr; } }
+@media (max-width: 720px) {
+  .prog-item { grid-template-columns: 52px minmax(0, 1fr); }
+  .prog-act { grid-column: 1 / -1; flex-direction: row; justify-content: space-between; align-items: center; }
+  .ph-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+  .ph-card figcaption { padding: .4rem; font-size: .8rem; }
+  .join .btn-row { width: 100%; } .join .btn-row .btn { flex: 1; }
+  .auth .btn span { white-space: nowrap; }
+}
+.ph-grid.compact { grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr)); gap: .6rem; }
+.ph-grid.compact .ph-card figcaption { padding: .35rem .45rem; font-size: .78rem; }
+.ph-grid.compact .ph-cap, .ph-grid.compact .ph-ev { display: none; }
+@media (max-width: 720px) { .ph-grid.compact { grid-template-columns: repeat(3, minmax(0, 1fr)); } .ph-grid.compact .ph-author { display: none; } .ph-grid.compact .ph-meta { justify-content: flex-end; } }
 
 </style>
   <link rel="manifest" href="manifest.webmanifest">
@@ -556,13 +649,15 @@ const Store = (() => {
   const ADMIN_COLS = new Set(['lookups', 'members']);
   const ARRAY_FIELDS = ['support_ids', 'materials', 'univ_supports', 'attachments', 'responsibilities'];
 
-  const state = { mode: 'local', ready: false, data: emptyData(), user: null, role: null, storageOk: true, pending: 0 };
+  const state = { mode: 'local', ready: false, data: emptyData(), user: null, role: null, member: null, features: { members: false }, storageOk: true, pending: 0 };
   const listeners = new Set();
   const hooks = { notify: () => {} };
   let sb = null;
 
   function emptyData() {
-    return { settings: { id: 'main', name: 'Fotoğrafçılık Topluluğu', logo_url: '', academic_year: '', advisor: '', confirm_delete: true }, lookups: [], members: [], events: [], tasks: [], supports: [], log: [] };
+    return { settings: { id: 'main', name: 'Fotoğrafçılık Topluluğu', logo_url: '', academic_year: '', advisor: '', confirm_delete: true }, lookups: [], members: [], events: [], tasks: [], supports: [], log: [],
+      // Üye paneli (yalnızca ortak mod; yedeğe girmez)
+      photos: [], announcements: [], rsvpCounts: {}, myRsvps: [], myLikes: [], clubMembers: [] };
   }
   const emit = () => listeners.forEach((fn) => { try { fn(); } catch (e) { console.error(e); } });
   const on = (fn) => { listeners.add(fn); return () => listeners.delete(fn); };
@@ -570,6 +665,10 @@ const Store = (() => {
   // ---------- yetki (yalnızca arayüz için; asıl kontrol RLS) ----------
   const can = (kind) => state.mode === 'local' ? true : (kind === 'admin' ? state.role === 'admin' : state.role === 'admin' || state.role === 'editor');
   const internal = () => state.mode === 'local' ? true : !!state.role;
+  /** Kurul üyesi mi (yönetim paneli)? Yerel modda her zaman evet. */
+  const isBoard = () => state.mode === 'local' ? true : !!state.role;
+  /** Onaylı üye ya da kurul üyesi: katılım, beğeni, fotoğraf yükleme yapabilir. */
+  const canParticipate = () => state.mode === 'remote' && !!state.user && (!!state.role || (state.member && state.member.status === 'approved'));
   const colPerm = (col) => ADMIN_COLS.has(col) ? 'admin' : 'edit';
 
   // ---------- normalleştirme ----------
@@ -621,27 +720,51 @@ const Store = (() => {
   }
 
   async function applySession(session) {
-    if (!session || !session.user) { state.user = null; state.role = null; return; }
+    if (!session || !session.user) { state.user = null; state.role = null; state.member = null; return; }
     state.user = { id: session.user.id, email: session.user.email };
     const { data, error } = await sb.from('profiles').select('role,full_name').eq('user_id', session.user.id).maybeSingle();
     if (error) console.warn('Profil okunamadı:', error.message);
     state.role = data ? data.role : null;
     state.user.name = data ? data.full_name : null;
+    await loadMyMember();
   }
+  async function loadMyMember() {
+    state.member = null;
+    if (!state.user) return;
+    const r = await sb.from('club_members').select('*').eq('user_id', state.user.id).maybeSingle();
+    if (r.error) { if (!isMissing(r.error)) console.warn('Üye kaydı okunamadı:', r.error.message); return; }
+    state.member = r.data || null;
+    if (state.member && !state.user.name) state.user.name = state.member.full_name;
+  }
+
+  /** Üye paneli tabloları henüz kurulmamışsa (uye-paneli.sql çalıştırılmamış) hata yerine boş liste döner. */
+  const isMissing = (e) => !!e && (e.code === '42P01' || e.code === 'PGRST205' || e.code === 'PGRST202' || /does not exist|could not find/i.test(e.message || ''));
+  const soft = (p) => Promise.resolve(p).then((r) => (r && r.error && isMissing(r.error) ? { data: [], missing: true } : r));
 
   async function reloadAll() {
     const member = !!state.role;
+    const uid = state.user ? state.user.id : null;
     const none = Promise.resolve({ data: [] });
-    const [st, lk, mb, ev, tk, sp, lg] = await Promise.all([
+    const [st, lk, mb, ev, tk, sp, lg, ph, an, rc, mr, ml, cm] = await Promise.all([
       sb.from('settings').select('*').eq('id', 'main').maybeSingle(),
       sb.from('lookups').select('*').order('sort'),
       sb.from('members').select('*').order('sort'),
       sb.from('events').select('*'),
-      sb.from('tasks').select('*'),
+      member ? sb.from('tasks').select('*') : none,
       member ? sb.from('support_requests').select('*') : none,
       member ? sb.from('activity_log').select('*').order('at', { ascending: false }).limit(60) : none,
+      soft(sb.from('photos').select('*').order('created_at', { ascending: false }).limit(3000)),
+      soft(sb.from('announcements').select('*').order('created_at', { ascending: false }).limit(60)),
+      soft(sb.rpc('rsvp_counts')),
+      uid ? soft(sb.from('event_rsvps').select('event_id').eq('user_id', uid)) : none,
+      uid ? soft(sb.from('photo_likes').select('photo_id').eq('user_id', uid)) : none,
+      member ? soft(sb.from('club_members').select('*').order('created_at', { ascending: false })) : none,
     ]);
-    for (const r of [st, lk, mb, ev, tk, sp, lg]) if (r.error) throw r.error;
+    for (const r of [st, lk, mb, ev, tk, sp, lg, ph, an, rc, mr, ml, cm]) if (r.error) throw r.error;
+    state.features.members = !ph.missing;
+    if (uid && !member) await loadMyMember();
+    const counts = {};
+    (rc.data || []).forEach((r) => { counts[r.event_id] = Number(r.n) || 0; });
     state.data = {
       settings: { ...emptyData().settings, ...(st.data || {}) },
       lookups: (lk.data || []).map((r) => normRow('lookups', r)),
@@ -650,6 +773,12 @@ const Store = (() => {
       tasks: (tk.data || []).map((r) => normRow('tasks', r)),
       supports: (sp.data || []).map((r) => normRow('supports', r)),
       log: (lg.data || []).map((r) => ({ ...r })),
+      photos: ph.data || [],
+      announcements: an.data || [],
+      rsvpCounts: counts,
+      myRsvps: (mr.data || []).map((r) => r.event_id),
+      myLikes: (ml.data || []).map((r) => r.photo_id),
+      clubMembers: cm.data || [],
     };
   }
 
@@ -678,7 +807,12 @@ const Store = (() => {
     if (e && e.code === '23505') return 'Aynı değere sahip bir kayıt zaten var (örneğin etkinlik numarası).';
     if (e && e.code === '23514') return 'Girilen değerler veritabanı kurallarına uymuyor (ör. bitiş tarihi başlangıçtan önce olamaz).';
     if (/failed to fetch|networkerror|load failed/i.test(m)) return 'Sunucuya ulaşılamadı. İnternet bağlantınızı kontrol edin.';
-    if (/KAYIT_IZNI_YOK|database error saving new user/i.test(m)) return 'Bu e-posta yetkili kişiler listesinde yok. Topluluk başkanından sizi listeye eklemesini isteyin.';
+    if (/KAYIT_IZNI_YOK|database error saving new user/i.test(m)) return 'Kayıt tamamlanamadı. Ad soyad ve öğrenci numarasını kontrol edin; bu öğrenci numarasıyla daha önce kayıt olunmuş olabilir.';
+    if (/OGRENCI_NO_KAYITLI/.test(m)) return 'Bu öğrenci numarasıyla zaten bir hesap var. "Giriş yap" ile giriş yapın; şifrenizi unuttuysanız kuruldan yardım isteyin.';
+    if (/BEKLEYEN_SINIR/.test(m)) return 'Onay bekleyen 10 fotoğrafınız var. Kurul bunları inceledikten sonra yeni fotoğraf yükleyebilirsiniz.';
+    if (/KURUL_HESABI/.test(m)) return 'Bu kişi kurul üyesi; hesabını silmek için önce Yetkili kişiler listesinden çıkarın.';
+    if (/exceeded the maximum allowed size|payload too large|entity too large/i.test(m)) return 'Fotoğraf dosyası çok büyük.';
+    if (/mime type .* is not supported|invalid_mime_type/i.test(m)) return 'Bu dosya türü desteklenmiyor; JPEG veya PNG fotoğraf seçin.';
     if (/already registered|already been registered|user_already_exists/i.test(m)) return 'Bu e-postayla zaten bir hesap var. "Giriş yap" sekmesinden giriş yapın.';
     if (/password should be at least|weak_password|SIFRE_KISA/i.test(m)) return 'Şifre en az 6 karakter olmalı.';
     if (/signups not allowed|signup_disabled/i.test(m)) return 'Yeni hesap açma Supabase ayarlarında kapalı. Yöneticinin "Allow new users to sign up" seçeneğini açması gerekir.';
@@ -823,7 +957,10 @@ const Store = (() => {
 
   // ---------- yedek / geri yükleme ----------
   function exportJSON() {
-    return { app: 'kuft-yonetim', version: 1, exported_at: new Date().toISOString(), mode: state.mode, data: U.clone(state.data) };
+    // Yalnızca kurul verisi yedeklenir; üye kişisel bilgileri ve fotoğraflar yedek dosyasına girmez.
+    const d = state.data;
+    const core = { settings: d.settings, lookups: d.lookups, members: d.members, events: d.events, tasks: d.tasks, supports: d.supports, log: d.log };
+    return { app: 'kuft-yonetim', version: 1, exported_at: new Date().toISOString(), mode: state.mode, data: U.clone(core) };
   }
   function validateBackup(obj) {
     if (!obj || obj.app !== 'kuft-yonetim' || !obj.data || typeof obj.data !== 'object') throw new Error('Bu dosya geçerli bir yedek dosyası değil.');
@@ -840,7 +977,8 @@ const Store = (() => {
       state.data = nd; Local.persist(); emit(); return;
     }
     // Ortak modda: yedekteki kayıtlar eklenir/güncellenir; yedekte olmayan kayıtlar SİLİNMEZ.
-    state.data = { ...nd, log: state.data.log };
+    const keep = state.data;
+    state.data = { ...keep, ...nd, log: keep.log };
     emit();
     await commit(async () => {
       await must(sb.from('settings').upsert(pick0(nd.settings, SETTINGS_FIELDS)));
@@ -868,20 +1006,6 @@ const Store = (() => {
       throw new Error(friendly(error));
     }
     await applySession(data.session);
-    await reloadAll();
-    emit();
-  }
-  /** Yetkili kişiler listesindeki e-posta ile kendi hesabını açar (şifreyi kişi kendisi belirler). */
-  async function signUp(email, password, fullName) {
-    if (!sb) throw new Error('Hesap açma yalnızca ortak modda kullanılabilir.');
-    const { data, error } = await sb.auth.signUp({ email: email.trim().toLowerCase(), password, options: { data: { full_name: fullName || '' } } });
-    if (error) throw new Error(friendly(error));
-    if (!data.session) {
-      // E-posta onayı açıksa oturum gelmez; doğrudan girişi dene
-      const r = await sb.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
-      if (r.error) throw new Error(friendly(r.error));
-      await applySession(r.data.session);
-    } else await applySession(data.session);
     await reloadAll();
     emit();
   }
@@ -917,6 +1041,188 @@ const Store = (() => {
     if (error) throw new Error(friendly(error));
     await addLog(`Şifre sıfırlandı: ${email}`, 'access');
   }
+  // ---------- üye paneli ----------
+  const photoUrl = (path) => (sb && path ? sb.storage.from('photos').getPublicUrl(path).data.publicUrl : '');
+  const newId = () => (window.crypto && crypto.randomUUID ? crypto.randomUUID()
+    : '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c) => (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)));
+  const needRemote = () => { if (!sb) throw new Error('Bu özellik yalnızca ortak modda (Supabase) kullanılabilir.'); };
+  const needUser = () => { needRemote(); if (!state.user) throw new Error('Önce giriş yapın.'); };
+  const needParticipant = () => { needUser(); if (!canParticipate()) throw new Error(state.member && state.member.status === 'pending' ? 'Üyeliğiniz kurul onayı bekliyor; onaylandıktan sonra bu işlemi yapabilirsiniz.' : 'Bu işlem için onaylı üye olmanız gerekir.'); };
+  const rpc = async (fn, args) => { const { data, error } = await sb.rpc(fn, args); if (error) throw new Error(friendly(error)); return data; };
+
+  /** Üye kaydı: ad soyad, öğrenci no, e-posta, bölüm, sınıf, şifre. Kurul listesindeki e-postalar kurul yetkisi alır. */
+  async function signUp(v) {
+    needRemote();
+    const email = String(v.email || '').trim().toLowerCase();
+    const studentNo = String(v.student_no || '').trim();
+    try { if (studentNo && await rpc('student_no_taken', { p_student_no: studentNo })) throw new Error('OGRENCI_NO_KAYITLI'); }
+    catch (e) { if (/OGRENCI_NO_KAYITLI/.test(e.message)) throw new Error(friendly(e)); /* kontrol yapılamadıysa kayda devam */ }
+    const meta = { full_name: String(v.full_name || '').trim(), student_no: studentNo, department: v.department || '', class_year: v.class_year || '' };
+    const { data, error } = await sb.auth.signUp({ email, password: v.password, options: { data: meta } });
+    if (error) throw new Error(friendly(error));
+    if (!data.session) {
+      const r = await sb.auth.signInWithPassword({ email, password: v.password });
+      if (r.error) throw new Error(friendly(r.error));
+      await applySession(r.data.session);
+    } else await applySession(data.session);
+    await reloadAll();
+    emit();
+  }
+  async function updateMyProfile(patch) {
+    needUser();
+    if (!state.member) throw new Error('Üye kaydınız bulunamadı.');
+    const rec = { full_name: String(patch.full_name || '').trim(), department: patch.department || '', class_year: patch.class_year || '', bio: patch.bio || '' };
+    const { error } = await sb.from('club_members').update(rec).eq('user_id', state.user.id);
+    if (error) throw new Error(friendly(error));
+    Object.assign(state.member, rec);
+    emit();
+  }
+
+  // Katılıyorum / vazgeçtim
+  async function toggleRsvp(eventId) {
+    needParticipant();
+    const d = state.data; const going = d.myRsvps.includes(eventId);
+    d.myRsvps = going ? d.myRsvps.filter((x) => x !== eventId) : [...d.myRsvps, eventId];
+    d.rsvpCounts[eventId] = Math.max(0, (d.rsvpCounts[eventId] || 0) + (going ? -1 : 1));
+    emit();
+    await commit(async () => {
+      if (going) await must(sb.from('event_rsvps').delete().eq('event_id', eventId).eq('user_id', state.user.id));
+      else await must(sb.from('event_rsvps').insert({ event_id: eventId, user_id: state.user.id }));
+    });
+    return !going;
+  }
+  // Beğen / beğeniyi geri al
+  async function toggleLike(photoId) {
+    needParticipant();
+    const d = state.data; const liked = d.myLikes.includes(photoId);
+    const p = d.photos.find((x) => x.id === photoId);
+    d.myLikes = liked ? d.myLikes.filter((x) => x !== photoId) : [...d.myLikes, photoId];
+    if (p) p.like_count = Math.max(0, (p.like_count || 0) + (liked ? -1 : 1));
+    emit();
+    await commit(async () => {
+      if (liked) await must(sb.from('photo_likes').delete().eq('photo_id', photoId).eq('user_id', state.user.id));
+      else await must(sb.from('photo_likes').insert({ photo_id: photoId, user_id: state.user.id }));
+    });
+  }
+
+  /** Fotoğrafı tarayıcıda küçültür (EXIF yönü korunur) ve JPEG'e çevirir. */
+  async function resizeImage(file, max, quality) {
+    let src;
+    try { src = await createImageBitmap(file, { imageOrientation: 'from-image' }); }
+    catch (e) {
+      src = await new Promise((res, rej) => {
+        const img = new Image();
+        img.onload = () => res(img);
+        img.onerror = () => rej(new Error('Bu dosya açılamadı. JPEG veya PNG bir fotoğraf seçin (iPhone fotoğrafı ise "En Uyumlu" biçimde paylaşın).'));
+        img.src = URL.createObjectURL(file);
+      });
+    }
+    const w0 = src.naturalWidth || src.width, h0 = src.naturalHeight || src.height;
+    if (!w0 || !h0) throw new Error('Fotoğrafın boyutu okunamadı.');
+    const k = Math.min(1, max / Math.max(w0, h0));
+    const w = Math.max(1, Math.round(w0 * k)), hgt = Math.max(1, Math.round(h0 * k));
+    const c = document.createElement('canvas'); c.width = w; c.height = hgt;
+    const ctx = c.getContext('2d'); ctx.imageSmoothingQuality = 'high';
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, hgt);
+    ctx.drawImage(src, 0, 0, w, hgt);
+    if (src.close) src.close();
+    const blob = await new Promise((res) => c.toBlob(res, 'image/jpeg', quality));
+    if (!blob) throw new Error('Fotoğraf işlenemedi.');
+    return { blob, w, h: hgt };
+  }
+  const MAX_INPUT = 30 * 1024 * 1024;
+  async function uploadPhoto(file, { caption = '', event_id = null, consent = false } = {}) {
+    needParticipant();
+    if (!consent) throw new Error('Paylaşım iznini onaylamanız gerekir.');
+    if (!file || !/^image\//.test(file.type || 'image/')) throw new Error('Lütfen bir fotoğraf dosyası seçin.');
+    if (file.size > MAX_INPUT) throw new Error('Dosya çok büyük (en fazla 30 MB).');
+    const full = await resizeImage(file, 1600, 0.82);
+    const thumb = await resizeImage(file, 480, 0.74);
+    const id = newId();
+    const base = `${state.user.id}/${id}`;
+    const paths = [base + '.jpg', base + '_t.jpg'];
+    const bucket = sb.storage.from('photos');
+    const opts = { contentType: 'image/jpeg', cacheControl: '31536000', upsert: false };
+    let r = await bucket.upload(paths[0], full.blob, opts);
+    if (r.error) throw new Error(friendly(r.error));
+    r = await bucket.upload(paths[1], thumb.blob, opts);
+    if (r.error) { await bucket.remove(paths); throw new Error(friendly(r.error)); }
+    const row = { id, user_id: state.user.id, event_id: event_id || null, caption: String(caption || '').trim().slice(0, 300), path_full: paths[0], path_thumb: paths[1], width: full.w, height: full.h, bytes: full.blob.size + thumb.blob.size, consent: true };
+    const ins = await sb.from('photos').insert(row).select('*').single();
+    if (ins.error) { await bucket.remove(paths); throw new Error(friendly(ins.error)); }
+    state.data.photos.unshift(ins.data);
+    emit();
+    return ins.data;
+  }
+  async function deletePhoto(photo) {
+    needUser();
+    const files = [photo.path_full, photo.path_thumb].filter(Boolean);
+    state.data.photos = state.data.photos.filter((p) => p.id !== photo.id);
+    emit();
+    await commit(async () => {
+      if (files.length) { const r = await sb.storage.from('photos').remove(files); if (r.error) console.warn('Dosya silinemedi:', r.error.message); }
+      await remoteDeleteBy('photos', 'id', photo.id);
+    });
+  }
+  async function remoteDeleteBy(table, key, val) {
+    const r = await must(sb.from(table).delete().eq(key, val).select(key));
+    if (!r.data || !r.data.length) throw new Error('Kayıt silinemedi (yetkiniz olmayabilir veya kayıt zaten yok).');
+  }
+
+  // ---- kurul işlemleri ----
+  async function reviewPhoto(photo, status, reason = '') {
+    need('edit');
+    await rpc('review_photo', { p_id: photo.id, p_status: status, p_reason: reason || '' });
+    if (status === 'rejected') {
+      const r = await sb.storage.from('photos').remove([photo.path_full, photo.path_thumb]);
+      if (r.error) console.warn('Reddedilen fotoğrafın dosyası silinemedi:', r.error.message);
+    }
+    const p = state.data.photos.find((x) => x.id === photo.id);
+    if (p) Object.assign(p, { status, reject_reason: status === 'rejected' ? reason : '', reviewed_at: new Date().toISOString() });
+    emit();
+    await addLog(`Fotoğraf ${status === 'approved' ? 'yayınlandı' : status === 'rejected' ? 'reddedildi' : 'beklemeye alındı'}: ${photo.author_name || ''}${photo.caption ? ' – ' + photo.caption.slice(0, 40) : ''}`, 'photos');
+  }
+  async function reviewMember(m, status, note = '') {
+    need('edit');
+    await rpc('review_member', { p_user: m.user_id, p_status: status, p_note: note || '' });
+    const row = state.data.clubMembers.find((x) => x.user_id === m.user_id);
+    if (row) Object.assign(row, { status, review_note: note || '', reviewed_at: new Date().toISOString() });
+    emit();
+    const label = { approved: 'onaylandı', rejected: 'reddedildi', suspended: 'askıya alındı', pending: 'beklemeye alındı' }[status] || status;
+    await addLog(`Üye ${label}: ${m.full_name} (${m.student_no})`, 'club_members');
+  }
+  async function deleteMemberAccount(m) {
+    need('admin');
+    const own = state.data.photos.filter((p) => p.user_id === m.user_id);
+    const files = own.flatMap((p) => [p.path_full, p.path_thumb]).filter(Boolean);
+    for (let i = 0; i < files.length; i += 100) { const r = await sb.storage.from('photos').remove(files.slice(i, i + 100)); if (r.error) console.warn(r.error.message); }
+    await rpc('delete_member_account', { p_user: m.user_id });
+    state.data.clubMembers = state.data.clubMembers.filter((x) => x.user_id !== m.user_id);
+    state.data.photos = state.data.photos.filter((p) => p.user_id !== m.user_id);
+    emit();
+    await addLog(`Üye hesabı silindi: ${m.full_name} (${m.student_no})`, 'club_members');
+  }
+  async function saveAnnouncement(a) {
+    need('edit');
+    const rec = { title: String(a.title || '').trim(), body: String(a.body || '').trim(), pinned: !!a.pinned };
+    const q = a.id ? sb.from('announcements').update(rec).eq('id', a.id).select('*').single() : sb.from('announcements').insert(rec).select('*').single();
+    const { data, error } = await q;
+    if (error) throw new Error(friendly(error));
+    const list = state.data.announcements; const i = list.findIndex((x) => x.id === data.id);
+    if (i >= 0) list[i] = data; else list.unshift(data);
+    emit();
+    await addLog(`Duyuru ${a.id ? 'güncellendi' : 'yayınlandı'}: ${rec.title}`, 'announcements');
+  }
+  async function deleteAnnouncement(a) {
+    need('edit');
+    state.data.announcements = state.data.announcements.filter((x) => x.id !== a.id);
+    emit();
+    await commit(() => remoteDeleteBy('announcements', 'id', a.id));
+    await addLog(`Duyuru silindi: ${a.title}`, 'announcements');
+  }
+  async function eventAttendees(eventId) { needUser(); return (await rpc('event_attendees', { p_event: eventId })) || []; }
+  async function storageUsage() { if (!sb || !state.role) return null; try { return Number(await rpc('storage_usage')) || 0; } catch (e) { return null; } }
+
   async function signOut() {
     if (!sb) return;
     await sb.auth.signOut();
@@ -948,7 +1254,7 @@ const Store = (() => {
     return 'ETK-' + String(max + 1).padStart(3, '0');
   };
 
-  return { state, D, on, emit, hooks, init, can, internal, get, save, saveMany, saveSettings, remove, removeEvent, removeMember, addLog, purgeSamples, sampleCount, exportJSON, restore, validateBackup, resetLocal, signIn, signUp, signOut, changePassword, listAccess, saveAccess, removeAccess, adminSetPassword, lookups, lookupInUse, nextEventCode, friendly, settings: () => state.data.settings };
+  return { state, D, on, emit, hooks, init, can, internal, isBoard, canParticipate, photoUrl, updateMyProfile, toggleRsvp, toggleLike, uploadPhoto, deletePhoto, reviewPhoto, reviewMember, deleteMemberAccount, saveAnnouncement, deleteAnnouncement, eventAttendees, storageUsage, get, save, saveMany, saveSettings, remove, removeEvent, removeMember, addLog, purgeSamples, sampleCount, exportJSON, restore, validateBackup, resetLocal, signIn, signUp, signOut, changePassword, listAccess, saveAccess, removeAccess, adminSetPassword, lookups, lookupInUse, nextEventCode, friendly, settings: () => state.data.settings };
 })();
 
 </script>
@@ -1075,7 +1381,8 @@ const UI = (() => {
     calendar: '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>', chevL: '<path d="M15 5l-7 7 7 7"/>', chevR: '<path d="M9 5l7 7-7 7"/>',
     eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>', lock: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
     aperture: '<circle cx="12" cy="12" r="9"/><path d="M12 3l4 7M20.2 8.5H9M19 16l-7 0.1M12 21l-4-7M3.8 15.5H15M5 8l7-.1"/>',
-    file: '<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/>', link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+    file: '<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/>',
+    heart: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>', image: '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/>', link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
   };
   const icon = (name, size = 18) => {
     const t = document.createElement('template');
@@ -1459,6 +1766,10 @@ const EventsView = (() => {
         h('div', null, h('h4', null, 'Gerekli malzemeler'), list(e.materials), h('h4', null, 'Üniversiteden talep edilecek destekler'), list(e.univ_supports),
           h('h4', null, 'Dosya ve fotoğraf ekleri'), (e.attachments || []).length ? h('ul', { class: 'plain' }, e.attachments.map((a) => h('li', null, UI.icon('link', 14), ' ', UI.link(a.url, a.title)))) : h('p', { class: 'muted' }, '—'))),
       UI.card('Görevler', taskList, canEdit ? UI.btn('Görev ekle', { ic: 'plus', small: true, onclick: () => TasksView.taskForm(null, { event_id: e.id }) }) : null, 'inner'),
+      Store.state.mode === 'remote' && internal && Store.state.features.members ? UI.card('Üye katılımı', h('p', null,
+        h('strong', null, `${Store.D().rsvpCounts[e.id] || 0} üye`), ' "Katılıyorum" dedi.',
+        Store.D().photos.some((p) => p.event_id === e.id && p.status === 'approved') ? ` Bu etkinlikten ${Store.D().photos.filter((p) => p.event_id === e.id && p.status === 'approved').length} fotoğraf yayında.` : ''),
+        UI.btn('Katılımcı listesi', { ic: 'user', small: true, onclick: () => BoardMembers.attendeesDialog(e) }), 'inner') : null,
       internal ? UI.card('Üniversite destek talepleri', sups.length ? UI.table(['Talep', 'Birim', 'Tarih', 'Durum'], sups.map((s) => h('tr', null, UI.td('Talep', s.title), UI.td('Birim', s.unit || '—'), UI.td('Tarih', U.fmtDate(s.request_date)), UI.td('Durum', UI.statusBadge(s.status))))) : UI.empty('Bu etkinlik için destek talebi yok.'),
         canEdit ? UI.btn('Talep ekle', { ic: 'plus', small: true, onclick: () => SupportView.supportForm(null, { event_id: e.id }) }) : null, 'inner') : null);
   }
@@ -1961,6 +2272,9 @@ const DashboardView = (() => {
       conf.size || ts.overdue ? h('div', { class: 'alert warn', role: 'status' }, UI.icon('warn', 18), h('div', null,
         conf.size ? h('span', null, h('strong', null, `${conf.size} etkinlik`), ' tarih çakışması içeriyor. ') : null,
         ts.overdue ? h('span', null, h('strong', null, `${ts.overdue} görev`), ' gecikmiş. ') : null)) : null,
+      Store.state.mode === 'remote' && Store.state.features.members && (BoardMembers.pendingMembers() || BoardMembers.pendingPhotos()) ? h('div', { class: 'alert info', role: 'status' }, UI.icon('user', 18), h('div', null,
+        BoardMembers.pendingMembers() ? h('span', null, h('a', { href: '#/members' }, h('strong', null, `${BoardMembers.pendingMembers()} üye başvurusu`)), ' onay bekliyor. ') : null,
+        BoardMembers.pendingPhotos() ? h('span', null, h('a', { href: '#/moderation' }, h('strong', null, `${BoardMembers.pendingPhotos()} fotoğraf`)), ' onay bekliyor.') : null)) : null,
       h('div', { class: 'kpis' },
         UI.kpi('Toplam etkinlik', evs.length, 'Arşiv hariç'), UI.kpi('Yaklaşan etkinlik', upcoming.length, `${undated.length} etkinliğin tarihi belirlenmedi`),
         UI.kpi('Tamamlanan etkinlik', done), UI.kpi('Hazırlık aşamasında', preparing, 'Planlanıyor · Onay · Hazırlanıyor'),
@@ -2100,7 +2414,7 @@ const SettingsView = (() => {
   function accessForm(r) {
     UI.form({
       title: r ? 'Yetkili kişiyi düzenle' : 'Yetkili kişi ekle', size: 'sm', values: r || { role: 'editor' },
-      intro: r ? null : 'Bu e-postayla kişi uygulamada "Hesap oluştur" diyerek kendi şifresini belirleyip hemen giriş yapabilir.',
+      intro: r ? null : 'Bu e-postayla "Üye ol" formunu dolduran kişi otomatik olarak bu kurul yetkisini alır.',
       fields: [
         { key: 'email', label: 'E-posta', type: 'email', required: true, disabled: !!r },
         { key: 'full_name', label: 'Ad soyad', type: 'text' },
@@ -2129,8 +2443,8 @@ const SettingsView = (() => {
     const name = r && r.full_name ? r.full_name.split(' ')[0] : '';
     return `Merhaba${name ? ' ' + name : ''}, Fotoğrafçılık Topluluğu yönetim paneline seni ekledim.\n` +
       (link ? `1) Şu bağlantıyı aç: ${link}\n` : '1) Yönetim panelini aç.\n') +
-      `2) Sağ üstteki "Giriş yap"a, sonra "Hesap oluşturun"a tıkla.\n` +
-      `3) ${r ? r.email + ' adresinle' : 'Seni eklediğim e-posta adresinle'} kendi şifreni belirle. Hepsi bu!` +
+      `2) Sağ üstteki "Üye ol" düğmesine tıkla ve formu doldur.\n` +
+      `3) E-posta olarak ${r ? r.email : 'seni eklediğim e-posta adresini'} yaz ve kendi şifreni belirle. Bu e-postayla kurul yetkin otomatik tanımlanır. Hepsi bu!` +
       (link ? `\n\nİpucu: Telefonda bağlantıyı açıp tarayıcı menüsünden "Ana ekrana ekle" dersen uygulama gibi açılır.` : '');
   }
   async function copyInvite(r) {
@@ -2155,7 +2469,7 @@ const SettingsView = (() => {
         : UI.empty('Henüz kimse eklenmedi.'));
     }).catch((e) => U.put(clear(box), h('p', { class: 'neg' }, e.message)));
     return UI.card('Yetkili kişiler', h('div', null,
-      h('p', { class: 'muted small' }, 'Listeye eklediğiniz kişiler "Giriş yap > Hesap oluşturun" ile kendi şifrelerini belirleyip hemen girer. Listede olmayan kimse hesap açamaz.'),
+      h('p', { class: 'muted small' }, 'Kurul üyelerini buradan yönetin. Listeye eklediğiniz e-postayla "Üye ol" formunu dolduran kişi otomatik olarak kurul yetkisi alır. Topluluk üyelerinin kayıtları ise Üyeler sayfasından onaylanır.'),
       box,
       h('div', { class: 'btn-row' }, UI.btn('Kişi ekle', { ic: 'plus', variant: 'primary', small: true, onclick: () => accessForm(null) }), UI.btn('Genel davet mesajını kopyala', { ic: 'copy', small: true, onclick: () => copyInvite(null) }))), null, 'wide');
   }
@@ -2275,24 +2589,559 @@ const SettingsView = (() => {
 
 </script>
   <script>
+/* js/views-community.js */
+/* Üye paneli: Akış, Etkinlikler (katılım), Galeri (fotoğraf + beğeni), Profilim */
+'use strict';
+const Community = (() => {
+  const { h, clear } = U;
+
+  // Üyeye gösterilen sade etkinlik durumu
+  const PUBLIC_STATUS = {
+    'Fikir aşamasında': ['Taslak plan', 'muted'], 'Planlanıyor': ['Hazırlanıyor', 'info'], 'Onay bekliyor': ['Hazırlanıyor', 'info'],
+    'Hazırlanıyor': ['Hazırlanıyor', 'info'], 'Hazır': ['Kesinleşti', 'ok'], 'Gerçekleştirildi': ['Gerçekleşti', 'done'], 'İptal edildi': ['İptal edildi', 'bad'],
+  };
+  const statusBadge = (e) => { const [t, tone] = PUBLIC_STATUS[e.status] || [e.status, 'muted']; return UI.badge(t, tone); };
+  const MEMBER_STATUS = { pending: ['Onay bekliyor', 'warn'], approved: ['Onaylı üye', 'ok'], rejected: ['Onaylanmadı', 'bad'], suspended: ['Askıda', 'bad'] };
+  const PHOTO_STATUS = { pending: ['Onay bekliyor', 'warn'], approved: ['Yayında', 'ok'], rejected: ['Reddedildi', 'bad'] };
+  const CLASS_YEARS = ['Hazırlık', '1. sınıf', '2. sınıf', '3. sınıf', '4. sınıf', '5. sınıf ve üstü', 'Yüksek lisans', 'Doktora'];
+
+  const D = () => Store.D();
+  const remoteOnly = () => UI.card('Üye paneli', UI.empty('Üye paneli yalnızca ortak modda (Supabase bağlıyken) çalışır.'));
+  const notReady = () => UI.card('Üye paneli henüz kurulmadı', h('p', null, Store.isBoard()
+    ? 'Veritabanında üye paneli tabloları bulunamadı. Supabase SQL Editor\'de supabase/uye-paneli.sql dosyasını çalıştırın.'
+    : 'Üye paneli yakında açılacak.'));
+  const visibleEvents = () => D().events.filter((e) => !e.archived);
+  const isPast = (e) => e.status === 'Gerçekleştirildi' || (!!Calc.evEnd(e) && Calc.evEnd(e) < U.todayISO());
+  const canJoin = (e) => !isPast(e) && e.status !== 'İptal edildi';
+  const approvedPhotos = () => D().photos.filter((p) => p.status === 'approved');
+
+  // ---- giriş gerektiren işlemler ----
+  function needParticipant() {
+    const st = Store.state;
+    if (!st.user) { UI.toast('Bu işlem için üye girişi gerekir.', 'error'); App.loginDialog(); return false; }
+    if (!Store.canParticipate()) {
+      UI.toast(st.member && st.member.status === 'pending' ? 'Üyeliğin kurul onayı bekliyor; onaylanınca bu işlemi yapabilirsin.' : 'Bu işlem için onaylı üye olman gerekir.', 'error');
+      return false;
+    }
+    return true;
+  }
+  async function rsvp(e, btn) {
+    if (!needParticipant()) return;
+    if (btn) btn.disabled = true;
+    try { const now = await Store.toggleRsvp(e.id); UI.toast(now ? `"${e.title}" için katılımın kaydedildi.` : 'Katılımın geri alındı.'); }
+    catch (err) { UI.toast(Store.friendly(err), 'error'); }
+    finally { if (btn) btn.disabled = false; }
+  }
+  async function like(p) {
+    if (!needParticipant()) return;
+    try { await Store.toggleLike(p.id); } catch (err) { UI.toast(Store.friendly(err), 'error'); }
+  }
+
+  // ---- ortak parçalar ----
+  const goingBtn = (e, small = true) => {
+    const going = D().myRsvps.includes(e.id);
+    if (!canJoin(e)) return null;
+    const b = UI.btn(going ? 'Katılıyorsun' : 'Katılıyorum', { small, variant: going ? 'going' : 'primary', ic: going ? 'check' : 'plus', onclick: () => rsvp(e, b) });
+    b.setAttribute('aria-pressed', String(going));
+    return b;
+  };
+  const countText = (e) => { const n = D().rsvpCounts[e.id] || 0; return n ? `${n} kişi katılıyor` : (canJoin(e) ? 'İlk katılan sen ol' : ''); };
+  const likeBtn = (p) => {
+    const liked = D().myLikes.includes(p.id);
+    return h('button', { class: 'like' + (liked ? ' on' : ''), type: 'button', 'aria-pressed': String(liked), 'aria-label': (liked ? 'Beğeniyi geri al' : 'Beğen') + ` (${p.like_count || 0} beğeni)`, onclick: (ev) => { ev.stopPropagation(); like(p); } },
+      UI.icon('heart', 18), h('span', null, String(p.like_count || 0)));
+  };
+  const thumb = (p, onclick) => h('button', { class: 'ph-img', type: 'button', 'aria-label': 'Fotoğrafı büyüt' + (p.caption ? ': ' + p.caption : ''), onclick },
+    h('img', { src: Store.photoUrl(p.path_thumb), alt: p.caption || `${p.author_name || 'Üye'} tarafından paylaşılan fotoğraf`, loading: 'lazy', decoding: 'async' }));
+  function photoCard(p, list) {
+    return h('figure', { class: 'ph-card' },
+      thumb(p, () => lightbox(p, list)),
+      h('figcaption', null,
+        h('div', { class: 'ph-meta' }, h('span', { class: 'ph-author' }, p.author_name || 'Üye'), likeBtn(p)),
+        p.caption ? h('p', { class: 'ph-cap' }, p.caption) : null,
+        p.event_id ? h('p', { class: 'ph-ev' }, UI.icon('calendar', 13), ' ', Calc.eventTitle(p.event_id)) : null));
+  }
+  const photoGrid = (list, emptyMsg, compact) => list.length ? h('div', { class: 'ph-grid' + (compact ? ' compact' : '') }, list.map((p) => photoCard(p, list))) : UI.empty(emptyMsg);
+
+  /** Büyük görünüm; ← → ile listedeki diğer fotoğraflara geçer */
+  function lightbox(p0, list) {
+    let i = Math.max(0, list.findIndex((x) => x.id === p0.id));
+    const holder = h('div', { class: 'lb' });
+    const dlg = UI.dialog({ title: 'Fotoğraf', size: 'xl', content: holder, backdropClose: true, onClose: () => off() });
+    const draw = () => {
+      const p = D().photos.find((x) => x.id === list[i].id) || list[i];
+      U.put(clear(holder),
+        h('div', { class: 'lb-stage' },
+          list.length > 1 ? h('button', { class: 'icon-btn lb-nav prev', type: 'button', 'aria-label': 'Önceki fotoğraf', onclick: () => { i = (i - 1 + list.length) % list.length; draw(); } }, UI.icon('chevL')) : null,
+          h('img', { src: Store.photoUrl(p.path_full), alt: p.caption || 'Fotoğraf' }),
+          list.length > 1 ? h('button', { class: 'icon-btn lb-nav next', type: 'button', 'aria-label': 'Sonraki fotoğraf', onclick: () => { i = (i + 1) % list.length; draw(); } }, UI.icon('chevR')) : null),
+        h('div', { class: 'lb-info' },
+          h('div', null, h('strong', null, p.author_name || 'Üye'), h('span', { class: 'muted small' }, ' · ' + U.fmtDateTime(p.created_at)),
+            p.caption ? h('p', null, p.caption) : null,
+            p.event_id ? h('p', { class: 'muted small' }, UI.icon('calendar', 13), ' ', Calc.eventTitle(p.event_id)) : null),
+          p.status === 'approved' ? likeBtn(p) : UI.badge((PHOTO_STATUS[p.status] || [p.status])[0], (PHOTO_STATUS[p.status] || [])[1])));
+    };
+    const off = Store.on(() => { if (dlg.open) draw(); });
+    dlg.addEventListener('keydown', (ev) => {
+      if (list.length < 2) return;
+      if (ev.key === 'ArrowLeft') { i = (i - 1 + list.length) % list.length; draw(); }
+      if (ev.key === 'ArrowRight') { i = (i + 1) % list.length; draw(); }
+    });
+    draw();
+  }
+
+  function statusBanner() {
+    const st = Store.state;
+    if (!st.user) return UI.card(null, h('div', { class: 'join' },
+      h('div', null, h('h2', null, 'Topluluğa katıl'), h('p', null, 'Üye ol; etkinliklere katılımını bildir, fotoğraflarını paylaş, beğen. Kayıt için öğrenci numaran yeterli.')),
+      h('div', { class: 'btn-row' }, UI.btn('Üye ol', { variant: 'primary', ic: 'user', onclick: () => App.signUpDialog() }), UI.btn('Giriş yap', { onclick: () => App.loginDialog() }))), null, 'join-card');
+    const m = st.member;
+    if (m && m.status === 'pending') return UI.card(null, h('p', { class: 'note warn' }, UI.icon('warn', 16), ' Üyelik başvurun alındı. Kurul öğrenci numaranı kontrol edip onayladığında katılım bildirme, beğenme ve fotoğraf paylaşma açılacak.'));
+    if (m && (m.status === 'rejected' || m.status === 'suspended')) return UI.card(null, h('p', { class: 'note bad' }, UI.icon('warn', 16), ` Üyeliğin ${m.status === 'rejected' ? 'onaylanmadı' : 'askıya alındı'}.`, m.review_note ? ` Not: ${m.review_note}` : '', ' Bir yanlışlık olduğunu düşünüyorsan kurulla iletişime geç.'));
+    return null;
+  }
+
+  // ================= AKIŞ =================
+  const FeedView = {
+    render(root) {
+      if (Store.state.mode !== 'remote') return U.put(root, UI.pageHead('Akış'), remoteOnly());
+      const s = Store.settings();
+      const anns = [...D().announcements].sort((a, b) => (b.pinned - a.pinned) || (a.created_at < b.created_at ? 1 : -1));
+      const upcoming = Calc.sortEvents(visibleEvents().filter((e) => canJoin(e) && e.status !== 'Fikir aşamasında')).slice(0, 4);
+      const recent = approvedPhotos().slice(0, 8);
+      const st = Store.state;
+      U.put(root,
+        UI.pageHead(st.user ? `Merhaba${(st.user.name || '') ? ', ' + st.user.name.split(' ')[0] : ''}` : 'Akış', s.name),
+        statusBanner(),
+        !Store.state.features.members ? notReady() : null,
+        h('div', { class: 'feed-grid' },
+          h('div', null,
+            UI.card('Duyurular', anns.length ? h('ul', { class: 'ann-list' }, anns.slice(0, 8).map((a) => h('li', { class: a.pinned ? 'pinned' : '' },
+              h('div', { class: 'ann-head' }, a.pinned ? UI.badge('Sabit', 'warn') : null, h('h3', null, a.title)),
+              a.body ? h('p', { class: 'pre' }, a.body) : null,
+              h('div', { class: 'muted small' }, [a.author_name, U.fmtDateTime(a.created_at)].filter(Boolean).join(' · ')))))
+              : UI.empty('Henüz duyuru yok.')),
+            UI.card('Son fotoğraflar', photoGrid(recent, 'Henüz paylaşılan fotoğraf yok.', true), UI.btn('Galeri', { small: true, ic: 'image', onclick: () => App.go('gallery') }))),
+          h('div', null,
+            UI.card('Yaklaşan etkinlikler', upcoming.length ? h('ul', { class: 'ev-mini' }, upcoming.map((e) => h('li', null,
+              h('button', { class: 'link-btn ev-mini-title', type: 'button', onclick: () => openEvent(e.id) }, e.title),
+              h('div', { class: 'muted small' }, Calc.dateLabel(e), e.venue ? ' · ' + e.venue : ''),
+              h('div', { class: 'ev-mini-foot' }, h('span', { class: 'small muted' }, countText(e)), goingBtn(e)))))
+              : UI.empty('Yakında duyurulacak.'), UI.btn('Tümü', { small: true, onclick: () => App.go('program') })))));
+    },
+  };
+
+  // ================= ETKİNLİKLER =================
+  let progTab = 'upcoming';
+  function openEvent(id) {
+    UI.liveDialog({ title: 'Etkinlik', size: 'lg', render: () => {
+      const e = Store.get('events', id); if (!e) return null;
+      const photos = approvedPhotos().filter((p) => p.event_id === e.id);
+      const lead = e.lead_id ? Calc.memberName(e.lead_id) : '';
+      return h('div', { class: 'detail' },
+        h('div', { class: 'detail-top' },
+          h('div', null, h('h3', { class: 'detail-title' }, e.title), h('div', { class: 'badges' }, statusBadge(e), UI.badge(Calc.lookupName(e.type_id), 'neutral'))),
+          h('div', { class: 'detail-actions' }, goingBtn(e, false))),
+        h('dl', { class: 'facts' }, [['Tarih', Calc.dateLabel(e)], ['Saat', Calc.timeLabel(e) || '—'], ['Yer', [e.venue, e.city].filter(Boolean).join(', ') || '—'], ['Sorumlu', lead || '—'], ['Katılım', countText(e) || '—']]
+          .map(([k, v]) => h('div', null, h('dt', null, k), h('dd', null, v)))),
+        e.description ? [h('h4', null, 'Hakkında'), h('p', null, e.description)] : null,
+        e.purpose ? [h('h4', null, 'Amaç'), h('p', null, e.purpose)] : null,
+        (e.materials || []).length ? [h('h4', null, 'Yanına alabileceklerin'), h('ul', { class: 'plain' }, e.materials.map((x) => h('li', null, x)))] : null,
+        photos.length ? [h('h4', null, `Bu etkinlikten fotoğraflar (${photos.length})`), photoGrid(photos, '', true)] : null);
+    } });
+  }
+  const ProgramView = {
+    render(root) {
+      if (Store.state.mode !== 'remote') return U.put(root, UI.pageHead('Etkinlikler'), remoteOnly());
+      const all = visibleEvents();
+      const up = Calc.sortEvents(all.filter((e) => !isPast(e)));
+      const past = Calc.sortEvents(all.filter(isPast)).reverse();
+      const list = progTab === 'upcoming' ? up : progTab === 'mine' ? Calc.sortEvents(all.filter((e) => D().myRsvps.includes(e.id))) : past;
+      const groups = new Map();
+      list.forEach((e) => { const k = Calc.evMonth(e) || 'zzzz'; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(e); });
+      const seg = (k, label) => h('button', { class: 'seg' + (progTab === k ? ' on' : ''), type: 'button', 'aria-pressed': String(progTab === k), onclick: () => { progTab = k; App.render(); } }, label);
+      U.put(root,
+        UI.pageHead('Etkinlikler', 'Katılacağın etkinlikleri işaretle; kurul hazırlığı buna göre yapar.'),
+        statusBanner(),
+        h('div', { class: 'segs', role: 'group', 'aria-label': 'Etkinlik listesi' }, seg('upcoming', `Yaklaşan (${up.length})`), Store.state.user ? seg('mine', `Katıldıklarım (${D().myRsvps.length})`) : null, seg('past', `Geçmiş (${past.length})`)),
+        h('div', { class: 'prog' }, list.length ? [...groups.entries()].map(([k, evs]) => h('section', { class: 'prog-month' },
+          h('h2', null, k === 'zzzz' ? 'Tarihi belirlenmeyenler' : U.fmtMonth(k)),
+          evs.map((e) => h('article', { class: 'prog-item' + (e.status === 'İptal edildi' ? ' cancelled' : '') },
+            h('div', { class: 'prog-date' }, e.start_date ? [h('span', { class: 'd' }, String(+e.start_date.slice(8, 10))), h('span', { class: 'm' }, U.MONTHS[+e.start_date.slice(5, 7) - 1].slice(0, 3))] : h('span', { class: 'm' }, 'Tarih\nyakında')),
+            h('div', { class: 'prog-body' },
+              h('button', { class: 'link-btn prog-title', type: 'button', onclick: () => openEvent(e.id) }, e.title),
+              h('div', { class: 'badges' }, statusBadge(e), UI.badge(Calc.lookupName(e.type_id), 'neutral')),
+              h('div', { class: 'muted small' }, [Calc.timeLabel(e), e.venue, e.city].filter(Boolean).join(' · ')),
+              e.description ? h('p', { class: 'prog-desc' }, e.description.length > 180 ? e.description.slice(0, 180) + '…' : e.description) : null),
+            h('div', { class: 'prog-act' }, h('span', { class: 'small muted' }, countText(e)), goingBtn(e))))))
+          : UI.empty(progTab === 'mine' ? 'Henüz katılım bildirdiğin etkinlik yok.' : 'Bu listede etkinlik yok.')));
+    },
+  };
+
+  // ================= GALERİ =================
+  const gal = { sort: 'new', event: '', limit: 48 };
+  function uploadDialog(presetEvent) {
+    if (!needParticipant()) return;
+    let file = null;
+    const input = h('input', { type: 'file', accept: 'image/*', id: 'up-file', class: 'sr-only' });
+    const preview = h('div', { class: 'up-preview' }, h('label', { for: 'up-file', class: 'up-drop' }, UI.icon('image', 28), h('span', null, 'Fotoğraf seç'), h('span', { class: 'muted small' }, 'JPEG veya PNG · telefondan çekebilirsin')));
+    const caption = h('textarea', { id: 'up-cap', rows: 2, maxlength: 300, placeholder: 'Kısa bir açıklama (isteğe bağlı)' });
+    const evSel = h('select', { id: 'up-ev' }, UI.opt('', '— Etkinlikle ilişkili değil —', !presetEvent),
+      Calc.sortEvents(visibleEvents().filter((e) => e.status !== 'İptal edildi')).reverse().map((e) => UI.opt(e.id, `${e.title} (${Calc.dateLabel(e)})`, presetEvent === e.id)));
+    const consent = h('input', { type: 'checkbox', id: 'up-ok' });
+    const err = h('div', { class: 'form-error', role: 'alert', hidden: true });
+    const submit = h('button', { class: 'btn primary', type: 'submit' }, 'Onaya gönder');
+    input.addEventListener('change', () => {
+      file = input.files && input.files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      U.put(clear(preview), h('img', { src: url, alt: 'Seçilen fotoğrafın önizlemesi' }), h('label', { for: 'up-file', class: 'btn sm up-change' }, 'Değiştir'));
+    });
+    const form = h('form', { class: 'form', novalidate: true },
+      h('p', { class: 'intro' }, 'Fotoğrafın kurul onayından sonra galeride herkese açık yayınlanır. Yüklerken otomatik olarak küçültülür.'),
+      err, input, preview,
+      h('div', { class: 'form-grid' },
+        h('div', { class: 'field full' }, h('label', { for: 'up-cap' }, 'Açıklama'), caption),
+        h('div', { class: 'field full' }, h('label', { for: 'up-ev' }, 'Etkinlik albümü'), evSel),
+        h('div', { class: 'field full' }, h('label', { class: 'check' }, consent, h('span', null, 'Fotoğraf bana ait; fotoğrafta tanınabilir kişiler varsa paylaşım için izinlerini aldım.')))),
+      h('div', { class: 'form-actions' }, h('button', { class: 'btn', type: 'button', onclick: () => dlg.close() }, 'Vazgeç'), submit));
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      err.hidden = true;
+      const msg = !file ? 'Önce bir fotoğraf seç.' : !consent.checked ? 'Paylaşım iznini onaylaman gerekiyor.' : '';
+      if (msg) { err.textContent = msg; err.hidden = false; return; }
+      submit.disabled = true; submit.textContent = 'Yükleniyor…';
+      try {
+        await Store.uploadPhoto(file, { caption: caption.value, event_id: evSel.value || null, consent: consent.checked });
+        dlg.close();
+        UI.toast(Store.isBoard() ? 'Fotoğraf onaya gönderildi. Fotoğraf onayı sayfasından yayınlayabilirsin.' : 'Fotoğrafın kurul onayına gönderildi. Onaylanınca galeride görünecek.');
+      } catch (e2) {
+        err.textContent = Store.friendly(e2); err.hidden = false;
+        submit.disabled = false; submit.textContent = 'Onaya gönder';
+      }
+    });
+    const dlg = UI.dialog({ title: 'Fotoğraf paylaş', size: 'md', content: form });
+  }
+  const GalleryView = {
+    render(root) {
+      if (Store.state.mode !== 'remote') return U.put(root, UI.pageHead('Galeri'), remoteOnly());
+      let list = approvedPhotos();
+      const evIds = [...new Set(list.map((p) => p.event_id).filter(Boolean))];
+      if (gal.event) list = list.filter((p) => p.event_id === gal.event);
+      if (gal.sort === 'top') list = [...list].sort((a, b) => (b.like_count - a.like_count) || (a.created_at < b.created_at ? 1 : -1));
+      const shown = list.slice(0, gal.limit);
+      const seg = (k, label) => h('button', { class: 'seg' + (gal.sort === k ? ' on' : ''), type: 'button', 'aria-pressed': String(gal.sort === k), onclick: () => { gal.sort = k; App.render(); } }, label);
+      const evSel = h('select', { 'aria-label': 'Albüm', onchange: (e) => { gal.event = e.target.value; gal.limit = 48; App.render(); } },
+        UI.opt('', 'Tüm fotoğraflar', !gal.event), evIds.map((id) => UI.opt(id, Calc.eventTitle(id), gal.event === id)));
+      const st = Store.state;
+      U.put(root,
+        UI.pageHead('Galeri', `${approvedPhotos().length} fotoğraf`,
+          Store.canParticipate() ? UI.btn('Fotoğraf paylaş', { variant: 'primary', ic: 'upload', onclick: () => uploadDialog() })
+            : !st.user ? UI.btn('Paylaşmak için üye ol', { ic: 'user', onclick: () => App.signUpDialog() }) : null),
+        statusBanner(),
+        !st.features.members ? notReady() : null,
+        h('div', { class: 'gal-tools' }, h('div', { class: 'segs', role: 'group', 'aria-label': 'Sıralama' }, seg('new', 'En yeni'), seg('top', 'En beğenilen')), evIds.length ? evSel : null),
+        photoGrid(shown, gal.event ? 'Bu albümde fotoğraf yok.' : 'Henüz yayınlanmış fotoğraf yok. İlk fotoğrafı sen paylaş!'),
+        list.length > shown.length ? h('div', { class: 'more' }, UI.btn(`Daha fazla göster (${list.length - shown.length})`, { onclick: () => { gal.limit += 48; App.render(); } })) : null);
+    },
+  };
+
+  // ================= PROFİLİM =================
+  function profileForm() {
+    const m = Store.state.member;
+    UI.form({
+      title: 'Bilgilerimi düzenle', size: 'sm', values: m,
+      fields: [
+        { key: 'full_name', label: 'Ad soyad', type: 'text', required: true, maxlength: 80 },
+        { key: 'department', label: 'Bölüm', type: 'text', maxlength: 80 },
+        { key: 'class_year', label: 'Sınıf', type: 'select', options: CLASS_YEARS.map((x) => ({ value: x, label: x })) },
+        { key: 'bio', label: 'Hakkımda', type: 'textarea', rows: 3, maxlength: 300, placeholder: 'Ör. kullandığın makine, sevdiğin fotoğraf türü' },
+      ],
+      validate: (v) => (v.full_name && v.full_name.length < 3 ? { full_name: 'Ad soyad en az 3 karakter olmalı.' } : {}),
+      onSubmit: async (v) => { await Store.updateMyProfile(v); UI.toast('Bilgilerin güncellendi.'); },
+    });
+  }
+  function passwordForm() {
+    UI.form({
+      title: 'Şifremi değiştir', size: 'sm',
+      fields: [{ key: 'p1', label: 'Yeni şifre', type: 'password', required: true, autocomplete: 'new-password', help: 'En az 6 karakter.' }, { key: 'p2', label: 'Yeni şifre (tekrar)', type: 'password', required: true, autocomplete: 'new-password' }],
+      validate: (v) => { const e = {}; if (v.p1 && v.p1.length < 6) e.p1 = 'Şifre en az 6 karakter olmalı.'; if (v.p2 && v.p1 !== v.p2) e.p2 = 'Şifreler aynı değil.'; return e; },
+      onSubmit: async (v) => { await Store.changePassword(v.p1); UI.toast('Şifren değiştirildi.'); },
+    });
+  }
+  async function delMyPhoto(p) {
+    if (!(await UI.confirmBox({ title: 'Fotoğrafı sil', message: 'Bu fotoğraf kalıcı olarak silinecek.', okLabel: 'Sil', danger: true }))) return;
+    try { await Store.deletePhoto(p); UI.toast('Fotoğraf silindi.'); } catch (e) { UI.toast(Store.friendly(e), 'error'); }
+  }
+  const ProfileView = {
+    render(root) {
+      if (Store.state.mode !== 'remote') return U.put(root, UI.pageHead('Profilim'), remoteOnly());
+      const st = Store.state;
+      if (!st.user) return U.put(root, UI.pageHead('Profilim'), statusBanner());
+      const m = st.member;
+      const mine = D().photos.filter((p) => p.user_id === st.user.id);
+      const joined = Calc.sortEvents(D().events.filter((e) => D().myRsvps.includes(e.id)));
+      const [sl, stone] = m ? (MEMBER_STATUS[m.status] || [m.status, 'muted']) : ['Kurul üyesi', 'info'];
+      U.put(root,
+        UI.pageHead('Profilim', null, h('div', { class: 'btn-row' },
+          m ? UI.btn('Bilgilerimi düzenle', { ic: 'edit', onclick: profileForm }) : UI.btn('Hesap ayarları', { ic: 'user', onclick: () => App.go('settings') }),
+          UI.btn('Şifremi değiştir', { ic: 'lock', onclick: passwordForm }))),
+        statusBanner(),
+        h('div', { class: 'cols-2' },
+          UI.card('Bilgilerim', h('dl', { class: 'facts' }, [
+            ['Ad soyad', m ? m.full_name : (st.user.name || '—')], m ? ['Öğrenci no', m.student_no] : null, ['E-posta', st.user.email],
+            m ? ['Bölüm', m.department || '—'] : null, m ? ['Sınıf', m.class_year || '—'] : null, ['Durum', UI.badge(sl, stone)],
+            m && m.bio ? ['Hakkımda', m.bio] : null,
+          ].filter(Boolean).map(([k, v]) => h('div', null, h('dt', null, k), h('dd', null, v))))),
+          UI.card(`Katıldığım etkinlikler (${joined.length})`, joined.length ? h('ul', { class: 'ev-mini' }, joined.map((e) => h('li', null,
+            h('button', { class: 'link-btn ev-mini-title', type: 'button', onclick: () => openEvent(e.id) }, e.title),
+            h('div', { class: 'muted small' }, Calc.dateLabel(e)), h('div', { class: 'ev-mini-foot' }, statusBadge(e), goingBtn(e)))))
+            : UI.empty('Henüz katılım bildirmedin.', UI.btn('Etkinliklere göz at', { small: true, onclick: () => App.go('program') })))),
+        UI.card(`Fotoğraflarım (${mine.length})`, mine.length ? h('div', { class: 'ph-grid' }, mine.map((p) => {
+          const [t, tone] = PHOTO_STATUS[p.status] || [p.status, 'muted'];
+          return h('figure', { class: 'ph-card' },
+            p.status === 'rejected' ? h('div', { class: 'ph-img ph-gone' }, UI.icon('x', 28), h('span', null, 'Dosya kaldırıldı')) : thumb(p, () => lightbox(p, mine.filter((x) => x.status !== 'rejected'))),
+            h('figcaption', null,
+              h('div', { class: 'ph-meta' }, UI.badge(t, tone), p.status === 'approved' ? h('span', { class: 'small muted' }, `♥ ${p.like_count || 0}`) : null, UI.iconBtn('trash', 'Fotoğrafı sil', () => delMyPhoto(p), 'danger')),
+              p.caption ? h('p', { class: 'ph-cap' }, p.caption) : null,
+              p.status === 'rejected' && p.reject_reason ? h('p', { class: 'small bad-text' }, 'Sebep: ' + p.reject_reason) : null));
+        })) : UI.empty('Henüz fotoğraf paylaşmadın.'),
+        Store.canParticipate() ? UI.btn('Fotoğraf paylaş', { small: true, variant: 'primary', ic: 'upload', onclick: () => uploadDialog() }) : null));
+    },
+  };
+
+  return { FeedView, ProgramView, GalleryView, ProfileView, openEvent, uploadDialog, lightbox, photoGrid, CLASS_YEARS, MEMBER_STATUS, PHOTO_STATUS };
+})();
+
+</script>
+  <script>
+/* js/views-board-members.js */
+/* Kurul tarafı: Üyeler (kayıt onayı), Fotoğraf onayı, Duyurular, etkinlik katılımcı listesi */
+'use strict';
+const BoardMembers = (() => {
+  const { h, clear } = U;
+  const D = () => Store.D();
+  const notRemote = (title) => [UI.pageHead(title), UI.card(null, UI.empty('Bu bölüm yalnızca ortak modda (Supabase bağlıyken) çalışır.'))];
+  const notReady = (title) => [UI.pageHead(title), UI.card('Üye paneli henüz kurulmadı', h('p', null, 'Veritabanında üye paneli tabloları bulunamadı. Supabase SQL Editor\'de supabase/uye-paneli.sql dosyasının tamamını çalıştırın.'))];
+  const guard = (root, title) => {
+    if (Store.state.mode !== 'remote') { U.put(root, notRemote(title)); return false; }
+    if (!Store.state.features.members) { U.put(root, notReady(title)); return false; }
+    return true;
+  };
+  const pendingMembers = () => D().clubMembers.filter((m) => m.status === 'pending').length;
+  const pendingPhotos = () => D().photos.filter((p) => p.status === 'pending').length;
+
+  // ================= ÜYELER =================
+  const mv = { tab: 'pending', q: '' };
+  const memberRow = (m) => [m.full_name, m.student_no, m.department, m.class_year, m.email, U.fmtDate((m.created_at || '').slice(0, 10)), (Community.MEMBER_STATUS[m.status] || [m.status])[0], m.review_note || ''];
+  async function setStatus(m, status) {
+    let note = '';
+    if (status === 'rejected' || status === 'suspended') {
+      const r = await new Promise((resolve) => UI.form({
+        title: status === 'rejected' ? 'Başvuruyu reddet' : 'Üyeliği askıya al', size: 'sm', submitLabel: status === 'rejected' ? 'Reddet' : 'Askıya al',
+        intro: `${m.full_name} (${m.student_no})`,
+        fields: [{ key: 'note', label: 'Not (üye görür)', type: 'text', maxlength: 200, placeholder: status === 'rejected' ? 'Ör. öğrenci numarası doğrulanamadı' : 'Ör. kurallara aykırı paylaşım' }],
+        onSubmit: async (v) => resolve(v.note || ''), onClose: () => resolve(null),
+      }));
+      if (r === null) return;
+      note = r;
+    }
+    try {
+      await Store.reviewMember(m, status, note);
+      UI.toast({ approved: `${m.full_name} onaylandı.`, rejected: 'Başvuru reddedildi.', suspended: 'Üyelik askıya alındı.', pending: 'Beklemeye alındı.' }[status]);
+    } catch (e) { UI.toast(Store.friendly(e), 'error'); }
+  }
+  async function delAccount(m) {
+    const ok = await UI.confirmBox({ title: 'Hesabı sil', message: `${m.full_name} (${m.student_no}) hesabı, fotoğrafları ve katılım kayıtlarıyla birlikte kalıcı olarak silinecek. Kişi isterse yeniden kayıt olabilir.`, okLabel: 'Hesabı sil', danger: true });
+    if (!ok) return;
+    try { await Store.deleteMemberAccount(m); UI.toast('Hesap silindi.'); } catch (e) { UI.toast(Store.friendly(e), 'error'); }
+  }
+  const MembersAdminView = {
+    render(root) {
+      if (!guard(root, 'Üyeler')) return;
+      const all = D().clubMembers;
+      const byTab = { pending: all.filter((m) => m.status === 'pending'), approved: all.filter((m) => m.status === 'approved'), other: all.filter((m) => m.status === 'rejected' || m.status === 'suspended') };
+      const q = mv.q.toLocaleLowerCase('tr');
+      const list = byTab[mv.tab].filter((m) => !q || [m.full_name, m.student_no, m.email, m.department].join(' ').toLocaleLowerCase('tr').includes(q));
+      const seg = (k, label) => h('button', { class: 'seg' + (mv.tab === k ? ' on' : ''), type: 'button', 'aria-pressed': String(mv.tab === k), onclick: () => { mv.tab = k; App.render(); } }, label);
+      const search = h('input', { type: 'search', id: 'mem-q', value: mv.q, placeholder: 'Ad, öğrenci no, e-posta, bölüm', 'aria-label': 'Üye ara', oninput: U.debounce((e) => { mv.q = e.target.value; App.render(); }, 250) });
+      const admin = Store.can('admin');
+      U.put(root,
+        UI.pageHead('Üyeler', `${byTab.approved.length} onaylı üye · ${byTab.pending.length} onay bekleyen`,
+          UI.btn('Onaylı üyeler (Excel)', { ic: 'download', onclick: async () => {
+            try { await U.downloadXLSX(`kuft-uyeler-${U.todayISO()}.xlsx`, [{ name: 'Üyeler', columns: ['Ad soyad', 'Öğrenci no', 'Bölüm', 'Sınıf', 'E-posta', 'Kayıt tarihi', 'Durum', 'Not'], rows: byTab.approved.map(memberRow) }]); }
+            catch (e) { UI.toast(e.message, 'error'); } } })),
+        h('div', { class: 'gal-tools' }, h('div', { class: 'segs', role: 'group', 'aria-label': 'Üye listesi' }, seg('pending', `Onay bekleyen (${byTab.pending.length})`), seg('approved', `Onaylı (${byTab.approved.length})`), seg('other', `Reddedilen / askıda (${byTab.other.length})`)), search),
+        mv.tab === 'pending' && list.length ? h('p', { class: 'muted small' }, 'Öğrenci numarasını topluluk kayıt listesiyle ya da öğrenci kimliğiyle karşılaştırıp onaylayın.') : null,
+        UI.card(null, list.length ? UI.table(['Ad soyad', 'Öğrenci no', 'Bölüm / sınıf', 'E-posta', 'Kayıt', 'Durum', ''], list.map((m) => h('tr', null,
+          UI.td('Ad soyad', h('strong', null, m.full_name), m.bio ? h('div', { class: 'muted small' }, m.bio) : null),
+          UI.td('Öğrenci no', h('code', null, m.student_no)),
+          UI.td('Bölüm / sınıf', [m.department, m.class_year].filter(Boolean).join(' · ') || '—'),
+          UI.td('E-posta', m.email),
+          UI.td('Kayıt', U.fmtDate((m.created_at || '').slice(0, 10))),
+          UI.td('Durum', UI.badge(...(Community.MEMBER_STATUS[m.status] || [m.status, 'muted'])), m.review_note ? h('div', { class: 'muted small' }, m.review_note) : null),
+          UI.td('', h('div', { class: 'row-actions' },
+            m.status !== 'approved' ? UI.btn(m.status === 'pending' ? 'Onayla' : 'Yeniden etkinleştir', { small: true, variant: 'primary', ic: 'check', onclick: () => setStatus(m, 'approved') }) : null,
+            m.status === 'pending' ? UI.btn('Reddet', { small: true, ic: 'x', onclick: () => setStatus(m, 'rejected') }) : null,
+            m.status === 'approved' ? UI.btn('Askıya al', { small: true, onclick: () => setStatus(m, 'suspended') }) : null,
+            admin ? UI.iconBtn('trash', 'Hesabı sil', () => delAccount(m), 'danger') : null)))))
+          : UI.empty(mv.q ? 'Aramaya uyan üye yok.' : mv.tab === 'pending' ? 'Onay bekleyen başvuru yok.' : 'Bu listede kimse yok.')));
+    },
+  };
+
+  // ================= FOTOĞRAF ONAYI =================
+  const REASONS = ['Topluluk konusuyla ilgisiz', 'Görüntü kalitesi yetersiz', 'Fotoğraftaki kişilerin izni belirsiz', 'Uygunsuz içerik', 'Aynı fotoğraf daha önce paylaşılmış'];
+  let usage = { bytes: null, at: 0 };
+  async function refreshUsage() {
+    const b = await Store.storageUsage();
+    usage = { bytes: b, at: Date.now() };
+    const el = document.getElementById('storage-usage');
+    if (el) U.put(clear(el), usageBox());
+  }
+  const LIMIT = 1024 * 1024 * 1024;
+  function usageBox() {
+    if (usage.bytes === null) return h('span', { class: 'muted small' }, 'Depo doluluğu hesaplanıyor…');
+    const pct = Math.min(100, Math.round(usage.bytes / LIMIT * 1000) / 10);
+    return h('div', null, h('div', { class: 'load-label' }, h('span', null, 'Fotoğraf deposu (ücretsiz plan: 1 GB)'), h('span', null, `${(usage.bytes / 1048576).toFixed(0)} MB · %${pct}`)), UI.progress(pct, 'Depo doluluğu'),
+      pct > 80 ? h('p', { class: 'small bad-text' }, 'Depo dolmak üzere. Eski ya da az beğenilen fotoğrafları silmeyi düşünün.') : null);
+  }
+  async function review(p, status) {
+    let reason = '';
+    if (status === 'rejected') {
+      const r = await new Promise((resolve) => UI.form({
+        title: 'Fotoğrafı reddet', size: 'sm', submitLabel: 'Reddet', intro: 'Sebep üyeye gösterilir. Reddedilen fotoğrafın dosyası silinir.',
+        fields: [{ key: 'reason', label: 'Sebep', type: 'select', required: true, options: [...REASONS, 'Diğer'].map((x) => ({ value: x, label: x })) }, { key: 'other', label: 'Açıklama (isteğe bağlı)', type: 'text', maxlength: 200 }],
+        onSubmit: async (v) => resolve(v.reason === 'Diğer' ? (v.other || 'Diğer') : v.reason + (v.other ? ` – ${v.other}` : '')), onClose: () => resolve(null),
+      }));
+      if (r === null) return;
+      reason = r;
+    }
+    try { await Store.reviewPhoto(p, status, reason); UI.toast(status === 'approved' ? 'Fotoğraf yayınlandı.' : 'Fotoğraf reddedildi.'); setTimeout(refreshUsage, 400); }
+    catch (e) { UI.toast(Store.friendly(e), 'error'); }
+  }
+  async function remove(p) {
+    if (!(await UI.confirmBox({ title: 'Fotoğrafı sil', message: `${p.author_name || 'Üye'} tarafından paylaşılan fotoğraf kalıcı olarak silinecek.`, okLabel: 'Sil', danger: true }))) return;
+    try { await Store.deletePhoto(p); UI.toast('Fotoğraf silindi.'); setTimeout(refreshUsage, 400); } catch (e) { UI.toast(Store.friendly(e), 'error'); }
+  }
+  let modTab = 'pending';
+  const ModerationView = {
+    render(root) {
+      if (!guard(root, 'Fotoğraf onayı')) return;
+      const pend = D().photos.filter((p) => p.status === 'pending').sort((a, b) => (a.created_at < b.created_at ? -1 : 1));
+      const live = D().photos.filter((p) => p.status === 'approved');
+      const seg = (k, label) => h('button', { class: 'seg' + (modTab === k ? ' on' : ''), type: 'button', 'aria-pressed': String(modTab === k), onclick: () => { modTab = k; App.render(); } }, label);
+      const list = modTab === 'pending' ? pend : live;
+      if (Date.now() - usage.at > 60000) setTimeout(refreshUsage, 0);
+      U.put(root,
+        UI.pageHead('Fotoğraf onayı', 'Kurul üyelerinden birinin onayladığı fotoğraf galeride herkese açık yayınlanır.', Store.canParticipate() ? UI.btn('Fotoğraf paylaş', { ic: 'upload', onclick: () => Community.uploadDialog() }) : null),
+        UI.card(null, h('div', { id: 'storage-usage' }, usageBox())),
+        h('div', { class: 'gal-tools' }, h('div', { class: 'segs', role: 'group' }, seg('pending', `Onay bekleyen (${pend.length})`), seg('live', `Yayındakiler (${live.length})`))),
+        list.length ? h('div', { class: 'mod-grid' }, list.map((p) => h('article', { class: 'mod-item' },
+          h('button', { class: 'ph-img', type: 'button', 'aria-label': 'Büyük göster', onclick: () => Community.lightbox(p, list) }, h('img', { src: Store.photoUrl(p.path_thumb), alt: p.caption || 'Fotoğraf', loading: 'lazy' })),
+          h('div', { class: 'mod-body' },
+            h('div', null, h('strong', null, p.author_name || 'Üye'), h('span', { class: 'muted small' }, ' · ' + U.fmtDateTime(p.created_at))),
+            p.caption ? h('p', null, p.caption) : h('p', { class: 'muted small' }, 'Açıklama yok'),
+            p.event_id ? h('p', { class: 'muted small' }, UI.icon('calendar', 13), ' ', Calc.eventTitle(p.event_id)) : null,
+            modTab === 'live' ? h('p', { class: 'muted small' }, `♥ ${p.like_count || 0} · onaylayan: ${p.reviewed_by || '—'}`) : null,
+            h('div', { class: 'row-actions' },
+              modTab === 'pending' ? UI.btn('Yayınla', { small: true, variant: 'primary', ic: 'check', onclick: () => review(p, 'approved') }) : null,
+              modTab === 'pending' ? UI.btn('Reddet', { small: true, ic: 'x', onclick: () => review(p, 'rejected') }) : null,
+              UI.iconBtn('trash', 'Fotoğrafı sil', () => remove(p), 'danger'))))))
+          : UI.card(null, UI.empty(modTab === 'pending' ? 'Onay bekleyen fotoğraf yok.' : 'Yayında fotoğraf yok.')));
+    },
+  };
+
+  // ================= DUYURULAR =================
+  function annForm(a) {
+    UI.form({
+      title: a ? 'Duyuruyu düzenle' : 'Yeni duyuru', size: 'md', values: a || { pinned: false }, submitLabel: a ? 'Kaydet' : 'Yayınla',
+      intro: 'Duyurular üyelerin Akış sayfasında görünür ve herkese açıktır.',
+      fields: [
+        { key: 'title', label: 'Başlık', type: 'text', required: true, maxlength: 120, full: true },
+        { key: 'body', label: 'Metin', type: 'textarea', rows: 6, maxlength: 3000, full: true },
+        { key: 'pinned', label: 'Sabitle', type: 'checkbox', checkLabel: 'En üstte sabitle', full: true },
+      ],
+      onSubmit: async (v) => { await Store.saveAnnouncement({ ...(a || {}), ...v }); UI.toast(a ? 'Duyuru güncellendi.' : 'Duyuru yayınlandı.'); },
+    });
+  }
+  async function annDelete(a) {
+    if (!(await UI.confirmDelete(`"${a.title}" duyurusu silinecek.`))) return;
+    try { await Store.deleteAnnouncement(a); UI.toast('Duyuru silindi.'); } catch (e) { UI.toast(Store.friendly(e), 'error'); }
+  }
+  const AnnouncementsView = {
+    render(root) {
+      if (!guard(root, 'Duyurular')) return;
+      const list = [...D().announcements].sort((a, b) => (b.pinned - a.pinned) || (a.created_at < b.created_at ? 1 : -1));
+      const canEdit = Store.can('edit');
+      U.put(root,
+        UI.pageHead('Duyurular', 'Üyelerin Akış sayfasında görünür.', canEdit ? UI.btn('Yeni duyuru', { variant: 'primary', ic: 'plus', onclick: () => annForm(null) }) : null),
+        list.length ? h('ul', { class: 'ann-list card' }, list.map((a) => h('li', { class: a.pinned ? 'pinned' : '' },
+          h('div', { class: 'ann-head' }, a.pinned ? UI.badge('Sabit', 'warn') : null, h('h3', null, a.title),
+            canEdit ? h('div', { class: 'row-actions' }, UI.iconBtn('edit', 'Düzenle', () => annForm(a)), UI.iconBtn('trash', 'Sil', () => annDelete(a), 'danger')) : null),
+          a.body ? h('p', { class: 'pre' }, a.body) : null,
+          h('div', { class: 'muted small' }, [a.author_name, U.fmtDateTime(a.created_at)].filter(Boolean).join(' · ')))))
+          : UI.card(null, UI.empty('Henüz duyuru yok.', canEdit ? UI.btn('İlk duyuruyu yaz', { small: true, onclick: () => annForm(null) }) : null)));
+    },
+  };
+
+  // ================= ETKİNLİK KATILIMCILARI =================
+  async function attendeesDialog(e) {
+    const holder = h('div', null, UI.loading('Katılımcılar yükleniyor…'));
+    UI.dialog({ title: `Katılımcılar · ${e.title}`, size: 'lg', content: holder, backdropClose: true });
+    try {
+      const rows = await Store.eventAttendees(e.id);
+      const cols = ['Ad soyad', 'Öğrenci no', 'Bölüm', 'Sınıf', 'E-posta', 'Tür', 'Bildirim tarihi'];
+      const data = rows.map((r) => [r.full_name, r.student_no, r.department, r.class_year, r.email, r.kind, U.fmtDateTime(r.joined_at)]);
+      U.put(clear(holder),
+        h('div', { class: 'detail-actions' }, h('strong', null, `${rows.length} kişi katılıyor`),
+          rows.length ? UI.btn('Excel', { small: true, ic: 'download', onclick: async () => { try { await U.downloadXLSX(`katilimcilar-${U.slug(e.code + '-' + e.title)}.xlsx`, [{ name: 'Katılımcılar', columns: cols, rows: data }]); } catch (err) { UI.toast(err.message, 'error'); } } }) : null,
+          rows.length && e.actual_participants == null && Store.can('edit') ? UI.btn('Gerçek katılımcı sayısına yaz', { small: true, onclick: async () => { await Store.save('events', { id: e.id, actual_participants: rows.length }, { log: `Gerçek katılımcı sayısı katılım listesinden yazıldı: ${e.title} (${rows.length})` }); UI.toast('Kaydedildi.'); } }) : null),
+        rows.length ? UI.table(cols.slice(0, 6), data.map((r) => h('tr', null, cols.slice(0, 6).map((c, i) => UI.td(c, r[i] || '—'))))) : UI.empty('Henüz katılım bildiren olmadı.'));
+    } catch (err) { U.put(clear(holder), h('p', { class: 'bad-text' }, Store.friendly(err))); }
+  }
+
+  return { MembersAdminView, ModerationView, AnnouncementsView, attendeesDialog, pendingMembers, pendingPhotos };
+})();
+
+</script>
+  <script>
 /* js/app.js */
 /* Uygulama kabuğu: yönlendirme, tema, giriş, başlatma */
 'use strict';
 const App = (() => {
   const { h, clear } = U;
+  // group: board = yönetim paneli (kurul), community = üye paneli
   const ROUTES = {
-    dashboard: { title: 'Genel bakış', view: () => DashboardView, icon: 'calendar' },
-    events: { title: 'Etkinlikler', view: () => EventsView },
-    calendar: { title: 'Takvim', view: () => CalendarView },
-    tasks: { title: 'Görevler', view: () => TasksView },
-    team: { title: 'Yönetim kurulu', view: () => TeamView },
-    support: { title: 'Üniversite destekleri', view: () => SupportView, internal: true },
-    reports: { title: 'Raporlar', view: () => ReportsView },
-    settings: { title: 'Ayarlar', view: () => SettingsView },
+    dashboard: { title: 'Genel bakış', view: () => DashboardView, group: 'board' },
+    events: { title: 'Etkinlikler', view: () => EventsView, group: 'board' },
+    calendar: { title: 'Takvim', view: () => CalendarView, group: 'board' },
+    tasks: { title: 'Görevler', view: () => TasksView, group: 'board' },
+    team: { title: 'Yönetim kurulu', view: () => TeamView, group: 'board' },
+    support: { title: 'Üniversite destekleri', view: () => SupportView, group: 'board', internal: true },
+    members: { title: 'Üyeler', view: () => BoardMembers.MembersAdminView, group: 'board', remote: true, count: () => BoardMembers.pendingMembers() },
+    moderation: { title: 'Fotoğraf onayı', view: () => BoardMembers.ModerationView, group: 'board', remote: true, count: () => BoardMembers.pendingPhotos() },
+    announcements: { title: 'Duyurular', view: () => BoardMembers.AnnouncementsView, group: 'board', remote: true },
+    reports: { title: 'Raporlar', view: () => ReportsView, group: 'board' },
+    settings: { title: 'Ayarlar', view: () => SettingsView, group: 'board' },
+    feed: { title: 'Akış', view: () => Community.FeedView, group: 'community', remote: true },
+    program: { title: 'Etkinlikler', view: () => Community.ProgramView, group: 'community', remote: true, membersOnly: true },
+    gallery: { title: 'Galeri', view: () => Community.GalleryView, group: 'community', remote: true },
+    profile: { title: 'Profilim', view: () => Community.ProfileView, group: 'community', remote: true, needUser: true },
   };
   let current = 'dashboard';
 
-  const routeFromHash = () => { const k = (location.hash || '').replace(/^#\/?/, ''); return ROUTES[k] ? k : 'dashboard'; };
+  /** Bu kişi bu sayfayı görebilir mi? (yalnızca arayüz; asıl kontrol veritabanında) */
+  function allowed(k) {
+    const r = ROUTES[k]; if (!r) return false;
+    const st = Store.state, board = Store.isBoard();
+    if (r.remote && st.mode !== 'remote') return false;
+    if (r.needUser && !st.user) return false;
+    if (r.group === 'board') return board && (!r.internal || Store.internal());
+    if (r.membersOnly && board) return false;
+    return true;
+  }
+  const defaultRoute = () => (Store.isBoard() ? 'dashboard' : 'feed');
+  const routeFromHash = () => { const k = (location.hash || '').replace(/^#\/?/, ''); return allowed(k) ? k : defaultRoute(); };
   const go = (k) => { if (location.hash === '#/' + k) render(); else location.hash = '#/' + k; };
 
   // ---- tema ----
@@ -2319,65 +3168,94 @@ const App = (() => {
     if (Store.state.mode !== 'remote') return UI.toast('Yerel modda giriş gerekmez.');
     const dlg = UI.form({
       title: 'Giriş yap', size: 'sm', submitLabel: 'Giriş yap',
-      intro: 'Yönetim kurulu üyeleri kendi e-posta ve şifreleriyle giriş yapar.',
+      intro: 'Üyeler ve kurul üyeleri e-posta adresleri ve şifreleriyle giriş yapar.',
       fields: [
         { key: 'email', label: 'E-posta', type: 'email', required: true, autocomplete: 'username' },
         { key: 'password', label: 'Şifre', type: 'password', required: true, autocomplete: 'current-password' },
       ],
       onSubmit: async (v) => {
         await Store.signIn(v.email.toLowerCase(), v.password);
-        if (!Store.state.role) UI.toast('Giriş yapıldı ancak e-postanız yetkili kişiler listesinde değil. Topluluk başkanına başvurun.', 'error');
-        else UI.toast('Hoş geldiniz' + (Store.state.user.name ? ', ' + Store.state.user.name : '') + '.');
+        const st = Store.state;
+        if (st.role) UI.toast('Hoş geldiniz' + (st.user.name ? ', ' + st.user.name : '') + '.');
+        else if (st.member && st.member.status === 'pending') UI.toast('Giriş yapıldı. Üyeliğin kurul onayı bekliyor.');
+        else if (st.member && st.member.status === 'approved') UI.toast('Hoş geldin' + (st.member.full_name ? ', ' + st.member.full_name.split(' ')[0] : '') + '!');
+        else if (st.member) UI.toast('Giriş yapıldı. Üyeliğin şu an etkin değil.', 'error');
+        else UI.toast('Giriş yapıldı ancak bu hesap için üye kaydı bulunamadı. Kurulla iletişime geçin.', 'error');
+        go(defaultRoute());
       },
     });
-    attachSwitch(dlg, switchLink('Hesabınız yok mu?', 'Hesap oluşturun', () => { dlg.close(); signUpDialog(); }));
+    attachSwitch(dlg, switchLink('Hesabın yok mu?', 'Üye ol', () => { dlg.close(); signUpDialog(); }));
   }
   function signUpDialog() {
     if (Store.state.mode !== 'remote') return UI.toast('Yerel modda hesap gerekmez.');
     const dlg = UI.form({
-      title: 'Hesap oluştur', size: 'sm', submitLabel: 'Hesabı oluştur',
-      intro: 'Topluluk başkanının yetkili kişiler listesine eklediği e-posta adresinizle kendi şifrenizi belirleyin. Hesap hemen açılır.',
+      title: 'Üye ol', size: 'md', submitLabel: 'Kaydı tamamla',
+      intro: 'Topluluk üyeleri öğrenci numarasıyla kayıt olur; kurul bilgileri kontrol edip üyeliği onaylar. Kurul üyeleri de bu formu kullanır.',
       fields: [
-        { key: 'full_name', label: 'Ad soyad', type: 'text', required: true, autocomplete: 'name' },
-        { key: 'email', label: 'E-posta', type: 'email', required: true, autocomplete: 'username' },
+        { key: 'full_name', label: 'Ad soyad', type: 'text', required: true, autocomplete: 'name', maxlength: 80 },
+        { key: 'student_no', label: 'Öğrenci numarası', type: 'text', required: true, maxlength: 12, placeholder: 'Yalnızca rakam' },
+        { key: 'email', label: 'E-posta', type: 'email', required: true, autocomplete: 'username', full: true },
+        { key: 'department', label: 'Bölüm', type: 'text', required: true, maxlength: 80 },
+        { key: 'class_year', label: 'Sınıf', type: 'select', required: true, options: Community.CLASS_YEARS.map((x) => ({ value: x, label: x })) },
         { key: 'password', label: 'Şifre', type: 'password', required: true, autocomplete: 'new-password', help: 'En az 6 karakter.' },
         { key: 'password2', label: 'Şifre (tekrar)', type: 'password', required: true, autocomplete: 'new-password' },
+        { key: 'kvkk', label: 'Onay', type: 'checkbox', full: true, checkLabel: 'Ad soyad, öğrenci numarası, bölüm ve e-posta bilgilerimin yalnızca topluluk üyelik işlemleri için kullanılmasını kabul ediyorum.' },
       ],
       validate: (v) => {
         const e = {};
+        if (v.full_name && v.full_name.length < 3) e.full_name = 'Ad soyad en az 3 karakter olmalı.';
+        if (v.student_no && !/^[0-9]{5,12}$/.test(v.student_no)) e.student_no = 'Öğrenci numarası 5–12 rakamdan oluşmalı.';
         if (v.password && v.password.length < 6) e.password = 'Şifre en az 6 karakter olmalı.';
         if (v.password2 && v.password !== v.password2) e.password2 = 'Şifreler aynı değil.';
+        if (!v.kvkk) e.kvkk = 'Devam etmek için onay vermelisin.';
         return e;
       },
       onSubmit: async (v) => {
-        await Store.signUp(v.email, v.password, v.full_name);
-        UI.toast(Store.state.role ? 'Hesabınız açıldı, hoş geldiniz.' : 'Hesap açıldı ancak yetki tanımlanamadı. Topluluk başkanına başvurun.', Store.state.role ? 'ok' : 'error');
+        await Store.signUp(v);
+        const st = Store.state;
+        if (st.role) UI.toast('Kurul hesabın açıldı, hoş geldin.');
+        else if (st.member) UI.toast('Kaydın alındı! Kurul öğrenci numaranı kontrol edip onayladığında tüm özellikler açılacak.');
+        else UI.toast('Hesap açıldı ancak üye kaydı oluşturulamadı. Kurulla iletişime geç.', 'error');
+        go(defaultRoute());
       },
     });
-    attachSwitch(dlg, switchLink('Zaten hesabınız var mı?', 'Giriş yapın', () => { dlg.close(); loginDialog(); }));
+    attachSwitch(dlg, switchLink('Zaten hesabın var mı?', 'Giriş yap', () => { dlg.close(); loginDialog(); }));
   }
-  async function logout() { try { await Store.signOut(); UI.toast('Çıkış yapıldı.'); } catch (e) { UI.toast(e.message, 'error'); } }
+  async function logout() { try { await Store.signOut(); UI.toast('Çıkış yapıldı.'); go(defaultRoute()); } catch (e) { UI.toast(e.message, 'error'); } }
 
   // ---- kabuk ----
   function renderShell() {
     const s = Store.settings();
-    document.title = (s.name || 'Topluluk') + ' · Yönetim';
+    document.title = (s.name || 'Topluluk') + (Store.isBoard() ? ' · Yönetim' : '');
     const brand = document.getElementById('brand');
     U.put(clear(brand), 
       s.logo_url && (U.isUrl(s.logo_url) || s.logo_url.startsWith('data:image/')) ? h('img', { class: 'brand-logo', src: s.logo_url, alt: '' }) : UI.icon('aperture', 28),
       h('span', { class: 'brand-name' }, s.name));
     const nav = document.getElementById('nav');
-    U.put(clear(nav), Object.entries(ROUTES).filter(([, r]) => !r.internal || Store.internal()).map(([k, r]) =>
-      h('a', { href: '#/' + k, class: 'nav-link' + (k === current ? ' on' : ''), 'aria-current': k === current ? 'page' : null, onclick: () => closeNav() }, r.title)));
+    const link = (k, r) => {
+      const n = r.count && Store.state.features.members ? r.count() : 0;
+      return h('a', { href: '#/' + k, class: 'nav-link' + (k === current ? ' on' : ''), 'aria-current': k === current ? 'page' : null, onclick: () => closeNav() },
+        h('span', null, r.title), n ? h('span', { class: 'nav-count', 'aria-label': `${n} bekleyen` }, String(n)) : null);
+    };
+    const groups = Store.isBoard() ? [['board', 'Yönetim'], ['community', 'Topluluk']] : [['community', null]];
+    U.put(clear(nav), groups.map(([g, label]) => {
+      const items = Object.entries(ROUTES).filter(([k, r]) => r.group === g && allowed(k));
+      if (!items.length) return null;
+      return [label && Store.state.mode === 'remote' ? h('div', { class: 'nav-group' }, label) : null, items.map(([k, r]) => link(k, r))];
+    }));
     const auth = document.getElementById('auth');
     clear(auth);
     const st = Store.state;
     if (st.mode === 'local') U.put(auth, h('span', { class: 'mode-pill', title: 'Veriler yalnızca bu cihazda saklanır' }, 'Yerel prototip'));
-    else if (st.user) U.put(auth, h('span', { class: 'user-pill', title: st.user.email }, UI.icon('user', 16), h('span', null, st.role ? ({ admin: 'Yönetici', editor: 'Editör', viewer: 'Görüntüleyici' })[st.role] : 'Yetkisiz')), UI.btn('Çıkış', { small: true, onclick: logout }));
-    else U.put(auth, h('span', { class: 'mode-pill view', title: 'Salt okunur görünüm' }, UI.icon('eye', 14), 'Ziyaretçi'), UI.btn('Giriş yap', { small: true, variant: 'primary', ic: 'lock', onclick: loginDialog }));
+    else if (st.user) {
+      const label = st.role ? ({ admin: 'Yönetici', editor: 'Editör', viewer: 'Görüntüleyici' })[st.role]
+        : st.member ? (Community.MEMBER_STATUS[st.member.status] || [st.member.status])[0] : 'Hesap';
+      const name = (st.user.name || '').split(' ')[0];
+      U.put(auth, h('button', { class: 'user-pill', type: 'button', title: st.user.email, onclick: () => go('profile') }, UI.icon('user', 16), h('span', null, name ? `${name} · ${label}` : label)), UI.btn('Çıkış', { small: true, onclick: logout }));
+    } else U.put(auth, UI.btn('Giriş yap', { small: true, ic: 'lock', onclick: loginDialog }), UI.btn('Üye ol', { small: true, variant: 'primary', onclick: signUpDialog }));
     const note = document.getElementById('banner');
     clear(note);
-    if (st.mode === 'remote' && st.user && !st.role) { note.hidden = false; note.append('E-postanız yetkili kişiler listesinde değil; yalnızca herkese açık bilgileri görebilirsiniz. Topluluk başkanından sizi Ayarlar > Yetkili kişiler listesine eklemesini isteyin.'); }
+    if (st.mode === 'remote' && st.user && !st.role && !st.member && st.features.members) { note.hidden = false; note.append('Bu hesap için üye kaydı bulunamadı; yalnızca herkese açık bilgileri görebilirsiniz. Kurulla iletişime geçin.'); }
     else if (st.mode === 'local') { note.hidden = false; note.append('Yerel prototip modu: veriler yalnızca bu cihazda saklanır ve başkalarıyla paylaşılmaz. Ortak kullanım için README\'deki Supabase kurulumunu yapın. '); }
     else note.hidden = true;
   }
