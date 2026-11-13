@@ -321,6 +321,9 @@ button.user-pill { font: inherit; font-size: .78rem; cursor: pointer; }
 .ph-grid.compact .ph-card figcaption { padding: .35rem .45rem; font-size: .78rem; }
 .ph-grid.compact .ph-cap, .ph-grid.compact .ph-ev { display: none; }
 @media (max-width: 720px) { .ph-grid.compact { grid-template-columns: repeat(3, minmax(0, 1fr)); } .ph-grid.compact .ph-author { display: none; } .ph-grid.compact .ph-meta { justify-content: flex-end; } }
+.ph-acts { display: inline-flex; align-items: center; gap: .15rem; flex: none; }
+.ph-acts .icon-btn { width: 32px; height: 32px; min-width: 32px; }
+.lb-acts { display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
 
 </style>
   <link rel="manifest" href="manifest.webmanifest">
@@ -2653,11 +2656,19 @@ const Community = (() => {
   };
   const thumb = (p, onclick) => h('button', { class: 'ph-img', type: 'button', 'aria-label': 'Fotoğrafı büyüt' + (p.caption ? ': ' + p.caption : ''), onclick },
     h('img', { src: Store.photoUrl(p.path_thumb), alt: p.caption || `${p.author_name || 'Üye'} tarafından paylaşılan fotoğraf`, loading: 'lazy', decoding: 'async' }));
+  const canDelete = (p) => !!Store.state.user && (p.user_id === Store.state.user.id || Store.can('edit'));
+  async function deletePhoto(p, after) {
+    const own = Store.state.user && p.user_id === Store.state.user.id;
+    const ok = await UI.confirmBox({ title: 'Fotoğrafı sil', message: own ? 'Bu fotoğraf galeriden ve depodan kalıcı olarak silinecek.' : `${p.author_name || 'Üye'} tarafından paylaşılan fotoğraf galeriden ve depodan kalıcı olarak silinecek.`, okLabel: 'Sil', danger: true });
+    if (!ok) return false;
+    try { await Store.deletePhoto(p); UI.toast('Fotoğraf silindi.'); if (after) after(); return true; } catch (e) { UI.toast(Store.friendly(e), 'error'); return false; }
+  }
   function photoCard(p, list) {
     return h('figure', { class: 'ph-card' },
       thumb(p, () => lightbox(p, list)),
       h('figcaption', null,
-        h('div', { class: 'ph-meta' }, h('span', { class: 'ph-author' }, p.author_name || 'Üye'), likeBtn(p)),
+        h('div', { class: 'ph-meta' }, h('span', { class: 'ph-author' }, p.author_name || 'Üye'),
+          h('span', { class: 'ph-acts' }, canDelete(p) ? UI.iconBtn('trash', 'Fotoğrafı sil', (ev) => { if (ev) ev.stopPropagation(); deletePhoto(p); }, 'danger sm') : null, likeBtn(p))),
         p.caption ? h('p', { class: 'ph-cap' }, p.caption) : null,
         p.event_id ? h('p', { class: 'ph-ev' }, UI.icon('calendar', 13), ' ', Calc.eventTitle(p.event_id)) : null));
   }
@@ -2679,7 +2690,9 @@ const Community = (() => {
           h('div', null, h('strong', null, p.author_name || 'Üye'), h('span', { class: 'muted small' }, ' · ' + U.fmtDateTime(p.created_at)),
             p.caption ? h('p', null, p.caption) : null,
             p.event_id ? h('p', { class: 'muted small' }, UI.icon('calendar', 13), ' ', Calc.eventTitle(p.event_id)) : null),
-          p.status === 'approved' ? likeBtn(p) : UI.badge((PHOTO_STATUS[p.status] || [p.status])[0], (PHOTO_STATUS[p.status] || [])[1])));
+          h('div', { class: 'lb-acts' },
+            p.status === 'approved' ? likeBtn(p) : UI.badge((PHOTO_STATUS[p.status] || [p.status])[0], (PHOTO_STATUS[p.status] || [])[1]),
+            canDelete(p) ? UI.btn('Sil', { small: true, variant: 'danger-ghost', ic: 'trash', onclick: () => deletePhoto(p, () => dlg.close()) }) : null)));
     };
     const off = Store.on(() => { if (dlg.open) draw(); });
     dlg.addEventListener('keydown', (ev) => {
@@ -2869,10 +2882,7 @@ const Community = (() => {
       onSubmit: async (v) => { await Store.changePassword(v.p1); UI.toast('Şifren değiştirildi.'); },
     });
   }
-  async function delMyPhoto(p) {
-    if (!(await UI.confirmBox({ title: 'Fotoğrafı sil', message: 'Bu fotoğraf kalıcı olarak silinecek.', okLabel: 'Sil', danger: true }))) return;
-    try { await Store.deletePhoto(p); UI.toast('Fotoğraf silindi.'); } catch (e) { UI.toast(Store.friendly(e), 'error'); }
-  }
+  const delMyPhoto = (p) => deletePhoto(p);
   const ProfileView = {
     render(root) {
       if (Store.state.mode !== 'remote') return U.put(root, UI.pageHead('Profilim'), remoteOnly());
